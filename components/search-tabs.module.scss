@@ -1,0 +1,80 @@
+.host {
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+.label {
+  float: left;
+  font-size: 1.3rem;
+  margin: 0px 10px;
+  padding-top: 7px;
+}
+.by {
+  margin-right: 10px;
+  float: left;
+  >button {
+    display: block;
+    border: 0;
+    font-size: 1.6rem;
+    padding: 5px 0 0 3px;
+    margin: 0;
+    background: transparent;
+    color: #717171;
+    cursor: pointer;
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+.byActive > button {
+  background: #272727;
+  background-image: linear-gradient(to bottom, #323232, #272727);
+  border-radius: 5px 5px 0 0;
+  color: #FAFC4F;
+  display: block;
+  font-size: 1.6rem;
+  height: 31px;
+  margin-bottom: -1px;
+  padding: 1px 20px 0;
+  position: relative;
+  text-align: center;
+  z-index: 980;
+  border: 1px solid #323232;
+  border-width: 0 1px;
+}
+.tip {
+  display: none;
+  @media (min-width: 730px) {
+    display: block;
+  }
+  float: right;
+  color: #6F6F6F;
+  font-size: 1.3rem;
+  font-style: italic;
+  margin: 5px 10px 0 0;
+  >code {
+    color: #8AB5C9;
+    font-size: 1.3rem;
+    padding: 0;
+    background-color: transparent;
+    border-radius: 0;
+  }
+}
+.tooltip {
+  position:absolute;
+  z-index:999;
+  left:-9999px;
+  background-color:#dedede;
+  padding:5px;
+  border:1px solid #fff;
+  width:250px;
+  p {
+    margin:0;
+    padding:0;
+    color:#fff;
+    background-color:#222;
+    padding:2px 7px;
+  }
+}

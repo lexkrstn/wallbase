@@ -1,0 +1,159 @@
+.host {
+  margin: 10px 0;
+  @media (min-width: 960px) {
+    margin: 30px 0;
+  }
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+.fold {
+  border-radius: 5px;
+  border: 1px solid #232323;
+  background: #171717;
+  font-size: 1.4rem;
+  color: #747474;
+  margin: 5px;
+  @media (min-width: 640px) and (max-width: 959px) {
+    float: right;
+    width: 49%;
+    height: 510px;
+    margin: 0 0.5% 1% 0;
+    &:first-child {
+      margin: 0 0 1% 0.5%;
+      float: left;
+    }
+    &:last-child {
+      float: none;
+      margin: 0 0.5%;
+      width: auto;
+      clear: both;
+      height: auto;
+    }
+  }
+  @media (min-width: 960px) {
+    float: right;
+    width: 32%;
+    height: 510px;
+    margin: 0;
+    &:first-child {
+      float: left;
+    }
+    &:last-child {
+      float: none;
+      margin: 0 34%;
+    }
+  }
+}
+.header {
+  display: flex;
+  border-radius: 5px 5px 0 0;
+  border-bottom: 1px solid #232323;
+  position: relative;
+  line-height: 40px;
+  height: 40px;
+  padding: 0 13px;
+  background-image: linear-gradient(to bottom, #171717, #111);
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+.title {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  color: #DAA967;
+  font-size: 1.8rem;
+  float: left;
+  line-height: 40px;
+  flex: 0 0 auto;
+}
+.desc {
+  color: #666666;
+  font-size: 13px;
+  margin: 0 0 0 10px;
+  float: left;
+  line-height: 42px;
+  flex: 1 0 auto;
+}
+.headerRightAddon {
+  flex: 0 0 auto;
+}
+.text {
+  line-height: 1.5em;
+  padding: 10px;
+  text-align: justify;
+  p {
+    margin: 0 0 10px;
+    &:last-child { margin-bottom: 0; }
+  }
+}
+.paypal {
+  text-align: center;
+  padding-bottom: 10px;
+  > a {
+    display: inline-block;
+    max-width: 180px;
+    margin: 5px 0 15px;
+    opacity: 0.9;
+    transition: opacity 200ms ease;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+.tabs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  >li {
+    display: block;
+    float: left;
+    font-size: 1.2rem;
+    > a,
+    > button {
+      display: block;
+      padding: 7px 10px;
+      line-height: normal;
+      border-radius: 4px 4px 0 0;
+      border: 0;
+      background: transparent;
+      &, &:link, &:visited {
+        color: #666;
+      }
+      &:hover, &:active {
+        color: #fff;
+        .number {
+          color: #900;
+        }
+      }
+    }
+    &.activeTab > a,
+    &.activeTab > button {
+      border: 1px solid #232323;
+      font-weight: bold;
+      border-bottom: none;
+      background: #171717;
+      &, &:link, &:visited {
+        color: #FFCC55;
+      }
+      &:active, &:hover {
+        color: #fff;
+      }
+    }
+  }
+}
+.number {
+  color: #fff;
+}
+.spinner {
+  position: relative;
+  height: 470px;
+}

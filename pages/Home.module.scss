@@ -1,0 +1,52 @@
+.home {
+  margin: 15px auto 0;
+  @media (min-height: 540px) {
+    margin: 60px auto 0;
+  }
+  @media (min-width: 980px) {
+    width: 980px;
+  }
+}
+.logo {
+  margin-bottom: 15px;
+  text-align: center;
+  >a {
+    height: 41px;
+    width: 193px;
+    display: block;
+    margin: 0 auto;
+    >img {
+      height: 41px;
+      width: 193px;
+    }
+  }
+}
+.subtitle {
+  display: none;
+  @media (min-height: 540px) {
+    display: block;
+  }
+  color: #555;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  margin: 0 auto 35px;
+  text-align: center;
+}
+.or {
+  margin-top: 10px;
+  padding-top: 2px;
+  text-align: center;
+  background-image: url('data:image/gif;base64,Qk06AAAAAAAAADYAAAAoAAAAAQAAAAEAAAABABgAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAMjIyAA==');
+  background-repeat: repeat-x;
+  background-position: 0 55%;
+  >span {
+    display: inline-block;
+    background: #1E1E1E;
+    color: #E2B143;
+    padding: 0 10px;
+    >.fa {
+      color: #323232;
+    }
+  }
+}

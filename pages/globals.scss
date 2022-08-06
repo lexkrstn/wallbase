@@ -1,0 +1,109 @@
+* { box-sizing: border-box; }
+strong, b {
+  font-weight: bold;
+}
+html, body {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: 0;
+  height: 100%;
+}
+html {
+  font-size: 62.5%;
+  background: #1E1E1E;
+}
+body {
+  font-size: 1.6rem;
+  color: #C6C6C6;
+  background: transparent;
+}
+body, button {
+  font-family: Calibri,tahoma,verdana,sans,"Lucida Sans Unicode","Lucida Grande",Arial,geneva,sans-serif;
+}
+a {
+  &:link, &:visited, &:active {
+    //color: #3DB015;
+    color: #94C688;
+    text-decoration: none;
+  }
+  &:hover {
+    //color: #B01564;
+    color: #fff;
+    text-decoration: none;
+  }
+}
+img {
+  border: none;
+}
+form {
+  margin: 0;
+  padding: 0;
+}
+p {
+  margin: 15px 0;
+}
+code {
+  color: #EAEAEA;
+  background-color: #3A3A3A;
+}
+
+/**************************************************************\
+                          ANIMATION
+\**************************************************************/
+
+@-webkit-keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/**************************************************************\
+                          GLOBAL MISC
+\**************************************************************/
+
+.blueish {
+  color: #0CF !important;
+}
+.yellow {
+  color: #FAFC4F !important;
+}
+.white {
+  color: #FFFFFF !important;
+}
+.blue {
+  color: #3581E1 !important;
+}
+.gray {
+  color: #666 !important;
+}
+.lightgray {
+  color: lightgray !important;
+}
+a.sfw {
+  &, &:visited, &:link {
+    color: #94C688;
+  }
+  &:hover {
+    color: #fff;
+  }
+}
+a.sketchy {
+  &, &:visited, &:link {
+    color: #CDC200;
+  }
+  &:hover {
+    color: #fff;
+  }
+}
+a.nsfw {
+  &, &:visited, &:link {
+    color: #db4f4f;
+  }
+  &:hover {
+    color: #fff;
+  }
+}

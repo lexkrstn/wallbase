@@ -1,0 +1,20 @@
+@import './triple-filter.scss';
+
+.host {
+	@extend %triple-filter;
+	max-width: 180px;
+	min-width: 100px;
+	&.disabled {
+		@extend %triple-filter--disabled;
+	}
+	>ul>li {
+		&.selected {
+			border-top-color: #ababab;
+			background-image: linear-gradient(to bottom, #8d8c8d, #575757);
+			text-shadow: #ABABAB 1px 1px 2px;
+		}
+	}
+	&.small>ul>li {
+		width: 40px;
+	}
+}
