@@ -1,31 +1,37 @@
 @import './triple-filter.scss';
 
 .host {
-	@extend %triple-filter;
-	min-width: 230px;
-	max-width: 300px;
-	&.disabled {
-		@extend %triple-filter--disabled;
-	}
-	>ul>li.selected {
-		border-top: 1px solid #f2fc45;
-		background: #dacd00;
-		background-image: linear-gradient(to bottom, #dacd00, #bdb500);
-		text-shadow: #f2fc45 1px 1px 2px;
-		&:first-child {
-			border-top: 1px solid #55c000;
-			background: #45a100;
-			background-image: linear-gradient(to bottom, #45a100, #3b8c00);
-			text-shadow: #55c000 1px 1px 2px;
-		}
-		&:last-child {
-			border-top: 1px solid #fa0000;
-			background: #e20100;
-			background-image: linear-gradient(to bottom, #e20100, #c70400);
-			text-shadow: #FA0000 1px 1px 2px;
-		}
-	}
-	&.small>ul>li {
-		width: 80px;
-	}
+  @extend %triple-filter;
+  min-width: 230px;
+  max-width: 300px;
+  &.disabled {
+    @extend %triple-filter--disabled;
+  }
+  >ul>li.selected {
+    border-top: 1px solid #f2fc45;
+    background: #dacd00;
+    background-image: linear-gradient(to bottom, #d9cc00, #c7bd00, #aea800);
+    >button {
+      text-shadow: #f2fc45 1px 1px 2px;
+    }
+    &:first-child {
+      border-top: 1px solid #55c000;
+      background: #45a100;
+      background-image: linear-gradient(to bottom, #44a000, #3f9300, #368200);
+      >button {
+        text-shadow: #55c000 1px 1px 2px;
+      }
+    }
+    &:last-child {
+      border-top: 1px solid #fa0000;
+      background: #e20100;
+      background-image: linear-gradient(to bottom, #e00101, #d10300, #ba0600);
+      >button {
+        text-shadow: #FA0000 1px 1px 2px;
+      }
+    }
+  }
+  &.small>ul>li {
+    width: 80px;
+  }
 }

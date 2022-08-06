@@ -41,20 +41,32 @@
         border-radius: 0 4px 4px 0;
         border-left: none;
       }
-      >a {
+      >a,
+      >button {
         padding: 5px 0;
         display: block;
-        &, &:link, &:visited, &:active, &:hover {
+        margin: 0;
+        background: transparent;
+        border: 0;
+        text-align: center;
+        width: 100%;
+        font-size: 1em;
+        cursor: pointer;
+        &, &:hover {
           color: #666;
         }
-      }
-      &.selected>a {
-        &, &:link, &:visited, &:active, &:hover {
-          color: #000
+        &:disabled {
+          cursor: default;
         }
       }
     } // li
   } // ul
+}
+
+.selected > button {
+  &, &:hover {
+    color: #000 !important;
+  }
 }
 
 %triple-filter--disabled {
