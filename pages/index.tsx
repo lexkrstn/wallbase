@@ -14,6 +14,44 @@ import { getPopularTags } from '../lib/tags';
 import styles from './Home.module.scss';
 import logoImage from './logo.svg';
 
+const SLIDES = [
+  {
+    image: 'https://w.wallhaven.cc/full/l3/wallhaven-l3xk6q.jpg',
+    href: `/walls/1`,
+    description: 'Blah',
+  },
+  {
+    image: 'https://w.wallhaven.cc/full/x8/wallhaven-x8rwzo.jpg',
+    href: `/walls/2`,
+    description: 'Blah',
+  },
+  {
+    image: 'https://w.wallhaven.cc/full/j3/wallhaven-j3glxy.jpg',
+    href: `/walls/3`,
+    description: 'Blah',
+  },
+  {
+    image: 'https://w.wallhaven.cc/full/wq/wallhaven-wq9v8p.jpg',
+    href: `/walls/4`,
+    description: 'Blah',
+  },
+  {
+    image: 'https://w.wallhaven.cc/full/28/wallhaven-2879mg.png',
+    href: `/walls/5`,
+    description: 'Blah',
+  },
+  {
+    image: 'https://w.wallhaven.cc/full/g7/wallhaven-g7yv8q.jpg',
+    href: `/walls/6`,
+    description: 'Blah',
+  },
+  {
+    image: 'https://w.wallhaven.cc/full/rd/wallhaven-rdm6km.png',
+    href: `/walls/7`,
+    description: 'Blah',
+  },
+];
+
 interface HomeProps {
   popularTags: Tag[] | null;
 }
@@ -45,7 +83,7 @@ const Home: NextPage<HomeProps> = ({ popularTags }: HomeProps) => {
           <span><i className="fa fa-diamond"></i> or <i className="fa fa-diamond"></i></span>
         </div>
         <NavButtons />
-        <Carousel />
+        <Carousel slides={SLIDES} />
         <Triptych popularTags={popularTags} />
       </div>
     </HomeLayout>
