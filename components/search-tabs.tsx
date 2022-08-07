@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent, useCallback, useState } from 'react';
 import styles from './search-tabs.module.scss';
+import Tooltip from './tooltip';
 
 export type SearchByType = 'keyword' | 'color';
 
@@ -26,11 +27,17 @@ const SearchTabs: FC<SearchTabsProps> = ({ defaultTab, onTabChanged }) => {
       </div>
       <div className={styles.tip}>
         {'— Available search options: '}
-        <code title="Use quotation marks to make the query more strict.">"keyword"</code>,
+        <Tooltip message="Use quotation marks to make the query more strict." inline>
+          <code>"keyword"</code>
+        </Tooltip>,
         {' '}
-        <code title="Exclude keywords you don't want to appear in the results page. Do not use spaces or quotation marks in the keywords.">not:word</code>
+        <Tooltip message="Exclude keywords you don't want to appear in the results page." inline>
+          <code>not:word</code>
+        </Tooltip>
         {' and '}
-        <code title="Jump directly to the specified results page.">page:123</code>.
+        <Tooltip message="Jump directly to the specified results page." inline>
+          <code>page:123</code>
+        </Tooltip>.
         {' Try them out.'}
       </div>
     </div>

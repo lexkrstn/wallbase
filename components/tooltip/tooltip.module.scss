@@ -1,0 +1,79 @@
+$bg: #000;
+$nib: 6px;
+
+.host {
+  display: block;
+}
+.inline {
+  display: inline-block;
+}
+.message {
+  position: absolute;
+  z-index: 999;
+  background: $bg;
+  opacity: 0.8;
+  display: none;
+  font-size: 14px;
+  line-height: 1.3em;
+  min-width: 50px;
+  max-width: 400px;
+  padding: 7px;
+  color: #C6C6C6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
+  border-radius: 2px;
+
+  p {
+    margin:0;
+    padding:0;
+    color:#fff;
+    background-color:#222;
+    padding:2px 7px;
+  }
+}
+.shown {
+  display: block;
+}
+%nib {
+  content: '';
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border: $nib solid transparent;
+}
+.top {
+  &::after {
+    @extend %nib;
+    left: 50%;
+    bottom: (-2 * $nib);
+    margin-left: (-$nib / 2);
+    border-top-color: $bg;
+  }
+}
+.bottom {
+  &::after {
+    @extend %nib;
+    left: 50%;
+    top: (-2 * $nib);
+    margin-left: (-$nib / 2);
+    border-bottom-color: $bg;
+  }
+}
+.right {
+  &::after {
+    @extend %nib;
+    left: (-2 * $nib);
+    top: 50%;
+    margin-top: (-$nib / 2);
+    border-right-color: $bg;
+  }
+}
+.left {
+  &::after {
+    @extend %nib;
+    right: (-2 * $nib);
+    top: 50%;
+    margin-top: (-$nib / 2);
+    border-left-color: $bg;
+  }
+}
