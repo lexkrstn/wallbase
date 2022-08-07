@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next";
-import React, { ReactElement } from "react";
+import React, { FC } from "react";
+import Link from 'next/link';
 import styles from './userbar.module.scss';
 
 interface User {
@@ -11,35 +12,45 @@ interface UserbarSSProps {
 }
 
 type UserbarProps = UserbarSSProps & {
-  docked: boolean;
+  wide?: boolean;
 };
 
-export default function Userbar({ docked, user }: UserbarProps): ReactElement {
+const Userbar: FC<UserbarProps> = ({ wide, user }) => {
   const userName = user ? user.login : 'Anonymous';
+  const containerClasses = [styles.container];
+  if (wide) containerClasses.push(styles.wide);
   return (
     <div className={styles.userbar}>
-      <div className={styles.commands}>
-        <span className={styles.greating}>Hey {userName}!</span>
-        {!user && (
-          <>
-            <a className={styles.link} href="javascript:;">Login</a>
-            <a className={styles.link} href="javascript:;">Register</a>
-          </>
-        )}
-        {!!user && (
-          <>
-            <a className={styles.link} href="javascript:;">Logout</a>
-            <span className={styles.loading}></span>
-          </>
-        )}
+      <div className={containerClasses.join(' ')}>
+        <div className={styles.commands}>
+          <span className={styles.greating}>Hey {userName}!</span>
+          {!user && (
+            <>
+              <Link href="/signin">
+                <a className={styles.link}>Login</a>
+              </Link>
+              <Link href="/signup">
+                <a className={styles.link}>Register</a>
+              </Link>
+            </>
+          )}
+          {!!user && (
+            <>
+              <a className={styles.link} href="#">Logout</a>
+              <span className={styles.loading}></span>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
-}
+};
 
 Userbar.defaultProps = {
-  docked: false,
+  wide: false,
 };
+
+export default Userbar;
 
 export const getServerSideProps: GetServerSideProps<UserbarSSProps> = async () => ({
   props: {
