@@ -152,10 +152,24 @@
 .optionsActive, .options:hover {
   background: #e3bb5d;
   background-image: linear-gradient(to bottom, #e3bb5d, #e88319);
+  position: relative;
   >svg {
     outline: 1px solid #eba33d;
     color: #fff;
   }
+}
+.optionsActive::after {
+  $size: 6px;
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border: $size solid transparent;
+  border-top-color: #e88319;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -$size;
 }
 .search {
   display: block;
