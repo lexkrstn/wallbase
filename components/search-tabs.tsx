@@ -24,13 +24,15 @@ const SearchTabs: FC<SearchTabsProps> = ({ defaultTab, onTabChanged }) => {
       <div className={`${styles.by} ${activeTab === 'color' ? styles.byActive : ''}`}>
         <button type="button" onClick={handleTabClick} data-tab="color">Color</button>
       </div>
-      {/*<div className={styles.tip}>
-        — Available search options:
-        <code className="js-tooltip" title="Use quotation marks to make the query more strict." data-position="top-right">"keyword"</code>,
-        <code className="js-tooltip" title="Exclude keywords you don't want to appear in the results page. Do not use spaces or quotation marks in the keywords." data-position="top-right">not:word</code> and
-        <code className="js-tooltip" title="Jump directly to the specified results page." data-position="top-right">page:123</code>.
-        Try them out.
-      </div>*/}
+      <div className={styles.tip}>
+        {'— Available search options: '}
+        <code title="Use quotation marks to make the query more strict.">"keyword"</code>,
+        {' '}
+        <code title="Exclude keywords you don't want to appear in the results page. Do not use spaces or quotation marks in the keywords.">not:word</code>
+        {' and '}
+        <code title="Jump directly to the specified results page.">page:123</code>.
+        {' Try them out.'}
+      </div>
     </div>
   );
 };
