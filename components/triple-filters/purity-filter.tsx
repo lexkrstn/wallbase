@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent, ReactElement, useCallback, useState } from 'react';
 import { PURITY_NSFW, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
+import Tooltip from '../tooltip';
 import styles from './purity-filter.module.scss';
 
 interface PurityFilterProps {
@@ -18,32 +19,28 @@ const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) 
       <input type="hidden" name="purity" value={value} />
       <ul>
         <li className={value & PURITY_SFW ? styles.selected : ''}>
-          <button
-            onClick={onClick}
-            title="Clean wallpaper"
-            data-purity={PURITY_SFW}
-          >
-            SFW
-          </button>
+          <Tooltip message="Clean wallpapers" position="bottom">
+            <button onClick={onClick} data-purity={PURITY_SFW}>SFW</button>
+          </Tooltip>
         </li>
         <li className={value & PURITY_SKETCHY ? styles.selected : ''}>
-          <button
-            onClick={onClick}
-            title="Wallpaper with soft/erotic poses, blood, etc."
-            data-purity={PURITY_SKETCHY}
-          >
-            SKETCHY
-          </button>
+          <Tooltip message="Wallpapers with soft/erotic poses, blood, etc." position="bottom">
+            <button onClick={onClick} data-purity={PURITY_SKETCHY}>SKETCHY</button>
+          </Tooltip>
         </li>
         <li className={value & PURITY_NSFW ? styles.selected : ''}>
-          <button
-            onClick={nsfwDisabled ? undefined : onClick}
-            disabled={nsfwDisabled}
-            title="Wallpaper with visible boobs, testicles/vagina, gore, etc"
-            data-purity={PURITY_NSFW}
+          <Tooltip
+            message="Wallpapers with visible boobs, testicles/vagina, gore, etc"
+            position="bottom"
           >
-            NSFW
-          </button>
+            <button
+              onClick={nsfwDisabled ? undefined : onClick}
+              disabled={nsfwDisabled}
+              data-purity={PURITY_NSFW}
+            >
+              NSFW
+            </button>
+          </Tooltip>
         </li>
       </ul>
     </div>

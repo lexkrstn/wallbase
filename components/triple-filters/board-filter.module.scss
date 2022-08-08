@@ -11,12 +11,10 @@
     width: 40px;
   }
 }
-
 .selected {
   border-top-color: #ababab !important;
   background-image: linear-gradient(to bottom, #8d8c8d, #575757) !important;
-
-  > button {
+  button {
     text-shadow: #ABABAB 1px 1px 2px !important;
   }
 }

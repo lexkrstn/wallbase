@@ -41,8 +41,7 @@
         border-radius: 0 4px 4px 0;
         border-left: none;
       }
-      >a,
-      >button {
+      button {
         padding: 5px 0;
         display: block;
         margin: 0;
@@ -63,7 +62,7 @@
   } // ul
 }
 
-.selected > button {
+.selected button {
   &, &:hover {
     color: #000 !important;
   }

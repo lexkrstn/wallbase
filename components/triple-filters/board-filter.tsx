@@ -1,5 +1,6 @@
 import React, { FC, MouseEvent, useCallback, useMemo, useState } from 'react';
 import { BOARD_A, BOARD_G, BOARD_P } from '../../interfaces/constants';
+import Tooltip from '../tooltip';
 import styles from './board-filter.module.scss';
 
 interface BoardFilterProps {
@@ -17,13 +18,19 @@ const BoardFilter: FC<BoardFilterProps> = ({ onChange, value }) => {
       <input type="hidden" name="board" value={value} />
       <ul>
         <li className={value & BOARD_G ? styles.selected : ''}>
-          <button onClick={onClick} title="General" data-board={BOARD_G}>G</button>
+          <Tooltip message="General" position="bottom">
+            <button onClick={onClick} data-board={BOARD_G}>G</button>
+          </Tooltip>
         </li>
         <li className={value & BOARD_A ? styles.selected : ''}>
-          <button onClick={onClick} title="Anime / Manga" data-board={BOARD_A}>A</button>
+          <Tooltip message="Anime / Manga" position="bottom">
+            <button onClick={onClick} data-board={BOARD_A}>A</button>
+          </Tooltip>
         </li>
         <li className={value & BOARD_P ? styles.selected : ''}>
-          <button onClick={onClick} title="People" data-board={BOARD_P}>P</button>
+          <Tooltip message="People" position="bottom">
+            <button onClick={onClick} data-board={BOARD_P}>P</button>
+          </Tooltip>
         </li>
       </ul>
     </div>
