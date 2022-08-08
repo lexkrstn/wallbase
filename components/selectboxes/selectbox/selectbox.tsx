@@ -7,6 +7,7 @@ import { hasAncestorNode } from '../../../helpers/hasAncestorNode';
 import styles from './selectbox.module.scss';
 import { SelectboxItemDto } from './interfaces';
 import SelectboxItemList from './selectbox-item-list';
+import { usePrevious } from '../../../helpers/usePrevious';
 
 export interface SelectboxProps {
   className?: string;
@@ -27,6 +28,7 @@ const Selectbox: FC<SelectboxProps> = ({
 }) => {
   const hostRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
+  const prevValue = usePrevious(value);
 
   const hostClasses = [styles.selectbox];
   if (className) hostClasses.push(className);
@@ -35,15 +37,6 @@ const Selectbox: FC<SelectboxProps> = ({
   const selectedItem = items.find(item => item.value === value);
 
   const doOpen = useCallback(() => setOpen(true), []);
-
-  const onItemChange = useCallback((itemValue: string) => {
-    if (!notCloseOnChange) {
-      setOpen(false);
-    }
-    if (onChange) {
-      onChange(itemValue);
-    }
-  }, [notCloseOnChange]);
 
   // Closes the popup menu upon clicking on the document
   useEffect(() => {
@@ -58,6 +51,12 @@ const Selectbox: FC<SelectboxProps> = ({
       document.removeEventListener('click', documentClickHandler);
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!notCloseOnChange && prevValue !== value && open) {
+      setOpen(false);
+    }
+  });
 
   return (
     <div className={hostClasses.join(' ')} ref={hostRef}>
@@ -81,7 +80,7 @@ const Selectbox: FC<SelectboxProps> = ({
           <SelectboxItemList
             items={items}
             value={value}
-            onChange={onItemChange}
+            onChange={onChange}
             renderLabel={renderItem}
           />
         )}
