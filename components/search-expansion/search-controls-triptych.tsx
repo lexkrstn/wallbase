@@ -9,6 +9,7 @@ import PageSizeSelectbox, { PageSizeType } from '../selectboxes/page-size-select
 import BoardFilter from '../triple-filters/board-filter';
 import PurityFilter from '../triple-filters/purity-filter';
 import styles from './search-controls-triptych.module.scss';
+import { BOARD_A, BOARD_G, BOARD_P, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
 
 export interface SearchControlsTriptychData {
   purity: number;
@@ -32,6 +33,8 @@ const SearchControlsTriptych: FC<SearchControlsTriptychProps> = () => {
   const [order, setOrder] = useState<OrderType>('desc');
   const [resolutionOp, setResolutionOp] = useState<ResolutionOperatorType>('gt');
   const [resolution, setResolution] = useState<ResolutionType>('');
+  const [boards, setBoards] = useState(BOARD_A | BOARD_G | BOARD_P);
+  const [purity, setPurity] = useState(PURITY_SFW | PURITY_SKETCHY);
 
   return (
     <div className={styles.triptych}>
@@ -39,7 +42,7 @@ const SearchControlsTriptych: FC<SearchControlsTriptychProps> = () => {
       <div className={styles.fold}>
         <div className={styles.field}>
           <div className={styles.label}>Category / Board</div>
-          <BoardFilter />
+          <BoardFilter value={boards} onChange={setBoards} />
         </div>
         <div className={styles.field}>
           <div className={styles.label}>Order by</div>
@@ -71,7 +74,7 @@ const SearchControlsTriptych: FC<SearchControlsTriptychProps> = () => {
       <div className={styles.fold}>
         <div className={styles.field}>
           <div className={styles.label}>Purity filter</div>
-          <PurityFilter />
+          <PurityFilter value={purity} onChange={setPurity} />
         </div>
         <div className={styles.field}>
           <div className={styles.label}>Thumbs per page</div>
