@@ -1,12 +1,17 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { FC } from "react";
 import styles from './search-options-help.module.scss';
 
 const SearchOptionsHelp: FC = () => (
   <div className={styles.host}>
     <div className={styles.desc}>
+      <div className={styles.icon}>
+        <FontAwesomeIcon icon={faExclamationCircle} />
+      </div>
       Search options below apply to the search input field.
       <br/>
-      Examples:
+      {'Examples: '}
       <span>jessica alba not:biel page:46</span>
       {' or '}
       <span>"ergo proxy" imgtype:png imgtype:gif</span>

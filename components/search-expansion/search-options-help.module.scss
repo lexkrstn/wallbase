@@ -39,6 +39,33 @@
     border-top: 1px solid #323232;
   }
 }
+.desc {
+  border: 1px solid #323232;
+  border-top: none;
+  font-size: 1.2rem;
+  line-height: 1.5em;
+  padding: 10px 10px 10px 50px;
+  border-radius: 0 0 4px 4px;
+  position: relative;
+  >span {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #6B99C9;;
+    font-style: italic;
+  }
+}
+.icon {
+  display: block;
+  height: 31px;
+  width: 31px;
+  position: absolute;
+  left: 10px;
+  top: 13px;
+  color: #8AB5C9;
+  > svg {
+    width: 100%;
+    height: 100%;
+  }
+}
 .key {
   font-style: italic;
   color: #8AB5C9;
