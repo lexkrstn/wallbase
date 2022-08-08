@@ -37,7 +37,7 @@ const SearchControlsTriptych: FC<SearchControlsTriptychProps> = () => {
   const [purity, setPurity] = useState(PURITY_SFW | PURITY_SKETCHY);
 
   return (
-    <div className={styles.triptych}>
+    <div className={styles.host}>
 
       <div className={styles.fold}>
         <div className={styles.field}>
