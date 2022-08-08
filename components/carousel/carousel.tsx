@@ -36,7 +36,7 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
       direction: 'left',
     }));
   }, [slides]);
-  
+
   const slideRight = useCallback(() => {
     setSlideState(({ activeIndex: index }) => ({
       activeIndex: index >= slides.length - 1 ? 0 : index + 1,
@@ -120,7 +120,7 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
       contentEl.removeEventListener('click', onClick, true);
     };
   }, []);
-  
+
   return (
     <div className={styles.host}>
       <ul className={styles.content} ref={contentRef}>
@@ -165,7 +165,7 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
         ))}
       </ul>
       {slides.slice(1).map(({ image }) => (
-        <link rel="preload" as="image" href={image} />
+        <link key={image} rel="preload" as="image" href={image} />
       ))}
     </div>
   );
