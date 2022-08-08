@@ -1,8 +1,11 @@
-import React, { ReactElement, useState } from 'react';
-import OrderBySelectbox from './selectboxes/OrderBySelectbox';
-import ResolutionSelectbox from './selectboxes/ResolutionSelectbox';
-import AspectSelectbox from './selectboxes/AspectSelectbox';
-import PageSizeSelectbox from './selectboxes/PageSizeSelectbox';
+import React, { FC, useCallback, useState } from 'react';
+import OrderBySelectbox, { OrderByType, OrderType } from './selectboxes/order-by-selectbox';
+import ResolutionSelectbox, {
+  ResolutionOperatorType,
+  ResolutionType,
+} from './selectboxes/resolution-selectbox';
+import AspectSelectbox, { AspectType } from './selectboxes/aspect-selectbox';
+import PageSizeSelectbox, { PageSizeType } from './selectboxes/page-size-selectbox';
 import BoardFilter from './triple-filters/board-filter';
 import PurityFilter from './triple-filters/purity-filter';
 import styles from './search-filters.module.scss';
@@ -11,8 +14,24 @@ interface SearchFiltersProps {
   shown: boolean;
 }
 
-export default function SearchFilters({ shown }: SearchFiltersProps): ReactElement {
+const SearchFilters: FC<SearchFiltersProps> = ({ shown }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [aspect, setAspect] = useState<AspectType>('');
+  const [pageSize, setPageSize] = useState<PageSizeType>(24);
+  const [orderBy, setOrderBy] = useState<OrderByType>('relevancy');
+  const [order, setOrder] = useState<OrderType>('desc');
+  const [resolutionOp, setResolutionOp] = useState<ResolutionOperatorType>('gt');
+  const [resolution, setResolution] = useState<ResolutionType>('');
+
+  const onAspectChange = useCallback((value: AspectType) => setAspect(value), []);
+  const onPageSizeChange = useCallback((value: PageSizeType) => setPageSize(value), []);
+  const onOrderByChange = useCallback((value: OrderByType) => setOrderBy(value), []);
+  const onOrderChange = useCallback((value: OrderType) => setOrder(value), []);
+  const onResolutionOpChange = useCallback((value: ResolutionOperatorType) => {
+    setResolutionOp(value);
+  }, []);
+  const onResolutionChange = useCallback((value: ResolutionType) => setResolution(value), []);
+
   return (
     <div className={styles.host + ' ' + (shown ? styles.hostShown : '')}>
       <ul className={styles.nav}>
@@ -33,18 +52,28 @@ export default function SearchFilters({ shown }: SearchFiltersProps): ReactEleme
             </div>
             <div className={styles.field}>
               <div className={styles.label}>Order by</div>
-              <OrderBySelectbox />
+              <OrderBySelectbox
+                onChange={onOrderByChange}
+                onOrderChange={onOrderChange}
+                value={orderBy}
+                order={order}
+              />
             </div>
           </div>
 
           <div className={styles.triptychFold}>
             <div className={styles.field}>
               <div className={styles.label}>Resolution</div>
-              <ResolutionSelectbox />
+              <ResolutionSelectbox
+                onChange={onResolutionChange}
+                onOperatorChange={onResolutionOpChange}
+                value={resolution}
+                operator={resolutionOp}
+              />
             </div>
             <div className={styles.field}>
               <div className={styles.label}>Aspect ratio</div>
-              <AspectSelectbox />
+              <AspectSelectbox onChange={onAspectChange} value={aspect} />
             </div>
           </div>
 
@@ -55,7 +84,7 @@ export default function SearchFilters({ shown }: SearchFiltersProps): ReactEleme
             </div>
             <div className={styles.field}>
               <div className={styles.label}>Thumbs per page</div>
-              <PageSizeSelectbox />
+              <PageSizeSelectbox onChange={onPageSizeChange} value={pageSize} />
             </div>
           </div>
         </div>
@@ -101,4 +130,8 @@ export default function SearchFilters({ shown }: SearchFiltersProps): ReactEleme
       </div>
     </div>
   );
-}
+};
+
+SearchFilters.displayName = 'SearchFilters';
+
+export default React.memo(SearchFilters);

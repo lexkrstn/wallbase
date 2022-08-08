@@ -1,0 +1,13 @@
+.host {
+  display: flex;
+}
+.label {
+  display: block;
+  flex: 0 1 auto;
+}
+.description {
+  display: block;
+  flex: 1 0 auto;
+  text-align: right;
+  color: #333;
+}

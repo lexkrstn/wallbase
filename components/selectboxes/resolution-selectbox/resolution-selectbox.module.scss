@@ -1,0 +1,16 @@
+.folds {
+  display: flex;
+}
+.fold {
+  flex: 0 0 auto;
+  width: 50%;
+  &:last-child {
+    border-left: 1px solid #323232;
+  }
+}
+.header {
+  color: #E88A1D;
+  font-size: 1.3rem;
+  padding: 5px;
+  text-align: center;
+}

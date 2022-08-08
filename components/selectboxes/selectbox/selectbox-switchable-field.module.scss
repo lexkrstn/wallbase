@@ -1,0 +1,39 @@
+.host {
+  display: flex;
+}
+.switch {
+  display: block;
+  flex: 0 1 auto;
+  order: 1;
+  @at-root .rtl & {
+    order: 3;
+    flex: 1 0 auto;
+  }
+  font-size: 1.5rem;
+  color: #666;
+  &:hover {
+    color: #BBB400;
+  }
+}
+.option {
+  display: none;
+  cursor: pointer;
+  &.active {
+    display: inline;
+  }
+}
+.separator {
+  display: block;
+  padding: 0 0.8em;
+  flex: 0 1 auto;
+  order: 2;
+}
+.label {
+  display: block;
+  flex: 1 0 auto;
+  order: 3;
+  @at-root .rtl & {
+    order: 1;
+    flex: 0 1 auto;
+  }
+}
