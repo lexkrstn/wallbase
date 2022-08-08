@@ -1,6 +1,5 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import '../components/selectboxes/selectbox.scss';
 import './globals.scss';
 
 function MyApp({ Component, pageProps }: AppProps) {

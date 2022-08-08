@@ -1,0 +1,68 @@
+.host {
+  margin: 0;
+  width: 100%;
+  border-spacing: 0;
+  @media (min-width: 780px) {
+    display: table;
+  }
+}
+.fold {
+  padding: 0 10px;
+  width: 320px;
+  margin: 0 auto;
+  @media (min-width: 780px) {
+    display: table-cell;
+    vertical-align: top;
+    padding: 10px 10px 30px 10px;
+    width: 33.3333333333333%;
+    border-left: 1px solid #323232;
+  }
+  &:first-child {
+    border-left: 0;
+  }
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+.field {
+  margin-top: 15px;
+  .selectbox {
+    max-width: 300px;
+  }
+  @media (min-width: 780px) {
+    .selectbox {
+      max-width: none;
+    }
+  }
+}
+.label {
+  color: #B5B5B5;
+  font-size: 1.4rem;
+  padding: 0 0 5px 5px;
+}
+.desc {
+  border: 1px solid #323232;
+  border-top: none;
+  font-size: 1.2rem;
+  line-height: 1.5em;
+  padding: 10px 10px 10px 50px;
+  border-radius: 0 0 4px 4px;
+  position: relative;
+  &:before {
+    content: '';
+    display: block;
+    background: url("../gui.png") no-repeat -247px -143px;
+    height: 31px;
+    width: 31px;
+    position: absolute;
+    left: 10px;
+    top: 13px;
+  }
+  >span {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    color: #6B99C9;;
+    font-style: italic;
+  }
+}

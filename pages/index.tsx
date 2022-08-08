@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Carousel from '../components/carousel';
 import HomeLayout from '../components/home-layout';
 import NavButtons from '../components/nav-buttons';
-import SearchFilters from '../components/search-filters';
+import SearchExpansion from '../components/search-expansion';
 import SearchLine from '../components/search-line';
 import SearchTabs, { SearchByType } from '../components/search-tabs';
 import Triptych from '../components/triptych';
@@ -78,7 +78,7 @@ const Home: NextPage<HomeProps> = ({ popularTags }: HomeProps) => {
           searchBy={searchBy}
           onShowFiltersClick={() => setFiltersShown(!filtersShown)}
         />
-        <SearchFilters shown={filtersShown} />
+        {filtersShown && <SearchExpansion />}
         <div className={styles.or}>
           <span><i className="fa fa-diamond"></i> or <i className="fa fa-diamond"></i></span>
         </div>
