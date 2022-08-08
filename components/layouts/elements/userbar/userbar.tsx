@@ -1,17 +1,12 @@
-import { GetServerSideProps } from "next";
-import React, { FC } from "react";
+import React, { FC } from 'react';
+import { faHandSpock } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
 import styles from './userbar.module.scss';
+import User from "../../../../interfaces/user";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-interface User {
-  login: string;
-}
-
-interface UserbarSSProps {
+interface UserbarProps {
   user?: User;
-}
-
-type UserbarProps = UserbarSSProps & {
   wide?: boolean;
 };
 
@@ -23,7 +18,12 @@ const Userbar: FC<UserbarProps> = ({ wide, user }) => {
     <div className={styles.userbar}>
       <div className={containerClasses.join(' ')}>
         <div className={styles.commands}>
-          <span className={styles.greating}>Hey {userName}!</span>
+          <span className={styles.greeting}>
+            <span className={styles.greetingIcon}>
+              <FontAwesomeIcon icon={faHandSpock} />
+            </span>
+            Hey {userName}!
+          </span>
           {!user && (
             <>
               <Link href="/signin">
@@ -46,16 +46,10 @@ const Userbar: FC<UserbarProps> = ({ wide, user }) => {
   );
 };
 
+Userbar.displayName = 'Userbar';
+
 Userbar.defaultProps = {
   wide: false,
 };
 
-export default Userbar;
-
-export const getServerSideProps: GetServerSideProps<UserbarSSProps> = async () => ({
-  props: {
-    user: {
-      login: 'User',
-    },
-  },
-});
+export default React.memo(Userbar);

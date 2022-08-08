@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders, faSearch, faPizzaSlice } from '@fortawesome/free-solid-svg-icons';
 import styles from './search-line.module.scss';
@@ -20,7 +20,7 @@ const SearchLine: FC<SearchLineProps> = ({ filtersShown, searchBy, onShowFilters
   const colorLineRef = useRef<HTMLDivElement>(null);
   const [colorPickerShown, setColorPickerShown] = useState(false);
   const [color, setColor] = useState<Rgb>({ r: 255, g: 255, b: 255 });
-  
+
   const showColorPicker = useCallback(() => setColorPickerShown(true), []);
 
   const handleColorChange = useCallback((color: Rgb) => {
@@ -43,7 +43,7 @@ const SearchLine: FC<SearchLineProps> = ({ filtersShown, searchBy, onShowFilters
       document.removeEventListener('click', documentClickHandler);
     };
   }, [colorPickerShown, setColorPickerShown]);
-  
+
   return (
     <div className={`${styles.host} ${styles.hostMain}`}>
       <form action="/walls">

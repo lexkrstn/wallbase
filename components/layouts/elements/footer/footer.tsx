@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
+import React, { FC } from 'react';
 import styles from './footer.module.scss';
 
-export default function Footer(): ReactElement {
+const Footer: FC = () => {
   const siteName = 'Wallbase';
   return (
     <footer className={styles.footer}>
@@ -40,4 +40,8 @@ export default function Footer(): ReactElement {
       </div>
     </footer>
   );
-}
+};
+
+Footer.displayName = 'Footer';
+
+export default React.memo(Footer);
