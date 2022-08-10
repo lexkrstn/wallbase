@@ -19,12 +19,20 @@ const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) 
       <input type="hidden" name="purity" value={value} />
       <ul>
         <li className={value & PURITY_SFW ? styles.selected : ''}>
-          <Tooltip message="Clean wallpapers" position="bottom">
+          <Tooltip
+            message="Clean wallpapers"
+            position="bottom"
+            offset={15}
+          >
             <button onClick={onClick} data-purity={PURITY_SFW}>SFW</button>
           </Tooltip>
         </li>
         <li className={value & PURITY_SKETCHY ? styles.selected : ''}>
-          <Tooltip message="Wallpapers with soft/erotic poses, blood, etc." position="bottom">
+          <Tooltip
+            message="Wallpapers with soft/erotic poses, blood, etc."
+            position="bottom"
+            offset={15}
+          >
             <button onClick={onClick} data-purity={PURITY_SKETCHY}>SKETCHY</button>
           </Tooltip>
         </li>
@@ -32,6 +40,7 @@ const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) 
           <Tooltip
             message="Wallpapers with visible boobs, testicles/vagina, gore, etc"
             position="bottom"
+            offset={15}
           >
             <button
               onClick={nsfwDisabled ? undefined : onClick}

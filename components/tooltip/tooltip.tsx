@@ -49,7 +49,7 @@ const Tooltip: FC<TooltipProps> = ({
     style.left = `${left}px`;
   });
 
-  
+
   const messageClasses = [styles.message, styles[position as string]]
   if (shown) {
     messageClasses.push(styles.shown);
