@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, ReactElement, useCallback, useState } from 'react';
+import React, { FC, MouseEvent, useCallback } from 'react';
 import { PURITY_NSFW, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
 import Tooltip from '../tooltip';
 import styles from './purity-filter.module.scss';

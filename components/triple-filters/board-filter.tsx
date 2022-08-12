@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useCallback, useMemo, useState } from 'react';
+import React, { FC, MouseEvent, useCallback } from 'react';
 import { BOARD_A, BOARD_G, BOARD_P } from '../../interfaces/constants';
 import Tooltip from '../tooltip';
 import styles from './board-filter.module.scss';
