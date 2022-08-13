@@ -1,4 +1,9 @@
-import FeaturedWallpaperSlide from "../interfaces/featured-wallpaper-slide";
+import path from 'path';
+import FeaturedWallpaperSlide from '../interfaces/featured-wallpaper-slide';
+
+const PUBLIC_PATH = path.resolve(__dirname, '..', 'public');
+export const WALLPAPERS_PATH = path.join(PUBLIC_PATH, 'wallpapers');
+export const THUMBNAILS_PATH = path.join(PUBLIC_PATH, 'thumbnails');
 
 export async function getFeaturedWallpaperSlides(): Promise<FeaturedWallpaperSlide[]> {
   return [

@@ -8,6 +8,11 @@ export const WEEK = DAY * 7;
 export const MONTH = DAY * 30;
 export const YEAR = DAY * 365;
 
+export const KB = 1024;
+export const MB = 1024 * KB;
+export const GB = 1024 * MB;
+export const TB = 1024 * GB;
+
 /**
  * Returns the plural of an English word.
  */
@@ -137,6 +142,20 @@ export function unitAgo(date: Date | number, format: 'abbr' | 'long' = 'abbr'): 
 
 export function formatK(n: number, fraction: number = 1): string {
   return n > 1000 ? (n / 1000).toFixed(fraction) + 'K' : n + '';
+}
+
+export function formatFileSize(n: number, fraction: number = 1): string {
+  const TOLERANCE = 0.8;
+  const DESCRIPTORS = [
+    { size: TB, unit: 'Tb' },
+    { size: GB, unit: 'Gb' },
+    { size: MB, unit: 'Mb' },
+    { size: KB, unit: 'Kb' },
+    { size: 0, unit: plural('byte', n) },
+  ];
+  const { size, unit } = DESCRIPTORS.find(d => Math.abs(n) >= d.size * TOLERANCE)!;
+  if (size === 0) return `${n} ${unit}`;
+  return `${(n / size).toFixed(fraction)} ${unit}`;
 }
 
 function hours24to12(hrs: number): number {

@@ -190,3 +190,18 @@ export async function ensureRootUserCreated(): Promise<boolean> {
   });
   return false;
 }
+
+/**
+ * Must be called when user interacts the backend in order to update
+ * his/her last visit stats.
+ */
+export async function addUserVisit(id: string, ip: string): Promise<boolean> {
+  const affected = await knex('users')
+    .update({
+      visited_at: knex.raw('NOW()'),
+      last_ip: ip,
+    })
+    .where({ id })
+    .returning('id');
+  return affected.length > 0;
+}

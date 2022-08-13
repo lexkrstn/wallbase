@@ -12,6 +12,7 @@ import Triptych from '../components/triptych';
 import FeaturedWallpaperSlide from '../interfaces/featured-wallpaper-slide';
 import { TagWithCategory } from '../interfaces/tag';
 import { useUser } from '../lib/hooks/useUser';
+import { getStatistics, Statistics } from '../lib/stats';
 import { getPopularTags } from '../lib/tags';
 import { getFeaturedWallpaperSlides } from '../lib/wallpapers';
 import styles from './index.module.scss';
@@ -20,9 +21,12 @@ import logoImage from './logo.svg';
 interface IndexProps {
   popularTags: TagWithCategory[] | null;
   featuredWallpaperSlides: FeaturedWallpaperSlide[] | null;
+  stats: Statistics;
 }
 
-const Index: NextPage<IndexProps> = ({ popularTags, featuredWallpaperSlides }) => {
+const Index: NextPage<IndexProps> = ({
+  popularTags, featuredWallpaperSlides, stats,
+}) => {
   const { user, loading: userLoading } = useUser();
   const [filtersShown, setFiltersShown] = useState(false);
   const [searchBy, setSearchBy] = useState<SearchByType>('keyword');
@@ -49,7 +53,7 @@ const Index: NextPage<IndexProps> = ({ popularTags, featuredWallpaperSlides }) =
         </div>
         <NavButtons />
         {featuredWallpaperSlides && <Carousel slides={featuredWallpaperSlides} />}
-        <Triptych popularTags={popularTags} />
+        <Triptych popularTags={popularTags} stats={stats} />
       </div>
     </IndexLayout>
   )
@@ -65,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
     props: {
       popularTags: JSON.parse(JSON.stringify(await getPopularTags())),
       featuredWallpaperSlides: await getFeaturedWallpaperSlides(),
+      stats: await getStatistics(),
     },
   };
 };
