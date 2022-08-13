@@ -1,6 +1,6 @@
 import React, { FC, MouseEvent, useCallback, useState } from 'react';
+import Tooltip from '../tooltip';
 import styles from './search-tabs.module.scss';
-import Tooltip from './tooltip';
 
 export type SearchByType = 'keyword' | 'color';
 

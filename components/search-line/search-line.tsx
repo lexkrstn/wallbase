@@ -3,9 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders, faSearch, faPizzaSlice } from '@fortawesome/free-solid-svg-icons';
 import styles from './search-line.module.scss';
 import Link from 'next/link';
-import { hasAncestorNode } from '../helpers/hasAncestorNode';
-import ColorPicker, { Rgb } from './color-picker';
-import { rgbToHex } from '../helpers/rgbToHex';
+import { hasAncestorNode } from '../../helpers/hasAncestorNode';
+import { rgbToHex } from '../../helpers/rgbToHex';
+import ColorPicker, { Rgb } from '../color-picker';
 
 export type SearchByType = 'keyword' | 'color';
 
