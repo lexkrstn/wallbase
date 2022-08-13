@@ -1,15 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { ReactElement } from 'react';
-import Tag from '../interfaces/tag';
+import { TagWithCategory } from '../interfaces/tag';
 import Button from './buttons/button';
-import PopularTags from './popular-tags';
+import PopularTagList from './popular-tag-list';
 import Stats from './stats';
 import styles from './triptych.module.scss';
 import patreonImage from './patreon-button.png';
 
 interface TriptychProps {
-  popularTags: Tag[] | null,
+  popularTags: TagWithCategory[] | null,
 }
 
 export default function Triptych({ popularTags }: TriptychProps): ReactElement {
@@ -28,7 +28,7 @@ export default function Triptych({ popularTags }: TriptychProps): ReactElement {
           <div className={styles.spinner}></div>
         )}
         {!!popularTags && (
-          <PopularTags tags={popularTags} />
+          <PopularTagList tags={popularTags} />
         )}
       </section>
 

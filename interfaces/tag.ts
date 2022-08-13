@@ -1,9 +1,19 @@
 import Category from "./category";
+import { Purity } from "./purity";
 
 export default interface Tag {
-  id: number;
+  id: string;
   name: string;
-  purity: number;
-  count: number;
+  alias: string;
+  createdAt: Date;
+  creatorId: string;
+  categoryId: string;
+  description: string;
+  wallpaperCount: number;
+  favCount: number;
+  purity: Purity;
+}
+
+export interface TagWithCategory extends Tag {
   category: Category;
 }

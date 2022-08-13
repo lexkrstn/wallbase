@@ -1,5 +1,9 @@
 export default interface Category {
-  id: number;
+  id: string;
   name: string;
-  count: number;
+  createdAt: Date;
+  creatorId: string;
+  parentId: string | null;
+  tagCount: number;
+  description: string;
 }

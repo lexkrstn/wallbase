@@ -1,8 +1,3 @@
-.host {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
 .item {
   font-size: 1.6rem;
   display: block;
@@ -33,7 +28,8 @@
 .search {
   white-space: nowrap;
   vertical-align: middle;
-  .fa {
+  > svg {
+    height: 0.8em;
     margin-right: 5px;
     color: #B5B5B5;
   }
@@ -60,4 +56,22 @@
   text-overflow: ellipsis;
   line-height: 22px;
   text-align: right;
+}
+.sfw {
+  color: #94C688;
+  &:hover {
+    color: #fff;
+  }
+}
+.sketchy {
+  color: #CDC200;
+  &:hover {
+    color: #fff;
+  }
+}
+.nsfw {
+  color: #db4f4f;
+  &:hover {
+    color: #fff;
+  }
 }

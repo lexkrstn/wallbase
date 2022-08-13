@@ -10,7 +10,7 @@ import SearchLine from '../components/search-line';
 import SearchTabs, { SearchByType } from '../components/search-tabs';
 import Triptych from '../components/triptych';
 import FeaturedWallpaperSlide from '../interfaces/featured-wallpaper-slide';
-import Tag from '../interfaces/tag';
+import { TagWithCategory } from '../interfaces/tag';
 import { useUser } from '../lib/hooks/useUser';
 import { getPopularTags } from '../lib/tags';
 import { getFeaturedWallpaperSlides } from '../lib/wallpapers';
@@ -18,7 +18,7 @@ import styles from './index.module.scss';
 import logoImage from './logo.svg';
 
 interface IndexProps {
-  popularTags: Tag[] | null;
+  popularTags: TagWithCategory[] | null;
   featuredWallpaperSlides: FeaturedWallpaperSlide[] | null;
 }
 
@@ -63,7 +63,7 @@ Index.defaultProps = {
 export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
   return {
     props: {
-      popularTags: await getPopularTags(),
+      popularTags: JSON.parse(JSON.stringify(await getPopularTags())),
       featuredWallpaperSlides: await getFeaturedWallpaperSlides(),
     },
   };

@@ -80,27 +80,3 @@ code {
 .lightgray {
   color: lightgray !important;
 }
-a.sfw {
-  &, &:visited, &:link {
-    color: #94C688;
-  }
-  &:hover {
-    color: #fff;
-  }
-}
-a.sketchy {
-  &, &:visited, &:link {
-    color: #CDC200;
-  }
-  &:hover {
-    color: #fff;
-  }
-}
-a.nsfw {
-  &, &:visited, &:link {
-    color: #db4f4f;
-  }
-  &:hover {
-    color: #fff;
-  }
-}
