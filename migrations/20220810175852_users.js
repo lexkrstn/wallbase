@@ -5,6 +5,7 @@
 exports.up = async function(knex) {
   await knex.schema.createTable('users', table => {
     table.bigIncrements('id').unsigned().notNullable().primary();
+    table.string('login', 255).notNullable().unique();
     table.string('email', 255).notNullable().unique();
     table.boolean('activated').notNullable().defaultTo(false);
     table.string('password_hash', 255).notNullable();

@@ -12,6 +12,7 @@ const SearchExpansion: FC = () => {
   return (
     <div className={styles.host}>
       <Tabs
+        small
         labels={TAB_LABELS}
         active={activeTab}
         onChange={setActiveTab}

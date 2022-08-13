@@ -22,11 +22,8 @@ body, button {
   font-family: Calibri,tahoma,verdana,sans,"Lucida Sans Unicode","Lucida Grande",Arial,geneva,sans-serif;
 }
 a {
-  &:link, &:visited, &:active {
-    //color: #3DB015;
-    color: #94C688;
-    text-decoration: none;
-  }
+  color: #94C688;
+  text-decoration: none;
   &:hover {
     //color: #B01564;
     color: #fff;

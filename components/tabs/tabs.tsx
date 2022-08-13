@@ -4,15 +4,20 @@ import styles from './tabs.module.scss';
 interface TabsProps {
   labels: string[];
   active: number;
+  small?: boolean;
   onChange: (index: number) => void;
 }
 
-const Tabs: FC<TabsProps> = ({ labels, active, onChange }) => {
+const Tabs: FC<TabsProps> = ({ labels, active, small, onChange }) => {
+  const classes = [styles.host];
+  if (small) classes.push(styles.small);
+
   const onButtonClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     onChange(parseInt(event.currentTarget.dataset.index ?? '0', 10));
   }, []);
+
   return (
-    <ul className={styles.host}>
+    <ul className={classes.join(' ')}>
       {labels.map((label, i) => (
         <li
           key={label}

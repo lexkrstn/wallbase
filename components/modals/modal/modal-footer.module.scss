@@ -1,0 +1,23 @@
+.footer {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+.left {
+  justify-content: flex-start;
+}
+.center {
+  justify-content: center;
+}
+.spaceAround {
+  justify-content: space-around;
+  justify-content: space-evenly;
+}
+.right {
+  justify-content: flex-end;
+}
+.left, .center, .right {
+  > button:not(:first-child) {
+    margin-left: 15px;
+  }
+}

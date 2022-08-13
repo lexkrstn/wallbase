@@ -1,8 +1,10 @@
-const dotenv = require('dotenv');
-const path = require('path');
+import dotenv from 'dotenv';
+import path from 'path';
+
+const ROOT_DIR = process.env.ROOT || __dirname;
 
 const result = dotenv.config({
-  path: path.resolve(__dirname, '.env'),
+  path: path.resolve(ROOT_DIR, '.env'),
 });
 
 if (result.error) {
@@ -15,20 +17,20 @@ const commonConfig = {
   client: 'pg',
   connection: {
     host:     process.env.DB_HOST,
-    port:     parseInt(process.env.DB_PORT, 10),
+    port:     parseInt(process.env.DB_PORT!, 10),
     database: process.env.DB_NAME,
     user:     process.env.DB_USER,
     password: process.env.DB_PASSWORD,
   },
   migrations: {
-    directory: path.join(__dirname, 'migrations'),
+    directory: path.join(ROOT_DIR, 'migrations'),
   },
   seeds: {
-    directory: path.join(__dirname, 'seeds'),
+    directory: path.join(ROOT_DIR, 'seeds'),
   },
 };
 
-module.exports = {
+export default {
   development: commonConfig,
   testing: {
     ...commonConfig,

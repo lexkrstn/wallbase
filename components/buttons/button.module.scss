@@ -1,0 +1,95 @@
+.button {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border: 0;
+  border-radius: 2px;
+  &, &:hover {
+    text-decoration: none;
+  }
+  &:focus, &:active {
+    outline: 1px dotted #333;
+  }
+}
+.xsmall {
+  padding: 2px 5px;
+  font-size: 12px;
+}
+.small {
+  padding: 5px 10px;
+}
+.dark {
+  color: #838383;
+  background: #404040;
+  background-color: transparent;
+  background-image: linear-gradient(to bottom, #404040, #2a2a2a);
+  box-shadow: #111111 0 0 5px;
+  font-weight: normal;
+  &:hover, &:active {
+    color: #161616;
+    background: #cfcfcf;
+    background-image: linear-gradient(to bottom, #cfcfcf, #9c9c9c);
+  }
+  &:focus {
+    outline: none;
+  }
+}
+.rounded {
+  border-radius: 5px;
+}
+
+@mixin btn-style($color) {
+  $bg: #ececec;
+  background: $bg;
+	color: $color;
+  transition: background-color 100ms linear;
+  &:hover {
+    background: darken($bg, 10%);
+  }
+	&:disabled, &.disabled {
+		opacity: 0.7;
+    cursor: progress;
+	}
+}
+.regular {
+	@include btn-style(#333);
+}
+.danger {
+	@include btn-style(#90510e);
+}
+.success {
+	@include btn-style(#449d44);
+}
+.primary {
+	@include btn-style(#0e4d82);
+}
+
+.iconPrepend, .iconAppend {
+  display: inline-block;
+  height: 16px;
+  vertical-align: middle;
+}
+.iconPrepend {
+  margin-right: 0.5em;
+}
+.iconAppend {
+  margin-left: 0.5em;
+}
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  width: 16px;
+  height: 16px;
+  animation: rotate 1s linear 0s infinite normal forwards;
+}

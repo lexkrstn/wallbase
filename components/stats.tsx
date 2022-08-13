@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import Button from './button';
+import Button from './buttons/button';
 import styles from './stats.module.scss';
 
 export default function Stats(): ReactElement {
@@ -29,7 +29,7 @@ export default function Stats(): ReactElement {
         Users registered last 24h: <span className="white">272</span>
       </div>
       <div className={styles.rowBtn}>
-        <Button rounded sm href="/users">show users</Button>
+        <Button rounded xsmall dark href="/users">show users</Button>
       </div>
 
       <div className={styles.rowDark}>

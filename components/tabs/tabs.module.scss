@@ -24,12 +24,17 @@
     color: #B0B0B0;
     display: block;
     margin: 0;
-    font-size: 1.2rem;
-    padding: 7px 15px;
     border-radius: 4px 4px 0 0;
     border: 0;
     background: transparent;
     cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    @at-root .small & {
+      font-size: 12px;
+      padding: 7px 11px;
+    }
     &:hover {
       color: #E88319;
     }
@@ -40,7 +45,5 @@
     border: 1px solid #323232;
     border-bottom: none;
     color: #E88319;
-    font-size: 1.3rem;
-    padding: 7px 11px;
   }
 }

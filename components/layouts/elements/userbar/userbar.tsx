@@ -1,19 +1,28 @@
-import React, { FC } from 'react';
-import { faHandSpock } from '@fortawesome/free-solid-svg-icons';
-import Link from 'next/link';
+import React, { FC, MouseEvent, useCallback, useState } from 'react';
+import { faHandSpock, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from './userbar.module.scss';
 import User from "../../../../interfaces/user";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AuthModal from '../../../modals/auth-modal/auth-modal';
+import { useLogout } from '../../../../lib/hooks/useLogout';
 
 interface UserbarProps {
-  user?: User;
+  user: User | null;
+  userLoading: boolean;
   wide?: boolean;
 };
 
-const Userbar: FC<UserbarProps> = ({ wide, user }) => {
+const Userbar: FC<UserbarProps> = ({ wide, user, userLoading }) => {
   const userName = user ? user.login : 'Anonymous';
   const containerClasses = [styles.container];
   if (wide) containerClasses.push(styles.wide);
+
+  const { logout, loading: userLoggingOut } = useLogout();
+
+  const [authModalShown, setAuthModalShown] = useState(false);
+  const closeAuthModal = useCallback(() => setAuthModalShown(false), []);
+  const openAuthModal = useCallback(() => setAuthModalShown(true), []);
+
   return (
     <div className={styles.userbar}>
       <div className={containerClasses.join(' ')}>
@@ -25,23 +34,19 @@ const Userbar: FC<UserbarProps> = ({ wide, user }) => {
             Hey {userName}!
           </span>
           {!user && (
-            <>
-              <Link href="/signin">
-                <a className={styles.link}>Login</a>
-              </Link>
-              <Link href="/signup">
-                <a className={styles.link}>Register</a>
-              </Link>
-            </>
+            <button type="button" className={styles.link} onClick={openAuthModal}>Login</button>
           )}
           {!!user && (
-            <>
-              <a className={styles.link} href="#">Logout</a>
-              <span className={styles.loading}></span>
-            </>
+            <button type="button" className={styles.link} onClick={logout}>Logout</button>
+          )}
+          {(userLoading || userLoggingOut) && (
+            <span className={styles.loading}>
+              <FontAwesomeIcon className={styles.spinner} icon={faSpinner} />
+            </span>
           )}
         </div>
       </div>
+      <AuthModal shown={authModalShown} onClose={closeAuthModal} />
     </div>
   );
 };

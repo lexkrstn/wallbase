@@ -1,7 +1,11 @@
-import knex, { Knex } from 'knex';
-import knexfile from '../knexfile';
+import knex from 'knex';
+import knexfile from '../knexfile.module';
 
 const env = process.env.NODE_ENV || 'development';
-const configOptions = (knexfile as any)[env] as Knex.Config;
+const envMap: Record<typeof env[number], keyof typeof knexfile> = {
+  development: 'development',
+  production: 'production',
+  test: 'testing',
+};
 
-export default knex(configOptions);
+export default knex(knexfile[envMap[env]]);

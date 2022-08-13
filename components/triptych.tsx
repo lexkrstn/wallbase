@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { ReactElement } from 'react';
 import Tag from '../interfaces/tag';
-import Button from './button';
+import Button from './buttons/button';
 import PopularTags from './popular-tags';
 import Stats from './stats';
 import styles from './triptych.module.scss';
@@ -21,7 +21,7 @@ export default function Triptych({ popularTags }: TriptychProps): ReactElement {
           <h2 className={styles.title}>Popular tags</h2>
           <span className={styles.desc}>(this week)</span>
           <span className={styles.headerRightAddon}>
-            <Button sm rounded href="/tags">more tags</Button>
+            <Button xsmall dark rounded href="/tags">more tags</Button>
           </span>
         </header>
         {!popularTags && (
@@ -48,7 +48,7 @@ export default function Triptych({ popularTags }: TriptychProps): ReactElement {
         </header>
         <Stats />
       </section>
-  
+
       <section className={styles.fold}>
         <header className={styles.header}>
           <h2 className={styles.title}>Donations</h2>

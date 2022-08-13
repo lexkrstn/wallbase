@@ -10,6 +10,7 @@
 .container {
   margin: 0 auto;
   max-width: 980px;
+  padding: 0 15px;
   &.wide {
     margin-left: 0;
     margin-right: 0;
@@ -26,6 +27,7 @@
 }
 .greeting {
   display: none;
+  margin-right: 1em;
   @media (min-width: 600px) {
     display: inline-block;
   }
@@ -45,9 +47,16 @@
   }
 }
 .link {
-  border-left: 1px solid #1E1E1E;
   display: inline-block;
-  &, &:link, &:visited, &:active {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid #1E1E1E;
+  background: transparent;
+  outline: none;
+  font-size: inherit;
+  cursor: pointer;
+  &, &:visited {
     color: #686868;
   }
   &:hover {
@@ -56,8 +65,17 @@
 }
 .loading {
   display: inline-block;
-  width: 50px;
+  margin: 0 15px 0 0;
   height: 30px;
+  line-height: 30px;
   position: relative;
   vertical-align: middle;
+}
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  height: 16px;
+  animation: rotate 1s linear 0s infinite normal forwards;
 }

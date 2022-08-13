@@ -11,6 +11,7 @@ import SearchTabs, { SearchByType } from '../components/search-tabs';
 import Triptych from '../components/triptych';
 import FeaturedWallpaperSlide from '../interfaces/featured-wallpaper-slide';
 import Tag from '../interfaces/tag';
+import { useUser } from '../lib/hooks/useUser';
 import { getPopularTags } from '../lib/tags';
 import { getFeaturedWallpaperSlides } from '../lib/wallpapers';
 import styles from './index.module.scss';
@@ -22,10 +23,11 @@ interface IndexProps {
 }
 
 const Index: NextPage<IndexProps> = ({ popularTags, featuredWallpaperSlides }) => {
+  const { user, loading: userLoading } = useUser();
   const [filtersShown, setFiltersShown] = useState(false);
   const [searchBy, setSearchBy] = useState<SearchByType>('keyword');
   return (
-    <IndexLayout>
+    <IndexLayout user={user} userLoading={userLoading}>
       <div className={styles.home}>
         <div className={styles.logo}>
           <Link href="/">
