@@ -1,4 +1,4 @@
-import React, { FC, MouseEvent, useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { faHandSpock, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from './userbar.module.scss';
