@@ -9,6 +9,7 @@ interface TextFieldProps {
   placeholder?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   password?: boolean;
+  disabled?: boolean;
 }
 
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>((

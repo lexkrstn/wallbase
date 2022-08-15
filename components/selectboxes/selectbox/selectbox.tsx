@@ -3,11 +3,11 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import React, {
   FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState,
 } from 'react';
+import { usePrevious } from '../../../lib/hooks/usePrevious';
 import { hasAncestorNode } from '../../../helpers/hasAncestorNode';
 import styles from './selectbox.module.scss';
 import { SelectboxItemDto } from './interfaces';
 import SelectboxItemList from './selectbox-item-list';
-import { usePrevious } from '../../../helpers/usePrevious';
 
 export interface SelectboxProps {
   className?: string;

@@ -13,10 +13,6 @@ interface ButtonProps {
   xsmall?: boolean;
   submit?: boolean;
   dark?: boolean;
-  regular?: boolean;
-  primary?: boolean;
-  danger?: boolean;
-  success?: boolean;
   className?: string;
   iconPrepend?: IconProp;
   iconAppend?: IconProp;
@@ -26,18 +22,13 @@ interface ButtonProps {
 }
 
 const Button: FC<ButtonProps> = ({
-  className, children, rounded, small, xsmall, dark, regular, primary, danger,
-  success, submit, href, onClick, iconAppend, iconPrepend, loading, disabled,
+  className, children, rounded, small, xsmall, dark,
+  submit, href, onClick, iconAppend, iconPrepend, loading, disabled,
 }) => {
-  const classes = [styles.button];
+  const classes = [styles.button, dark ? styles.dark : styles.light];
   if (rounded) classes.push(styles.rounded);
   if (small) classes.push(styles.small);
   if (xsmall) classes.push(styles.xsmall);
-  if (dark) classes.push(styles.dark);
-  if (regular) classes.push(styles.regular);
-  if (primary) classes.push(styles.primary);
-  if (danger) classes.push(styles.danger);
-  if (success) classes.push(styles.success);
   if (disabled) classes.push(styles.disabled);
   if (className) classes.push(className);
   const inner = (

@@ -1,0 +1,124 @@
+%panel {
+	margin: 30px auto;
+	background: #1A1A1A;
+	border: 1px solid #282828;
+  border-radius: 4px;
+	vertical-align: top;
+}
+%panel__icon {
+	display: block;
+	float: left;
+	color: #c2c2c2;
+	font-size: 30px;
+	height: 45px;
+	width: 40px;
+	text-align: center;
+	margin-right: 10px;
+  > svg {
+    height: 1em;
+  }
+}
+%panel__header {
+	position: relative;
+	background: #0F0F0F;
+	background-image: linear-gradient(to bottom, #171717, #101010);
+	border-bottom: 1px solid #282828;
+	padding: 10px 12px;
+	text-align: left;
+	&:after {
+		content: '';
+		display: table;
+		clear: both;
+	}
+}
+%panel__caption {
+	border: 0;
+	margin: 0;
+	padding: 0;
+	color: #E29C32;
+	font-size: 17px;
+	font-weight: inherit;
+}
+
+// wallpaper upload section
+
+$upload-sidebar-width: 280px;
+
+.host {
+	@extend %panel;
+}
+.header {
+	@extend %panel__header;
+}
+.icon {
+	@extend %panel__icon;
+}
+.title {
+	@extend %panel__caption;
+}
+.attention {
+	font-size: 14px;
+  margin-top: 5px;
+}
+.body {
+	display: table;
+	width: 100%;
+}
+.sidebar {
+	width: $upload-sidebar-width;
+	background-color: #191919;
+	float: left;
+	.board-filter {
+		max-width: none;
+	}
+}
+.group {
+	margin: 5px 10px;
+}
+.label {
+	margin-bottom: 5px;
+}
+.content {
+	margin-left: 0px;
+	transition: margin-left .1s ease-out;
+  @at-root .sidebar + & {
+    margin-left: $upload-sidebar-width;
+  }
+}
+.footer {
+	text-align: center;
+	padding: 10px;
+	border-top: 1px solid #282828;
+	background-color: #191919;
+	&:after {
+		content: '';
+		display: table;
+		clear: both;
+	}
+}
+.continue {
+	float: right;
+}
+.btnClear {
+	float: left;
+}
+.btnUpload {
+	float: right;
+}
+.btnContinue {
+  margin-left: 5px;
+}
+.btnCancel {
+	float: left;
+}
+.btnFinish {
+	float: right;
+}
+.thumbnails {
+  position: relative;
+  z-index: 2;
+  margin: 10px;
+}
+.thumbnail {
+  box-shadow: 5px 5px 10px rgba(0,0,0,.5);
+}

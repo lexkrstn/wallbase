@@ -7,12 +7,16 @@ interface PurityFilterProps {
   nsfwDisabled?: boolean;
   onChange: (bitmask: number) => void;
   value: number;
+  single?: boolean;
+  disabled?: boolean;
 }
 
-const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) => {
+const PurityFilter: FC<PurityFilterProps> = ({
+  onChange, nsfwDisabled, value, single, disabled,
+}) => {
   const onClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     const purity = parseInt(event.currentTarget.dataset.purity ?? '0', 10);
-    onChange(value ^ purity);
+    onChange(single ? purity : value ^ purity);
   }, [value]);
   return (
     <div className={styles.host}>
@@ -24,7 +28,13 @@ const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) 
             position="bottom"
             offset={15}
           >
-            <button onClick={onClick} data-purity={PURITY_SFW}>SFW</button>
+            <button
+              onClick={onClick}
+              data-purity={PURITY_SFW}
+              disabled={disabled}
+            >
+              SFW
+            </button>
           </Tooltip>
         </li>
         <li className={value & PURITY_SKETCHY ? styles.selected : ''}>
@@ -33,7 +43,13 @@ const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) 
             position="bottom"
             offset={15}
           >
-            <button onClick={onClick} data-purity={PURITY_SKETCHY}>SKETCHY</button>
+            <button
+              onClick={onClick}
+              data-purity={PURITY_SKETCHY}
+              disabled={disabled}
+            >
+              SKETCHY
+            </button>
           </Tooltip>
         </li>
         <li className={value & PURITY_NSFW ? styles.selected : ''}>
@@ -44,7 +60,7 @@ const PurityFilter: FC<PurityFilterProps> = ({ onChange, nsfwDisabled, value }) 
           >
             <button
               onClick={nsfwDisabled ? undefined : onClick}
-              disabled={nsfwDisabled}
+              disabled={nsfwDisabled || disabled}
               data-purity={PURITY_NSFW}
             >
               NSFW

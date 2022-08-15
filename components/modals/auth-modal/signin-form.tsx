@@ -1,4 +1,4 @@
-import { faSignIn, faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { faSignIn, faExclamationCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, useCallback } from 'react';
 import { useSignIn } from '../../../lib/hooks/useSignIn';
 import Alert from '../../alert';
@@ -46,14 +46,13 @@ const SignInForm: FC<SignInFormProps> = ({ onCancel, onLoggedIn }) => {
       <ModalFooter spaceAround>
         <Button
           submit
-          regular
           iconPrepend={faSignIn}
           loading={loading}
           disabled={loading}
         >
           Log in
         </Button>
-        <Button danger onClick={handleCancelClick}>
+        <Button onClick={handleCancelClick} iconPrepend={faTimes} dark>
           Cancel
         </Button>
       </ModalFooter>

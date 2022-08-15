@@ -1,6 +1,7 @@
 %triple-filter {
   max-width: 180px;
   min-width: 100px;
+  user-select: none;
   >ul {
     display: block;
     list-style: none;
@@ -55,7 +56,8 @@
           color: #666;
         }
         &:disabled {
-          cursor: default;
+          cursor: not-allowed;
+          pointer-events: none;
         }
       }
     } // li

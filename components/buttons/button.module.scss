@@ -19,6 +19,10 @@
   &:focus, &:active {
     outline: 1px dotted #333;
   }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+  }
 }
 .xsmall {
   padding: 2px 5px;
@@ -30,17 +34,27 @@
 .dark {
   color: #838383;
   background: #404040;
-  background-color: transparent;
   background-image: linear-gradient(to bottom, #404040, #2a2a2a);
   box-shadow: #111111 0 0 5px;
   font-weight: normal;
-  &:hover, &:active {
+  outline: none;
+  &:hover:not(:disabled), &:active:not(:disabled) {
     color: #161616;
     background: #cfcfcf;
     background-image: linear-gradient(to bottom, #cfcfcf, #9c9c9c);
   }
-  &:focus {
-    outline: none;
+}
+.light {
+  color: #7B0000;
+  background: #cbcbcb;
+  background-image: linear-gradient(to bottom, #cbcbcb, #848484);
+  box-shadow: #111111 0 0 5px;
+  font-weight: normal;
+  outline: none;
+  &:hover:not(:disabled), &:active:not(:disabled) {
+    color: #161616;
+    background: #848484;
+    background-image: linear-gradient(to bottom, #848484, #cbcbcb);
   }
 }
 .rounded {
@@ -48,7 +62,7 @@
 }
 
 @mixin btn-style($color) {
-  $bg: #ececec;
+  $bg: #555353;
   background: $bg;
 	color: $color;
   transition: background-color 100ms linear;
@@ -56,18 +70,19 @@
     background: darken($bg, 10%);
   }
 	&:disabled, &.disabled {
-		opacity: 0.7;
-    cursor: progress;
+    background: $bg;
+		opacity: 0.5;
+    cursor: not-allowed;
 	}
 }
 .regular {
-	@include btn-style(#333);
+	@include btn-style(#d6d6d6);
 }
 .danger {
-	@include btn-style(#90510e);
+	@include btn-style(#ffbf9e);
 }
 .success {
-	@include btn-style(#449d44);
+	@include btn-style(#aee6a1);
 }
 .primary {
 	@include btn-style(#0e4d82);

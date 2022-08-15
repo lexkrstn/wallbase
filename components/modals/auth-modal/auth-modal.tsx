@@ -4,7 +4,8 @@ import Modal, { ModalBody } from '../modal';
 import SignInForm from './signin-form';
 import styles from './auth-modal.module.scss';
 
-const TABS = ['Log-in', 'Sign-up'];
+const TITLES = ['Sign in', 'Register new user'];
+const TABS = ['Log in', 'Sign up'];
 
 interface AuthModalProps {
   shown: boolean;
@@ -15,10 +16,10 @@ const AuthModal: FC<AuthModalProps> = ({ shown, onClose }) => {
   const [tabIndex, setTabIndex] = useState(0);
   return (
     <Modal
-      title={TABS[tabIndex]}
+      title={TITLES[tabIndex]}
       shown={shown}
       onClose={onClose}
-      small
+      xsmall
     >
       <ModalBody>
         <Tabs active={tabIndex} labels={TABS} onChange={setTabIndex} />
