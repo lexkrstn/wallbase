@@ -1,4 +1,5 @@
 import { Knex } from 'knex';
+import { PURITY_NSFW, PURITY_SFW, PURITY_SKETCHY } from '../interfaces/constants';
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('tags').insert([
@@ -7,7 +8,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'portrait',
       creator_id: 1,
       category_id: 103,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -15,7 +16,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'short hair',
       creator_id: 1,
       category_id: 73,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -23,7 +24,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'lingerie',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: '',
     },
     {
@@ -31,7 +32,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'long hair',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -39,7 +40,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'arched back',
       creator_id: 1,
       category_id: 73,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -47,7 +48,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'thongs',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: '',
     },
     {
@@ -55,7 +56,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'thighs',
       creator_id: 1,
       category_id: 73,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: '',
     },
     {
@@ -63,7 +64,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'ass',
       creator_id: 1,
       category_id: 73,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'asses, bum, butt, butts, buttocks',
     },
     {
@@ -71,7 +72,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'anime girls',
       creator_id: 1,
       category_id: 2,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'manga girls',
     },
     {
@@ -79,7 +80,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'back',
       creator_id: 1,
       category_id: 73,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'backs',
     },
     {
@@ -87,7 +88,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'bent over',
       creator_id: 1,
       category_id: 1,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'ass up, ass up face down, bend over, butt up, doggy, doggy style, doggystyle, face down, face down ass up, on all fours, on hands and knees',
     },
     {
@@ -95,7 +96,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'blonde',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'blonde hair, blondes',
     },
     {
@@ -103,7 +104,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'knee-highs',
       creator_id: 1,
       category_id: 83,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'high socks, knee-high socks, knee highs, kneehighs, knee high socks, kneehigh socks, knee socks, kneesocks',
     },
     {
@@ -111,7 +112,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'dyed hair',
       creator_id: 1,
       category_id: 73,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'hair dye',
     },
     {
@@ -119,7 +120,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'panties',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'pantsu, panty',
     },
     {
@@ -127,7 +128,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'panties down',
       creator_id: 1,
       category_id: 83,
-      purity: 'nsfw',
+      purity: PURITY_NSFW,
       alias: 'pulling down panties',
     },
     {
@@ -135,7 +136,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'removing panties',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'undressing',
     },
     {
@@ -143,7 +144,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'shaved vagina',
       creator_id: 1,
       category_id: 73,
-      purity: 'nsfw',
+      purity: PURITY_NSFW,
       alias: 'shaved pussies, shaved pussy, shaved vaginas',
     },
     {
@@ -151,7 +152,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'sideboob',
       creator_id: 1,
       category_id: 1,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'side boob, sideboobs, side boobs',
     },
     {
@@ -159,7 +160,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'smiling',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'smile, smiles',
     },
     {
@@ -167,7 +168,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'striped panties',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'shimapan, striped underwear',
     },
     {
@@ -175,7 +176,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'tatoo',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'tattooed, tattoos',
     },
     {
@@ -183,7 +184,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'shoes',
       creator_id: 1,
       category_id: 83,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -191,7 +192,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'women',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'babes, woman, female, girls, lady',
     },
     {
@@ -199,7 +200,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'nude',
       creator_id: 1,
       category_id: 1,
-      purity: 'nsfw',
+      purity: PURITY_NSFW,
       alias: 'naked, nudes',
     },
     {
@@ -207,7 +208,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'asian',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'asians',
     },
     {
@@ -215,7 +216,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'curve women',
       creator_id: 1,
       category_id: 1,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'curvaceous, curves, curvy bodies, curvy body, feminine bodies, juicy, juicy women, sexy bodies, sexy body, voluptuous',
     },
     {
@@ -223,7 +224,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'boobs',
       creator_id: 1,
       category_id: 73,
-      purity: 'nsfw',
+      purity: PURITY_NSFW,
       alias: 'boob, boobies, breast, breasts, tits, titties, titts',
     },
     {
@@ -231,7 +232,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'nipples',
       creator_id: 1,
       category_id: 73,
-      purity: 'nsfw',
+      purity: PURITY_NSFW,
       alias: 'nippels, nipple',
     },
     {
@@ -239,7 +240,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'bathtubs',
       creator_id: 1,
       category_id: 96,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -247,7 +248,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'strategic covering',
       creator_id: 1,
       category_id: 1,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: '',
     },
     {
@@ -255,7 +256,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'in bed',
       creator_id: 1,
       category_id: 1,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'lying in bed, lying on bed',
     },
     {
@@ -263,7 +264,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'small boobs',
       creator_id: 1,
       category_id: 73,
-      purity: 'nsfw',
+      purity: PURITY_NSFW,
       alias: 'flat chest, flat chested, pettanko, small breasts',
     },
     {
@@ -271,7 +272,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'rock',
       creator_id: 1,
       category_id: 5,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'rocks, rocky',
     },
     {
@@ -279,7 +280,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'looking down',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -287,7 +288,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'river',
       creator_id: 1,
       category_id: 70,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'rivers, stream, streams',
     },
     {
@@ -295,7 +296,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'bra',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'bras, brassiere',
     },
     {
@@ -303,7 +304,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'bikini',
       creator_id: 1,
       category_id: 83,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'bikini bottom, bikinis',
     },
     {
@@ -311,7 +312,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'wet body',
       creator_id: 1,
       category_id: 73,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'wet ass, wet asses, wet belly, wet bodies, wet boob, wet boobs, wet breast, wet breasts, wet chest, wet pussies, wet pussy, wet stomach, wet vaginas',
     },
     {
@@ -319,7 +320,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'flat belly',
       creator_id: 1,
       category_id: 73,
-      purity: 'sketchy',
+      purity: PURITY_SKETCHY,
       alias: 'flat bellies, flat stomach, flat stomachs, flat tummies, flat tummy',
     },
     {
@@ -327,7 +328,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'car',
       creator_id: 1,
       category_id: 99,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'cars',
     },
     {
@@ -335,7 +336,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'women with glasses',
       creator_id: 1,
       category_id: 1,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'girls with glasses, girl with glasses, woman with glasses',
     },
     {
@@ -343,7 +344,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'glasses',
       creator_id: 1,
       category_id: 83,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: '',
     },
     {
@@ -351,7 +352,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'digital art',
       creator_id: 1,
       category_id: 75,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'Cgi, digital artwork, digital compositions, graphic, graphics',
     },
     {
@@ -359,7 +360,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'video games',
       creator_id: 1,
       category_id: 78,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'game, game art, games, gaming, video game, videogame, videogames, video games art',
     },
     {
@@ -367,7 +368,7 @@ export async function seed(knex: Knex): Promise<void> {
       name: 'pixel art',
       creator_id: 1,
       category_id: 75,
-      purity: 'sfw',
+      purity: PURITY_SFW,
       alias: 'bit art, pixel, pixelart, pixelated',
     },
   ]);

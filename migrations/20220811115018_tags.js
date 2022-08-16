@@ -14,7 +14,7 @@
     table.string('description', 1024).notNullable().defaultTo('');
     table.integer('wallpaper_count').unsigned().notNullable().defaultTo(0);
     table.integer('fav_count').unsigned().notNullable().defaultTo(0);
-    table.enum('purity', ['sfw', 'sketchy', 'nsfw']).notNullable().defaultTo('sfw');
+    table.integer('purity').notNullable().defaultTo(1);
     table.specificType('tsv', 'tsvector').nullable()
       .comment('Full text search vector containing name and alias');
 

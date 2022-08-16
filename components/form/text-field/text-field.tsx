@@ -1,4 +1,6 @@
-import React, { ChangeEventHandler, forwardRef } from 'react';
+import React, {
+  ChangeEventHandler, FocusEventHandler, forwardRef, KeyboardEventHandler,
+} from 'react';
 import styles from './text-field.module.scss';
 
 interface TextFieldProps {
@@ -7,9 +9,13 @@ interface TextFieldProps {
   value?: string;
   className?: string;
   placeholder?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
   password?: boolean;
   disabled?: boolean;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
+  onBlur?: FocusEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
+  onKeyUp?: KeyboardEventHandler<HTMLInputElement>;
 }
 
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>((

@@ -1,5 +1,4 @@
 import Category from "./category";
-import { Purity } from "./purity";
 
 export default interface Tag {
   id: string;
@@ -11,7 +10,7 @@ export default interface Tag {
   description: string;
   wallpaperCount: number;
   favCount: number;
-  purity: Purity;
+  purity: number;
 }
 
 export interface TagWithCategory extends Tag {

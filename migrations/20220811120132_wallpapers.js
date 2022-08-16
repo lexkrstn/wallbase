@@ -22,8 +22,8 @@
     table.integer('fav_count_1d').unsigned().notNullable().defaultTo(0);
     table.integer('fav_count_1w').unsigned().notNullable().defaultTo(0);
     table.integer('fav_count_1m').unsigned().notNullable().defaultTo(0);
-    table.enum('purity', ['sfw', 'sketchy', 'nsfw']).notNullable().defaultTo('sfw');
-    table.enum('board', ['general', 'anime', 'people']).notNullable().defaultTo('general');
+    table.integer('purity').notNullable().defaultTo(1);
+    table.integer('board').notNullable().defaultTo(1);
     table.float('ratio').notNullable().comment('width / height');
     table.specificType('tsv', 'tsvector').notNullable()
       .comment('Concatenated FT-search data of all tags');

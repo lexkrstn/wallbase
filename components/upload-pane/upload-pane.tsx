@@ -8,7 +8,7 @@ import Link from 'next/link';
 import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 import { ImageFileData } from '../../helpers/image';
 import Button from '../buttons/button';
-import { ButtonTextField, TextField } from '../form';
+import { TextField } from '../form';
 import BoardFilter from '../triple-filters/board-filter';
 import PurityFilter from '../triple-filters/purity-filter';
 import ThumbnailGrid from '../thumbnail/grid';
@@ -17,6 +17,8 @@ import DropzoneThumbnail from '../dropzone/thumbnail';
 import styles from './upload-pane.module.scss';
 import { useImageFileDialog } from '../../lib/hooks/useImageFileDialog';
 import NotAllSetModal from './not-all-set-modal';
+import TagInput from '../form/tag-input';
+import Tag from '../../interfaces/tag';
 
 interface ThumbnailState extends ImageFileData {
   id: string;
@@ -24,6 +26,7 @@ interface ThumbnailState extends ImageFileData {
   purity: number;
   board: number;
   sourceUrl: string;
+  tags: Tag[],
   progress?: number;
 }
 
@@ -48,6 +51,19 @@ function getCommonSourceUrlOfActive(thumbnails: ThumbnailState[]): string {
   return active.every(t => t.sourceUrl === sourceUrl) ? sourceUrl : '/* multiple */';
 }
 
+function areTagArraysEqual(a: Tag[], b: Tag[]): boolean {
+  const idsA = a.map(tag => tag.id).sort();
+  const idsB = b.map(tag => tag.id).sort();
+  return JSON.stringify(idsA) === JSON.stringify(idsB);
+}
+
+function getCommonTagsOfActive(thumbnails: ThumbnailState[]): Tag[] {
+  const active = thumbnails.filter(t => t.active);
+  if (!active.length) return [];
+  const { tags } = active[0];
+  return active.every(t => areTagArraysEqual(t.tags, tags)) ? tags : [];
+}
+
 interface UploadPaneProps {
 
 }
@@ -57,17 +73,17 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
   const [notAllSetModalShown, setNotAllSetModalShown] = useState(false);
   const [multiselect, setMultiselect] = useState(true);
   const [state, setState] = useState<'edit' | 'error' | 'pick'>('pick');
-  const [{ images, board, purity, sourceUrl }, setImagesState] = useState({
+  const [{ images, board, purity, sourceUrl, tags }, setImagesState] = useState({
     images: [] as ThumbnailState[],
     board: 0,
     purity: 0,
     sourceUrl: '',
+    tags: [] as Tag[],
   });
   const imagesHaveBoard = images.every(image => image.board !== 0);
   const imagesHavePurity = images.every(image => image.purity !== 0);
   const canUpload = images.length > 0 && imagesHaveBoard && imagesHavePurity;
   const activeImageCount = images.reduce((count, image) => count + (image.active ? 1 : 0), 0);
-  console.log(activeImageCount)
 
   const closeNotAllSetModal = useCallback(() => setNotAllSetModalShown(false), []);
 
@@ -84,6 +100,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
         board: getCommonBoardOfActive(newImages),
         purity: getCommonPurityOfActive(newImages),
         sourceUrl: getCommonSourceUrlOfActive(newImages),
+        tags: getCommonTagsOfActive(newImages),
       };
     });
   }, [multiselect]);
@@ -100,6 +117,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
         board: getCommonBoardOfActive(newImages),
         purity: getCommonPurityOfActive(newImages),
         sourceUrl: getCommonSourceUrlOfActive(newImages),
+        tags: getCommonTagsOfActive(newImages),
       };
     });
   }, []);
@@ -109,6 +127,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
       purity: 0,
       board: 0,
       sourceUrl: '',
+      tags: [],
       images: oldState.images.filter(image => {
         image.dispose(); // calls URL.revokeObjectURL()
         return false; // filter out all
@@ -128,6 +147,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
           board: 0,
           purity: 0,
           sourceUrl: '',
+          tags: [],
         })),
       ],
     }));
@@ -163,6 +183,17 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
       images: oldState.images.map(image => ({
         ...image,
         sourceUrl: image.active ? newSourceUrl : image.sourceUrl,
+      })),
+    }));
+  }, []);
+
+  const handleTagsChange = useCallback((newTags: Tag[]) => {
+    setImagesState(oldState => ({
+      ...oldState,
+      tags: newTags,
+      images: oldState.images.map(image => ({
+        ...image,
+        tags: image.active ? newTags : image.tags,
       })),
     }));
   }, []);
@@ -203,7 +234,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
       <div className={styles.body}>
         {images.length > 0 && (
           <aside className={styles.sidebar}>
-            <div className={styles.group}  id="purity-section">
+            <div className={styles.group}>
               <div className={styles.label}>Purity</div>
               <PurityFilter
                 value={purity}
@@ -212,7 +243,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                 single
               />
             </div>
-            <div className={styles.group} id="board-section">
+            <div className={styles.group}>
               <div className={styles.label}>Board</div>
               <BoardFilter
                 value={board}
@@ -221,8 +252,12 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                 single
               />
             </div>
-            <div className={styles.group} id="tags-section">
+            <div className={styles.group}>
               <div className={styles.label}>Tags</div>
+              <TagInput
+                value={tags}
+                onChange={handleTagsChange}
+              />
             </div>
             <div className={styles.group}>
               <div className={styles.label}>Source</div>
