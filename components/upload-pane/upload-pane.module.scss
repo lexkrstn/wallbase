@@ -61,31 +61,31 @@ $upload-sidebar-width: 280px;
   margin-top: 5px;
 }
 .body {
-	display: table;
+	display: flex;
+  align-items: stretch;
 	width: 100%;
 }
 .sidebar {
+  flex: 0 0 auto;
 	width: $upload-sidebar-width;
 	background-color: #191919;
-	float: left;
-	.board-filter {
-		max-width: none;
-	}
+  padding-bottom: 52px;
 }
 .group {
-	margin: 5px 10px;
+	margin: 15px 10px;
 }
 .label {
-	margin-bottom: 5px;
+	margin-bottom: 10px;
 }
 .content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 	margin-left: 0px;
 	transition: margin-left .1s ease-out;
-  @at-root .sidebar + & {
-    margin-left: $upload-sidebar-width;
-  }
 }
 .footer {
+  flex: 0 0 auto;
 	text-align: center;
 	padding: 10px;
 	border-top: 1px solid #282828;

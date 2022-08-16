@@ -30,8 +30,9 @@ interface FindTagsOptions {
   perPage?: number;
   categoryId?: string;
   purity?: number;
-  order?: 'asc' | 'desc',
-  orderBy?: 'name' | 'wallpaper_count' | 'fav_count',
+  order?: 'asc' | 'desc';
+  orderBy?: 'name' | 'wallpaper_count' | 'fav_count';
+  fts?: boolean;
 }
 
 interface FindTagsResult {
@@ -47,23 +48,31 @@ export async function findTags({
   categoryId = '',
   order = 'desc',
   orderBy,
+  fts = false,
 }: FindTagsOptions = {}): Promise<FindTagsResult> {
   const countBuilder = knex('tags');
   if (query) {
-    countBuilder.whereRaw('tsv @@ plainto_tsquery(\'english\', ?)', query);
+    if (fts) {
+      countBuilder.whereRaw('tsv @@ plainto_tsquery(\'english\', ?)', query);
+    } else {
+      countBuilder.whereRaw(
+        'lower(name || \' \' || alias) LIKE \'%\' || ? || \'%\'',
+        query.toLowerCase(),
+      );
+    }
   }
   if (categoryId) {
     countBuilder.where('category_id', categoryId);
   }
   const purityBitmask = purity & PURITY_ALL;
   if (purityBitmask !== 0 && purityBitmask !== PURITY_ALL) {
-    countBuilder.whereRaw(`purity & ?`, purityBitmask);
+    countBuilder.whereRaw(`(purity & ?) <> 0`, purityBitmask);
   }
 
   const builder = countBuilder.clone()
     .offset((page - 1) * perPage)
     .limit(perPage);
-  if (query) {
+  if (query && fts) {
     builder.orderByRaw('ts_rank(tsv, plainto_tsquery(\'english\', ?))', query)
   } else if (orderBy) {
     builder.orderBy(orderBy, order);

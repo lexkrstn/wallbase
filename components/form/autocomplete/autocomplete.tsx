@@ -1,7 +1,8 @@
 import React, {
   ChangeEvent, ChangeEventHandler, FC, FocusEvent, FocusEventHandler,
-  KeyboardEvent, KeyboardEventHandler, MouseEvent, useCallback, useRef, useState,
+  KeyboardEvent, KeyboardEventHandler, MouseEvent, useCallback, useEffect, useRef, useState,
 } from 'react';
+import { hasAncestorNode } from '../../../helpers/hasAncestorNode';
 import { useAutocomplete } from '../../../lib/hooks/useAutocomplete';
 import TextField from '../text-field';
 import styles from './autocomplete.module.scss';
@@ -18,14 +19,13 @@ interface AutocompleteProps {
   fetcher: (query: string) => Promise<AutocompleteItem[]>;
   id?: string;
   name?: string;
-  value?: string;
+  value: string;
   className?: string;
   placeholder?: string;
-  password?: boolean;
   disabled?: boolean;
   emptyText?: string;
   onPickItem?: (item: AutocompleteItem) => void;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onChange: (value: string) => void;
   onFocus?: FocusEventHandler<HTMLInputElement>;
   onBlur?: FocusEventHandler<HTMLInputElement>;
   onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
@@ -33,25 +33,25 @@ interface AutocompleteProps {
 }
 
 const Autocomplete: FC<AutocompleteProps> = ({
-  className, fetcher, onChange, onFocus, onBlur, onPickItem,
+  className, fetcher, onChange, onFocus, onPickItem,
   onKeyDown, emptyText, ...textFieldProps
 }) => {
+  const hostRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const notCloseDropdownOnBlur = useRef(false);
   const menuRef = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
   const { list, changeQuery } = useAutocomplete({ fetcher });
 
-  const dropdownClasses = [styles.dropdown];
-  if (className) dropdownClasses.push(className);
-  if (open && list?.length) dropdownClasses.push(styles.open);
+  const classes = [styles.host];
+  if (className) classes.push(className);
+  if (open && list?.length) classes.push(styles.open);
 
   const handleQueryChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    changeQuery(event.currentTarget.value);
-    if (onChange) {
-      onChange(event);
-    }
-  }, [onChange]);
+    const newValue = event.currentTarget.value;
+    changeQuery(newValue);
+    onChange(newValue);
+  }, [onChange, changeQuery]);
 
   const handleFocus = useCallback((event: FocusEvent<HTMLInputElement>) => {
     setOpen(true);
@@ -60,66 +60,85 @@ const Autocomplete: FC<AutocompleteProps> = ({
     }
   }, [onFocus]);
 
-  const handleBlur = useCallback((event: FocusEvent<HTMLInputElement>) => {
-    if (!notCloseDropdownOnBlur.current) {
-      setOpen(false);
-    }
-    notCloseDropdownOnBlur.current = false;
-    if (onBlur) {
-      onBlur(event);
-    }
-  }, [onBlur]);
-
   const handleInputKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
     if (event.code == 'ArrowDown') {
       event.stopPropagation()
       event.preventDefault()
       notCloseDropdownOnBlur.current = true;
-      const li = menuRef.current!.firstElementChild as HTMLLIElement | null;
-      if (li) li.focus();
+      if (menuRef.current) {
+        const li = menuRef.current.firstElementChild as HTMLLIElement | null;
+        if (li) li.focus();
+      }
     }
     if (onKeyDown) {
       onKeyDown(event);
     }
-  }, []);
+  }, [onKeyDown]);
 
   const handleItemClick = useCallback((event: MouseEvent<HTMLLIElement>) => {
-    const id = event.currentTarget.dataset.id!;
-    const item = list?.find(item => item.id === id)!;
-    if (!item) return;
     if (onPickItem) {
+      const id = event.currentTarget.dataset.id!;
+      const item = list?.find(item => item.id === id)!;
+      if (!item) return;
       onPickItem(item);
     }
-  }, [list, onPickItem]);
+    changeQuery('');
+    onChange('');
+    setOpen(false);
+  }, [list, onPickItem, onChange]);
 
   const handleItemKeyDown = useCallback((event: KeyboardEvent<HTMLLIElement>) => {
     if (event.code === 'ArrowDown' || event.code === 'ArrowUp') {
       event.stopPropagation();
       event.preventDefault();
-      if (event.code === 'ArrowDown')
+      if (event.code === 'ArrowDown') {
         (event.currentTarget.nextElementSibling as HTMLLIElement | null)?.focus();
-      else
-        (event.currentTarget.previousElementSibling as HTMLLIElement | null)?.focus();
+      } else {
+        const next = (event.currentTarget.previousElementSibling as HTMLLIElement | null);
+        if (next) {
+          next.focus();
+        } else {
+          inputRef.current?.focus();
+        }
+      }
     } else if (event.code === 'Enter') {
       if (onPickItem) {
         const id = event.currentTarget.dataset.id!;
-        onPickItem(list!.find(item => item.id === id)!);
+        const item = list?.find(item => item.id === id)!;
+        if (!item) return;
+        onPickItem(item);
       }
+      changeQuery('');
+      onChange('');
+      setOpen(false);
       inputRef.current!.focus();
     }
-  }, [list]);
+  }, [list, onPickItem, onChange, changeQuery]);
+
+  useEffect(() => {
+    if (!open) return;
+    const documentClickHandler = (event: Event) => {
+      // Prevent closing upon clicking on the trigger showing the popup
+      if (hasAncestorNode(event.target as Node, hostRef.current)) return;
+      setOpen(false);
+    };
+    document.addEventListener('click', documentClickHandler);
+    return () => {
+      document.removeEventListener('click', documentClickHandler);
+    };
+  }, [open]);
 
   return (
-    <div className={styles.host}>
+    <div className={classes.join(' ')} ref={hostRef}>
       <TextField
         {...textFieldProps}
         onChange={handleQueryChange}
         onFocus={handleFocus}
-        onBlur={handleBlur}
         onKeyDown={handleInputKeyDown}
         ref={inputRef}
+        className={styles.textField}
       />
-      <div className={dropdownClasses.join(' ')}>
+      <div className={styles.dropdown}>
         {!!list && !!list.length && (
           <ul className={styles.list} ref={menuRef}>
             {list.map(({ id, label }) => (

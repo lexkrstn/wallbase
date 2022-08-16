@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import Tag from '../../../interfaces/tag';
 import TagList from '../../tag-list';
 import Autocomplete, { AutocompleteFetcher, AutocompleteItem } from '../autocomplete';
@@ -12,7 +12,8 @@ interface TagInputProps {
 }
 
 const fetcher: AutocompleteFetcher = async (query) => {
-  const result = await fetch(`/api/tags?q=${encodeURIComponent(query)}`);
+  if (!query) return [];
+  const result = await fetch(`/api/tags?q=${encodeURIComponent(query)}&perPage=5`);
   if (!result.ok) throw new Error(`Failed to load tags: HTTP ${result.status}`);
   const tags = (await result.json()) as Tag[];
   return tags.map(tag => ({
@@ -23,20 +24,36 @@ const fetcher: AutocompleteFetcher = async (query) => {
 };
 
 const TagInput: FC<TagInputProps> = ({ id, name, value, onChange }) => {
+  const [query, setQuery] = useState('');
+
   const handlePickItem = useCallback((item: AutocompleteItem) => {
     if (onChange) {
       if (value.find(tag => tag.id === item.id)) return;
       onChange([...value, item.userData as Tag]);
     }
-  }, [...value.map(tag => tag.id)]);
+  }, [value]);
+
+  const handleDeleteTag = useCallback((tag: Tag) => {
+    if (onChange) {
+      onChange(value.filter(t => t.id !== tag.id));
+    }
+  }, [value]);
+
   return (
     <div className={styles.host}>
-      <TagList tags={value} className={styles.tagList} />
+      <TagList
+        tags={value}
+        className={styles.tagList}
+        deletable
+        onClickDelete={handleDeleteTag}
+      />
       <Autocomplete
         id={id}
         name={name}
         fetcher={fetcher}
         onPickItem={handlePickItem}
+        value={query}
+        onChange={setQuery}
       />
     </div>
   );
