@@ -13,7 +13,7 @@ import BoardFilter from '../triple-filters/board-filter';
 import PurityFilter from '../triple-filters/purity-filter';
 import ThumbnailGrid from '../thumbnail/grid';
 import DropZone from '../dropzone';
-import DropzoneThumbnail from '../dropzone/thumbnail';
+import Thumbnail from '../thumbnail';
 import styles from './upload-pane.module.scss';
 import { useImageFileDialog } from '../../lib/hooks/useImageFileDialog';
 import NotAllSetModal from './not-all-set-modal';
@@ -64,9 +64,11 @@ function getCommonTagsOfActive(thumbnails: ThumbnailState[]): Tag[] {
   return active.every(t => areTagArraysEqual(t.tags, tags)) ? tags : [];
 }
 
-interface UploadPaneProps {
-
+function getNextPurity(purity: number) {
+  return (purity === 0 || purity === 4) ? 1 : purity << 1;
 }
+
+interface UploadPaneProps {}
 
 const UploadPane: NextPage<UploadPaneProps> = () => {
   const idCounterRef = useRef(0);
@@ -82,7 +84,8 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
   });
   const imagesHaveBoard = images.every(image => image.board !== 0);
   const imagesHavePurity = images.every(image => image.purity !== 0);
-  const canUpload = images.length > 0 && imagesHaveBoard && imagesHavePurity;
+  const imagesHaveTags = images.every(image => image.tags.length > 0);
+  const canUpload = images.length > 0 && imagesHaveBoard && imagesHavePurity && imagesHaveTags;
   const activeImageCount = images.reduce((count, image) => count + (image.active ? 1 : 0), 0);
 
   const closeNotAllSetModal = useCallback(() => setNotAllSetModalShown(false), []);
@@ -93,7 +96,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
         ...image,
         active: multiselect
           ? (image.id === id ? !image.active : image.active)
-          : image.id === id,
+          : (image.id === id ? !image.active : false),
       }));
       return {
         images: newImages,
@@ -162,6 +165,20 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
         purity: image.active ? newPurity : image.purity,
       })),
     }));
+  }, []);
+
+  const handleThumbnailPurityClick = useCallback((id: string) => {
+    setImagesState(oldState => {
+      const newImages = oldState.images.map(image => ({
+        ...image,
+        purity: image.id === id ? getNextPurity(image.purity) : image.purity,
+      }));
+      return {
+        ...oldState,
+        purity: getCommonPurityOfActive(newImages),
+        images: newImages,
+      };
+    });
   }, []);
 
   const handleBoardChange = useCallback((newBoard: number) => {
@@ -257,6 +274,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
               <TagInput
                 value={tags}
                 onChange={handleTagsChange}
+                disabled={activeImageCount === 0}
               />
             </div>
             <div className={styles.group}>
@@ -266,6 +284,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                 name="sourceUrl"
                 value={sourceUrl}
                 onChange={handleSourceUrlChange}
+                disabled={activeImageCount === 0}
               />
             </div>
           </aside>
@@ -278,21 +297,21 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
           >
             {images.length > 0 && (
               <ThumbnailGrid>
-                {images.map(({ id, width, height, file, url, active, purity, board, progress }) => (
-                  <DropzoneThumbnail
-                    id={id}
-                    key={file.name}
-                    fileName={file.name}
-                    fileSize={file.size}
-                    width={width}
-                    height={height}
-                    url={url}
-                    active={active}
-                    purity={purity}
-                    board={board}
-                    progress={progress}
+                {images.map(image => (
+                  <Thumbnail
+                    id={image.id}
+                    key={image.file.name}
+                    width={image.width}
+                    height={image.height}
+                    url={image.url}
+                    active={image.active}
+                    purity={image.purity}
+                    board={image.board}
+                    progress={image.progress}
+                    tags={image.tags}
                     onClick={handleThumbnailClick}
                     onDeleteClick={handleDeleteClick}
+                    onPurityClick={handleThumbnailPurityClick}
                   />
                 ))}
               </ThumbnailGrid>

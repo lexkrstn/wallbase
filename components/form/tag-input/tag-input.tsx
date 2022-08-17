@@ -7,6 +7,7 @@ import styles from './tag-input.module.scss';
 interface TagInputProps {
   id?: string;
   name?: string;
+  disabled?: boolean;
   value: Tag[];
   onChange?: (value: Tag[]) => void;
 }
@@ -23,7 +24,7 @@ const fetcher: AutocompleteFetcher = async (query) => {
   }));
 };
 
-const TagInput: FC<TagInputProps> = ({ id, name, value, onChange }) => {
+const TagInput: FC<TagInputProps> = ({ id, name, value, disabled, onChange }) => {
   const [query, setQuery] = useState('');
 
   const handlePickItem = useCallback((item: AutocompleteItem) => {
@@ -53,6 +54,7 @@ const TagInput: FC<TagInputProps> = ({ id, name, value, onChange }) => {
         fetcher={fetcher}
         onPickItem={handlePickItem}
         value={query}
+        disabled={disabled}
         onChange={setQuery}
       />
     </div>
