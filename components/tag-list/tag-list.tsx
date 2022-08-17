@@ -15,32 +15,36 @@ interface TagListProps {
   tags: Tag[];
   deletable?: boolean;
   className?: string;
+  disabled?: boolean;
   onClickDelete?: (tag: Tag) => void;
   onClickTag?: (tag: Tag) => void;
 }
 
 const TagList: FC<TagListProps> = ({
-  tags, deletable, className, onClickDelete, onClickTag,
+  tags, deletable, className, disabled, onClickDelete, onClickTag,
 }) => {
   const classes = [styles.list];
   if (className) classes.push(className);
+  if (disabled) classes.push(styles.disabled);
 
   const handleClickDelete = useCallback((event: MouseEvent<HTMLSpanElement>) => {
     event.stopPropagation();
+    if (disabled) return;
     if (onClickDelete) {
       const id = (event.currentTarget.parentElement as HTMLDivElement).dataset.id!;
       const tag = tags.find(t => t.id === id)!;
       onClickDelete(tag);
     }
-  }, [tags, onClickDelete]);
+  }, [tags, onClickDelete, disabled]);
 
   const handleClickTag = useCallback((event: MouseEvent<HTMLDivElement>) => {
+    if (disabled) return;
     if (onClickTag) {
       const id = event.currentTarget.dataset.id!;
       const tag = tags.find(t => t.id === id)!;
       onClickTag(tag);
     }
-  }, [tags, onClickTag]);
+  }, [tags, onClickTag, disabled]);
 
   return (
     <div className={classes.join(' ')}>

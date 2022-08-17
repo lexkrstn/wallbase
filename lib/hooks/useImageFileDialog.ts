@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ImageFileData, readImageFile } from "../../helpers/image";
+import { ImageFileData, readImageFile } from "../../lib/helpers/image";
 import { useFileDialog } from "./useFileDialog";
 
 interface UseImageFileDialogProps {

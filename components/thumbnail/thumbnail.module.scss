@@ -35,6 +35,9 @@ $thumbnail-resolution-height: 22px;
   &.nsfw {
     border-color: #B51919;
   }
+  &.disabled {
+    cursor: default;
+  }
 }
 .similarity {
 	position: absolute;
@@ -140,31 +143,30 @@ $thumbnail-resolution-height: 22px;
 	background-color: rgba(255,255,255,0.5);
 	z-index: 2;
 }
+@keyframes progress {
+  from { width: 1%; }
+  to { width: 95%; }
+}
 .progressIndicator {
 	min-width: 1%;
 	width: 1%;
 	height: 3px;
 	background-color: #94C688;
+  @at-root .loading & {
+    animation: progress 5s linear 0s 1 normal forwards;
+  }
 }
 .success, .error {
-	display: none;
 	position: absolute;
-	top: $thumbnail-padding + $thumbnail-fileinfo-height;
+	top: $thumbnail-padding;
 	bottom: $thumbnail-resolution-height;
 	left: $thumbnail-padding;
 	right: $thumbnail-padding;
-	z-index: 2;
-	&:before {
-		content: '';
-		display: inline-block;
-		height: 100%;
-		width: 0;
-		vertical-align: middle;
-	}
+	display: flex;
+  align-items: center;
+  justify-content: center;
 }
 %thumbnail__result-message {
-	display: inline-block;
-	vertical-align: middle;
 	width: 90%;
 	padding: 3px;
 	color: #fff;
@@ -179,12 +181,6 @@ $thumbnail-resolution-height: 22px;
 	@extend %thumbnail__result-message;
 	background-color: #652222;
 	background-color: rgba(93, 4, 4, 0.54);
-  @at-root .active & {
-    position: absolute;
-    width: 90%;
-    left: 5%;
-    top: 5px;
-  }
 }
 .thlink {
 	display: block;
@@ -232,6 +228,9 @@ $thumbnail-resolution-height: 22px;
   @at-root .interactive:hover & {
     right: 4px;
   }
+  @at-root .disabled & {
+    display: none;
+  }
 }
 .resolution {
 	bottom: $thumbnail-padding;
@@ -266,6 +265,9 @@ $thumbnail-resolution-height: 22px;
 	&:hover {
 		color: #fff;
 	}
+  @at-root .disabled & {
+    cursor: auto;
+  }
   @at-root .sfw & {
     color: #3DB015;
     &:hover {
@@ -308,6 +310,12 @@ $thumbnail-resolution-height: 22px;
 	&:hover {
 		color: #fff;
 	}
+  @at-root .disabled & {
+    cursor: auto;
+    &:hover {
+      color: #4EC0F0;
+    }
+  }
 }
 .overlay {
   position: absolute;

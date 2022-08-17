@@ -1,17 +1,5 @@
 import padStart from 'lodash/padStart';
-
-export const SECOND = 1000;
-export const MINUTE = SECOND * 60;
-export const HOUR = MINUTE * 60;
-export const DAY = HOUR * 24;
-export const WEEK = DAY * 7;
-export const MONTH = DAY * 30;
-export const YEAR = DAY * 365;
-
-export const KB = 1024;
-export const MB = 1024 * KB;
-export const GB = 1024 * MB;
-export const TB = 1024 * GB;
+import { DAY, GB, HOUR, KB, MB, MINUTE, MONTH, TB, WEEK, YEAR } from '../constants';
 
 /**
  * Returns the plural of an English word.

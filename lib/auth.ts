@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { serialize, parse } from 'cookie';
 import JWT, { JwtPayload } from 'jsonwebtoken';
 import { TOKEN_MAX_AGE, TOKEN_NAME } from '../interfaces/constants';
+import config from './config';
 
 export function setTokenCookie(res: NextApiResponse, token: string): void {
   res.setHeader('Set-Cookie', serialize(TOKEN_NAME, token, {
@@ -47,11 +48,13 @@ export function getUserIdFromToken(token: string): Promise<string> {
 
 export function issueUserToken(id: string): Promise<string> {
   return new Promise<string>((resolve, reject) => {
-    const data = {
-      id,
-      exp: Math.floor(Date.now() / 1000) + (60 * 60),
+    const payload = {
+      sub: id,
+      exp: Math.floor(Date.now() / 1000) + config.tokenLifeTime,
+      iss: config.site.domain,
+      aud: config.site.domain,
     };
-    JWT.sign(data, process.env.SALT!, { subject: 'login' }, (err, token) => {
+    JWT.sign(payload, config.secret, (err, token) => {
       if (err) {
         reject(err);
         return;

@@ -31,10 +31,12 @@ interface ThumbnailProps {
   purity?: number;
   board?: number;
   progress?: number;
+  loading?: boolean;
   similarity?: number;
   interactive?: boolean;
   href?: string;
   tags?: Tag[];
+  disabled?: boolean;
   onPurityClick?: (id: string) => void;
   onTagBtnClick?: (id: string) => void;
   onClick?: (id: string) => void;
@@ -43,16 +45,19 @@ interface ThumbnailProps {
 
 const Thumbnail: FC<ThumbnailProps> = ({
   id, width, height, error, success, url, active, purity,
-  board, progress, similarity, interactive, href, tags,
+  board, progress, similarity, interactive, href, tags, loading, disabled,
   onClick, onDeleteClick, onPurityClick, onTagBtnClick,
 }) => {
   const classes = [styles.host];
   if (active) classes.push(styles.active);
   if (purity) classes.push(PURITY_TO_CLASS[purity]);
   if (interactive) classes.push(styles.interactive);
+  if (loading) classes.push(styles.loading);
+  if (disabled) classes.push(styles.disabled);
 
   const handleClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+    if (disabled) return;
     const target = event.target as Element;
     if (onDeleteClick && target.closest(`.${styles.delete}`)) {
       onDeleteClick(id);
@@ -69,15 +74,15 @@ const Thumbnail: FC<ThumbnailProps> = ({
     if (onClick) {
       onClick(id);
     }
-  }, [id, onDeleteClick, onClick, onPurityClick, onTagBtnClick]);
+  }, [id, disabled, onDeleteClick, onClick, onPurityClick, onTagBtnClick]);
 
   return (
     <div className={classes.join(' ')} onClick={handleClick} title="">
-      {progress !== undefined && (
+      {(progress !== undefined || loading) && (
         <div className={styles.progressbar}>
           <div
             className={styles.progressIndicator}
-            style={{ width: `${progress.toFixed(1)}%` }}
+            style={progress ? { width: `${progress.toFixed(1)}%` } : {}}
           />
         </div>
       )}

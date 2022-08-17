@@ -1,7 +1,7 @@
 import knex from './knex';
 import os from 'os';
 import checkDiskSpace from 'check-disk-space';
-import { WALLPAPERS_PATH } from './wallpapers';
+import config from './config';
 
 export interface Statistics {
   totalWallpapers: number;
@@ -52,7 +52,7 @@ export async function getStatistics(): Promise<Statistics> {
     .count();
   const [{ s: wallpapersFileSize }] = await knex('wallpapers')
     .select(knex.raw('SUM(file_size) as s'));
-  const diskStats = await checkDiskSpace(WALLPAPERS_PATH);
+  const diskStats = await checkDiskSpace(config.wallpaper.path);
   const { heapTotal: appMemory } = process.memoryUsage();
 
   return {

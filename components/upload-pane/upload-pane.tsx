@@ -1,12 +1,10 @@
 import {
-  faUpload, faFolderOpen, faFloppyDisk, faTrash, faChevronCircleRight,
-  faTimes, faCheck,
+  faUpload, faFolderOpen, faTrash, faChevronCircleRight,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { NextPage } from 'next';
 import Link from 'next/link';
-import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
-import { ImageFileData } from '../../helpers/image';
+import React, { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
+import { ImageFileData } from '../../lib/helpers/image';
 import Button from '../buttons/button';
 import { TextField } from '../form';
 import BoardFilter from '../triple-filters/board-filter';
@@ -19,6 +17,7 @@ import { useImageFileDialog } from '../../lib/hooks/useImageFileDialog';
 import NotAllSetModal from './not-all-set-modal';
 import TagInput from '../form/tag-input';
 import Tag from '../../interfaces/tag';
+import { UploadError, useUploads } from '../../lib/hooks/use-uploads';
 
 interface ThumbnailState extends ImageFileData {
   id: string;
@@ -26,8 +25,21 @@ interface ThumbnailState extends ImageFileData {
   purity: number;
   board: number;
   sourceUrl: string;
+  authorName: string;
+  authorUrl: string;
   tags: Tag[],
-  progress?: number;
+  loading?: boolean;
+  success?: boolean;
+  error?: string;
+}
+
+interface ApiPostBody {
+  purity: number;
+  board: number;
+  sourceUrl: string;
+  authorName: string;
+  authorUrl: string;
+  tags: string;
 }
 
 function getCommonPurityOfActive(thumbnails: ThumbnailState[]): number {
@@ -68,13 +80,14 @@ function getNextPurity(purity: number) {
   return (purity === 0 || purity === 4) ? 1 : purity << 1;
 }
 
-interface UploadPaneProps {}
+interface UploadPaneProps {
+  onUploaded?: (errors: UploadError[], successes: File[]) => void;
+}
 
-const UploadPane: NextPage<UploadPaneProps> = () => {
+const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
   const idCounterRef = useRef(0);
   const [notAllSetModalShown, setNotAllSetModalShown] = useState(false);
   const [multiselect, setMultiselect] = useState(true);
-  const [state, setState] = useState<'edit' | 'error' | 'pick'>('pick');
   const [{ images, board, purity, sourceUrl, tags }, setImagesState] = useState({
     images: [] as ThumbnailState[],
     board: 0,
@@ -87,6 +100,55 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
   const imagesHaveTags = images.every(image => image.tags.length > 0);
   const canUpload = images.length > 0 && imagesHaveBoard && imagesHavePurity && imagesHaveTags;
   const activeImageCount = images.reduce((count, image) => count + (image.active ? 1 : 0), 0);
+
+  const resetPaneState = useCallback(() => {
+    resetErrors();
+    setImagesState({
+      images: [],
+      purity: 0,
+      board: 0,
+      tags: [],
+      sourceUrl: '',
+    });
+  }, []);
+
+  const {
+    uploading, errors, upload, reset: resetErrors,
+  } = useUploads<ApiPostBody>('/api/wallpapers', {
+    useCookieToken: true,
+    onStarted: useCallback((file: File) => {
+      setImagesState(state => ({
+        ...state,
+        images: state.images.map(image => ({
+          ...image,
+          loading: image.file === file ? true : image.loading,
+        })),
+      }));
+    }, []),
+    onError: useCallback((file: File, error: Error | string) => {
+      setImagesState(state => ({
+        ...state,
+        images: state.images.map(image => ({
+          ...image,
+          loading: false,
+          error: image.file === file ? (error as Error).message || error as string : image.error,
+        })),
+      }));
+    }, []),
+    onSuccess: useCallback((file: File) => {
+      setImagesState(state => ({
+        ...state,
+        images: state.images.map(image => ({
+          ...image,
+          loading: false,
+          success: image.file === file ? true : image.success,
+        })),
+      }));
+    }, []),
+    onComplete: onUploaded,
+  });
+
+  const inputDisabled = activeImageCount === 0 || uploading || errors.length > 0;
 
   const closeNotAllSetModal = useCallback(() => setNotAllSetModalShown(false), []);
 
@@ -150,6 +212,8 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
           board: 0,
           purity: 0,
           sourceUrl: '',
+          authorName: '',
+          authorUrl: '',
           tags: [],
         })),
       ],
@@ -220,7 +284,25 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
       setNotAllSetModalShown(true);
       return;
     }
-  }, [canUpload]);
+    setImagesState(state => ({
+      ...state,
+      images: state.images.map(image => ({
+        ...image,
+        active: false,
+      })),
+    }));
+    upload(images.map(image => ({
+      file: image.file,
+      body: {
+        purity: image.purity,
+        board: image.board,
+        sourceUrl: image.sourceUrl,
+        tags: image.tags.map(tag => tag.id).join(','),
+        authorName: image.authorName,
+        authorUrl: image.authorUrl,
+      },
+    })));
+  }, [canUpload, images]);
 
   const { open: openFileDialog } = useImageFileDialog({
     onChange: handleImagesLoaded,
@@ -239,12 +321,12 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
             <a>rules</a>
           </Link>
           {' before '}
-          {state !== 'edit' && (
+          {(!uploading && errors.length === 0) && (
             <Button xsmall dark iconPrepend={faFolderOpen} onClick={openFileDialog}>
               picking
             </Button>
           )}
-          {state === 'edit' ? ' uploading' : ''}
+          {(uploading || errors.length > 0) && ' uploading'}
           {' wallpapers.'}
         </div>
       </div>
@@ -256,7 +338,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
               <PurityFilter
                 value={purity}
                 onChange={handlePurityChange}
-                disabled={activeImageCount === 0}
+                disabled={inputDisabled}
                 single
               />
             </div>
@@ -265,7 +347,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
               <BoardFilter
                 value={board}
                 onChange={handleBoardChange}
-                disabled={activeImageCount === 0}
+                disabled={inputDisabled}
                 single
               />
             </div>
@@ -274,7 +356,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
               <TagInput
                 value={tags}
                 onChange={handleTagsChange}
-                disabled={activeImageCount === 0}
+                disabled={inputDisabled}
               />
             </div>
             <div className={styles.group}>
@@ -284,14 +366,15 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                 name="sourceUrl"
                 value={sourceUrl}
                 onChange={handleSourceUrlChange}
-                disabled={activeImageCount === 0}
+                disabled={inputDisabled}
               />
             </div>
           </aside>
         )}
         <div className={styles.content}>
           <DropZone
-            disabled={state !== 'pick'}
+            className={styles.dropzone}
+            disabled={uploading || errors.length > 0}
             onImagesLoaded={handleImagesLoaded}
             onClick={openFileDialog}
           >
@@ -307,18 +390,21 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                     active={image.active}
                     purity={image.purity}
                     board={image.board}
-                    progress={image.progress}
                     tags={image.tags}
+                    loading={image.loading}
+                    success={image.success}
+                    error={image.error}
                     onClick={handleThumbnailClick}
                     onDeleteClick={handleDeleteClick}
                     onPurityClick={handleThumbnailPurityClick}
+                    disabled={uploading || errors.length > 0}
                   />
                 ))}
               </ThumbnailGrid>
             )}
           </DropZone>
           <footer className={styles.footer}>
-            {state !== 'edit' && (
+            {errors.length === 0 && (
               <>
                 <Button
                   className={styles.btnClear}
@@ -326,7 +412,7 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                   rounded
                   dark
                   onClick={clearImages}
-                  disabled={images.length === 0}
+                  disabled={images.length === 0 || uploading || errors.length > 0}
                 >
                   Clear
                 </Button>
@@ -334,37 +420,20 @@ const UploadPane: NextPage<UploadPaneProps> = () => {
                   className={styles.btnUpload}
                   iconPrepend={faUpload}
                   rounded
-                  disabled={images.length === 0}
+                  loading={uploading}
                   onClick={handleUploadClick}
                 >
                   Upload
                 </Button>
               </>
             )}
-            {state === 'edit' && (
-              <>
-                <Button
-                  className={styles.btnCancel}
-                  iconPrepend={faTimes}
-                  rounded
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className={styles.btnFinish}
-                  iconPrepend={faCheck}
-                >
-                  Finish
-                </Button>
-              </>
-            )}
-            {state === 'error' && (
-              <div className={styles.continue} style={{ display: 'none' }}>
-                Some uploads failed. Oh, nevermind.
+            {errors.length > 0 && (
+              <div className={styles.continue}>
                 <Button
                   className={styles.btnContinue}
                   iconAppend={faChevronCircleRight}
                   rounded
+                  onClick={resetPaneState}
                 >
                   Continue!
                 </Button>

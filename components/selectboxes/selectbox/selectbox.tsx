@@ -4,7 +4,7 @@ import React, {
   FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState,
 } from 'react';
 import { usePrevious } from '../../../lib/hooks/usePrevious';
-import { hasAncestorNode } from '../../../helpers/hasAncestorNode';
+import { hasAncestorNode } from '../../../lib/helpers/hasAncestorNode';
 import styles from './selectbox.module.scss';
 import { SelectboxItemDto } from './interfaces';
 import SelectboxItemList from './selectbox-item-list';

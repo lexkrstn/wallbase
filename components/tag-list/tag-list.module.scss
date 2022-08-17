@@ -70,9 +70,11 @@
     color: #818181;
   }
   @at-root .item:hover &:hover, &:hover {
-		text-decoration: none;
 		color: #dedede;
 	}
+  @at-root .disabled .item:hover & {
+    color: #4d4d4d;
+  }
   > svg {
     height: 1em;
   }

@@ -99,7 +99,7 @@ export async function updateUser(id: string, dto: UpdateUserDto): Promise<boolea
  * @param dto User DTO.
  * @returns The user record or null.
  */
- export async function getUser(id: string): Promise<User | null> {
+ export async function findUserById(id: string): Promise<User | null> {
   try {
     const rows = await knex('users')
       .where('id', id)
@@ -180,7 +180,7 @@ export async function findUsers({
  * @returns True if the user existed before.
  */
 export async function ensureRootUserCreated(): Promise<boolean> {
-  const user = await getUser(ROOT_USER_ID);
+  const user = await findUserById(ROOT_USER_ID);
   if (user) return true;
   await createUser({
     login: 'admin',

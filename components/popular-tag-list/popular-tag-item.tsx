@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { thousands } from '../../helpers/formatters';
+import { thousands } from '../../lib/helpers/formatters';
 import { TagWithCategory } from '../../interfaces/tag';
 import styles from './popular-tag-item.module.scss';
 

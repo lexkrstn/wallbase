@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { FC } from 'react';
 import { TagWithCategory } from '../../interfaces/tag';
 import { Statistics } from '../../lib/stats';
-import { thousands } from '../../helpers/formatters';
+import { thousands } from '../../lib/helpers/formatters';
 import Button from '../buttons/button';
 import PopularTagList from '../popular-tag-list';
 import StatisticsPane from '../statistics-pane';

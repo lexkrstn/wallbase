@@ -1,22 +1,26 @@
 import { faImage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { DragEvent, FC, MouseEvent, ReactNode, useCallback, useState } from 'react';
-import { ImageFileData, readImageFile } from '../../helpers/image';
+import { ImageFileData, readImageFile } from '../../lib/helpers/image';
 import styles from './dropzone.module.scss';
 
 interface DropZoneProps {
+  className?: string;
   children?: ReactNode;
   disabled?: boolean;
   onImagesLoaded: (images: ImageFileData[]) => void;
   onClick?: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
-const DropZone: FC<DropZoneProps> = ({ children, disabled, onImagesLoaded, onClick }) => {
+const DropZone: FC<DropZoneProps> = ({
+  className, children, disabled, onImagesLoaded, onClick,
+}) => {
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
-  const dropzoneClasses = [styles.host];
-  if (disabled || loading) dropzoneClasses.push(styles.disabled);
-  if (dragOver) dropzoneClasses.push(styles.dragOver);
+  const classes = [styles.host];
+  if (className) classes.push(className);
+  if (disabled || loading) classes.push(styles.disabled);
+  if (dragOver) classes.push(styles.dragOver);
 
   const handleDragOver = useCallback((e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -48,8 +52,8 @@ const DropZone: FC<DropZoneProps> = ({ children, disabled, onImagesLoaded, onCli
 
   return (
     <div
-      className={dropzoneClasses.join(' ')}
-      title={loading ? '' : 'Click to select wallapapers'}
+      className={classes.join(' ')}
+      title={(loading || disabled) ? '' : 'Click to select wallapapers'}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}

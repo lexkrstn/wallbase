@@ -1,3 +1,4 @@
+import { wrapError, UniqueViolationError } from 'db-errors';
 import uniq from 'lodash/uniq';
 import Category from '../interfaces/category';
 import { PURITY_ALL } from '../interfaces/constants';
@@ -85,4 +86,23 @@ export async function findTags({
     tags: tags as Tag[],
     totalCount: parseInt(count + '', 10),
   };
+}
+
+export async function addWallpaperTags(
+  wallpaperId: string,
+  tagIds: string[],
+  creatorId: string,
+) {
+  tagIds.map(async tagId => {
+    try {
+      await knex('wallpapers_tags').insert({
+        wallpaper_id: wallpaperId,
+        tag_id: tagId,
+        creator_id: creatorId,
+      });
+    } catch (err: any) {
+      if (!(wrapError(err) instanceof UniqueViolationError)) throw err;
+      // Skip UniqueViolationError
+    }
+  });
 }

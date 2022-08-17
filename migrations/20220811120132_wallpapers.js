@@ -32,7 +32,7 @@
     table.specificType('colors', 'float[15]').notNullable()
       .comment('5 distinctive colors');
     table.specificType('avg_color', 'float[3]').notNullable();
-    table.integer('crc32').notNullable();
+    table.string('sha256', 64).notNullable();
     table.boolean('featured').notNullable().defaultTo(false);
 
     table.foreign('uploader_id')

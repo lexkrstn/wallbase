@@ -47,6 +47,7 @@ const TagInput: FC<TagInputProps> = ({ id, name, value, disabled, onChange }) =>
         className={styles.tagList}
         deletable
         onClickDelete={handleDeleteTag}
+        disabled={disabled}
       />
       <Autocomplete
         id={id}
