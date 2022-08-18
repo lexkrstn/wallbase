@@ -1,20 +1,22 @@
-import {
-  faUpload, faFolderOpen, faFloppyDisk, faTrash, faChevronCircleRight,
-  faTimes, faCheck, faImage,
-} from '@fortawesome/free-solid-svg-icons';
 import { NextPage } from 'next';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
+import Router from 'next/router';
 import RegularLayout from '../components/layouts/regular-layout';
 import UploadPane from '../components/upload-pane';
-import { useUser } from '../lib/hooks/useUser';
+import User from '../interfaces/user';
 import styles from './upload.module.scss';
 
 interface UploadProps {
-
+  user: User | null;
+  userLoading: boolean;
 }
 
-const Upload: NextPage<UploadProps> = () => {
-  const { user, loading: userLoading } = useUser();
+const Upload: NextPage<UploadProps> = ({ user, userLoading }) => {
+  useEffect(() => {
+    if (!user) {
+      Router.push('/');
+    }
+  }, [user]);
   return (
     <RegularLayout user={user} userLoading={userLoading}>
       <div className={styles.host}>

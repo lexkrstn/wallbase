@@ -11,23 +11,29 @@ import SearchTabs, { SearchByType } from '../components/search-tabs';
 import Triptych from '../components/triptych';
 import FeaturedWallpaperSlide from '../interfaces/featured-wallpaper-slide';
 import { TagWithCategory } from '../interfaces/tag';
-import { useUser } from '../lib/hooks/useUser';
+import User from '../interfaces/user';
 import { getStatistics, Statistics } from '../lib/stats';
 import { getPopularTags } from '../lib/tags';
 import { getFeaturedWallpaperSlides } from '../lib/wallpapers';
 import styles from './index.module.scss';
 import logoImage from './logo.svg';
 
-interface IndexProps {
+interface IndexServerSideProps {
   popularTags: TagWithCategory[] | null;
   featuredWallpaperSlides: FeaturedWallpaperSlide[] | null;
   stats: Statistics;
 }
 
+interface IndexAppProps {
+  user: User | null;
+  userLoading: boolean;
+}
+
+type IndexProps = IndexServerSideProps & IndexAppProps;
+
 const Index: NextPage<IndexProps> = ({
-  popularTags, featuredWallpaperSlides, stats,
+  popularTags, featuredWallpaperSlides, stats, user, userLoading,
 }) => {
-  const { user, loading: userLoading } = useUser();
   const [filtersShown, setFiltersShown] = useState(false);
   const [searchBy, setSearchBy] = useState<SearchByType>('keyword');
   return (
@@ -59,12 +65,7 @@ const Index: NextPage<IndexProps> = ({
   )
 };
 
-Index.defaultProps = {
-  popularTags: null,
-  featuredWallpaperSlides: null,
-};
-
-export const getServerSideProps: GetServerSideProps<IndexProps> = async () => {
+export const getServerSideProps: GetServerSideProps<IndexServerSideProps> = async () => {
   return {
     props: {
       popularTags: JSON.parse(JSON.stringify(await getPopularTags())),

@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import { wrapError } from 'db-errors';
 import omit from 'lodash/omit';
+import geoip from 'geoip-lite';
+import countryData from 'country-data';
 import User, { UserRole, UserWithPassword } from '../interfaces/user';
 import knex from './knex';
 import { camelCaseObjectKeys, kebabCaseObjectKeys } from './utils';
@@ -191,15 +193,44 @@ export async function ensureRootUserCreated(): Promise<boolean> {
   return false;
 }
 
+interface GeoIpUserData {
+  cc2: string;
+  cc3: string;
+  country: string;
+  city: string;
+  timezone: string;
+  lat: number;
+  lng: number;
+}
+
+export function getGeoIpUserData(ip: string): GeoIpUserData | null {
+  const geo = geoip.lookup(ip);
+  if (!geo) return null;
+  const cc2 = geo.country;
+  const country = countryData.countries[cc2];
+  if (!country) return null;
+  return {
+    cc2,
+    cc3: country.alpha3,
+    country: country.name,
+    city: geo.city,
+    timezone: geo.timezone,
+    lat: geo.ll[0],
+    lng: geo.ll[1],
+  };
+}
+
 /**
  * Must be called when user interacts the backend in order to update
  * his/her last visit stats.
  */
 export async function addUserVisit(id: string, ip: string): Promise<boolean> {
+  const geoIpData = getGeoIpUserData(ip) ?? {};
   const affected = await knex('users')
     .update({
       visited_at: knex.raw('NOW()'),
       last_ip: ip,
+      ...geoIpData,
     })
     .where({ id })
     .returning('id');

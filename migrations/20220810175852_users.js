@@ -18,9 +18,15 @@ exports.up = async function(knex) {
     table.integer('avatar_version').notNullable().defaultTo(1);
     table.string('avatar_ext', 3).notNullable().defaultTo('');
     table.string('cc2', 2).notNullable().defaultTo('')
-      .comment('ISO 3166-1 alpha-2');
+      .comment('ISO 3166-1 alpha-2 country code');
     table.string('cc3', 3).notNullable().defaultTo('')
-      .comment('ISO 3166-1 alpha-3');
+      .comment('ISO 3166-1 alpha-3 country code');
+    table.string('country', 127).notNullable().defaultTo('')
+      .comment('country name');
+    table.string('city', 32).notNullable().defaultTo('');
+    table.string('timezone', 64).notNullable().defaultTo('');
+    table.float('lat').nullable();
+    table.float('lng').nullable();
     table.integer('upload_count').notNullable().defaultTo(0)
       .comment('number of uploaded wallpapers curretlly listed on website');
     table.integer('rating').notNullable().defaultTo(0)

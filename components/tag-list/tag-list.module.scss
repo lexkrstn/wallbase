@@ -24,6 +24,9 @@
 	&:hover {
 		background: #454545;
 	}
+  @at-root .disabled &:hover {
+    background: #2B2B2B;
+  }
 }
 .icon {
   font-size: 10px;
@@ -34,6 +37,9 @@
   vertical-align: middle;
   @at-root .item:hover & {
     color: #818181;
+  }
+  @at-root .disabled .item:hover & {
+    color: #4D4D4D;
   }
   > svg {
     height: 1em;
@@ -74,6 +80,7 @@
 	}
   @at-root .disabled .item:hover & {
     color: #4d4d4d;
+    cursor: default;
   }
   > svg {
     height: 1em;

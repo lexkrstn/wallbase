@@ -14,6 +14,10 @@ export default interface User {
   avatarExt: string;
   cc2: string;
   cc3: string;
+  city: string;
+  lat: number | null;
+  lng: number | null;
+  timezone: string;
   uploadCount: string;
   rating: number;
   wallViewCount: number;

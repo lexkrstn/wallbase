@@ -1,5 +1,5 @@
 import {
-  faUpload, faFolderOpen, faTrash, faChevronCircleRight,
+  faUpload, faFolderOpen, faTrash, faChevronRight, faExclamationCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -18,6 +18,7 @@ import NotAllSetModal from './not-all-set-modal';
 import TagInput from '../form/tag-input';
 import Tag from '../../interfaces/tag';
 import { UploadError, useUploads } from '../../lib/hooks/use-uploads';
+import Alert from '../alert';
 
 interface ThumbnailState extends ImageFileData {
   id: string;
@@ -372,6 +373,14 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
           </aside>
         )}
         <div className={styles.content}>
+          {errors.length > 0 && (
+            <Alert icon={faExclamationCircle} className={styles.alert}>
+              Some of your uploads failed!
+              {(errors.length < images.length) && (
+                <>Still, {images.length - errors.length} of them succeeded!</>
+              )}
+            </Alert>
+          )}
           <DropZone
             className={styles.dropzone}
             disabled={uploading || errors.length > 0}
@@ -422,6 +431,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
                   rounded
                   loading={uploading}
                   onClick={handleUploadClick}
+                  disabled={images.length === 0}
                 >
                   Upload
                 </Button>
@@ -431,11 +441,11 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
               <div className={styles.continue}>
                 <Button
                   className={styles.btnContinue}
-                  iconAppend={faChevronCircleRight}
+                  iconAppend={faChevronRight}
                   rounded
                   onClick={resetPaneState}
                 >
-                  Continue!
+                  Got it!
                 </Button>
               </div>
             )}

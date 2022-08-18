@@ -1,6 +1,7 @@
 import React, { FC, useCallback, useState } from 'react';
 import { faHandSpock, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { countryCodeEmoji } from 'country-code-emoji';
 import styles from './userbar.module.scss';
 import User from "../../../../interfaces/user";
 import AuthModal from '../../../modals/auth-modal/auth-modal';
@@ -31,7 +32,7 @@ const Userbar: FC<UserbarProps> = ({ wide, user, userLoading }) => {
             <span className={styles.greetingIcon}>
               <FontAwesomeIcon icon={faHandSpock} />
             </span>
-            Hey {userName}!
+            Hey {user?.cc2 ? countryCodeEmoji(user.cc2) : ''} {userName}!
           </span>
           {!user && (
             <button type="button" className={styles.link} onClick={openAuthModal}>Login</button>
