@@ -13,17 +13,22 @@ const ITEMS: SelectboxItemDto<PageSizeTypeString>[] = [
 ];
 
 interface PageSizeSelectboxProps {
+  className?: string;
   onChange: (value: PageSizeType) => void;
   value: PageSizeType;
 }
 
-const PageSizeSelectbox: FC<PageSizeSelectboxProps> = ({ onChange, value }) => {
+const PageSizeSelectbox: FC<PageSizeSelectboxProps> = ({ className, onChange, value }) => {
+  const classes = [styles.host];
+  if (className) classes.push(className);
+
   const handleChange = useCallback((value: string) => {
     onChange(parseInt(value, 10) as PageSizeType);
   }, [onChange]);
+
   return (
     <Selectbox
-      className={styles.host}
+      className={classes.join(' ')}
       name="pageSize"
       items={ITEMS}
       onChange={handleChange}
@@ -34,4 +39,4 @@ const PageSizeSelectbox: FC<PageSizeSelectboxProps> = ({ onChange, value }) => {
 
 PageSizeSelectbox.displayName = 'PageSizeSelectbox';
 
-export default PageSizeSelectbox;
+export default React.memo(PageSizeSelectbox);

@@ -4,6 +4,7 @@ import Tooltip from '../tooltip';
 import styles from './purity-filter.module.scss';
 
 interface PurityFilterProps {
+  className?: string;
   nsfwDisabled?: boolean;
   onChange: (bitmask: number) => void;
   value: number;
@@ -12,14 +13,18 @@ interface PurityFilterProps {
 }
 
 const PurityFilter: FC<PurityFilterProps> = ({
-  onChange, nsfwDisabled, value, single, disabled,
+  className, onChange, nsfwDisabled, value, single, disabled,
 }) => {
+  const classes = [styles.host];
+  if (className) classes.push(className);
+
   const onClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     const purity = parseInt(event.currentTarget.dataset.purity ?? '0', 10);
     onChange(single ? purity : value ^ purity);
   }, [value]);
+
   return (
-    <div className={styles.host}>
+    <div className={classes.join(' ')}>
       <input type="hidden" name="purity" value={value} />
       <ul>
         <li className={value & PURITY_SFW ? styles.selected : ''}>

@@ -13,10 +13,10 @@ interface UploadProps {
 
 const Upload: NextPage<UploadProps> = ({ user, userLoading }) => {
   useEffect(() => {
-    if (!user) {
+    if (!user && !userLoading) {
       Router.push('/');
     }
-  }, [user]);
+  }, [user, userLoading]);
   return (
     <RegularLayout user={user} userLoading={userLoading}>
       <div className={styles.host}>

@@ -11,12 +11,16 @@ interface UserbarProps {
   user: User | null;
   userLoading: boolean;
   wide?: boolean;
+  docked?: boolean;
 };
 
-const Userbar: FC<UserbarProps> = ({ wide, user, userLoading }) => {
+const Userbar: FC<UserbarProps> = ({ wide, user, userLoading, docked }) => {
   const userName = user ? user.login : 'Anonymous';
+  const classes = [styles.userbar];
+  if (docked) classes.push(styles.docked);
   const containerClasses = [styles.container];
   if (wide) containerClasses.push(styles.wide);
+  if (docked) containerClasses.push(styles.docked);
 
   const { logout, loading: userLoggingOut } = useLogout();
 
@@ -25,7 +29,7 @@ const Userbar: FC<UserbarProps> = ({ wide, user, userLoading }) => {
   const openAuthModal = useCallback(() => setAuthModalShown(true), []);
 
   return (
-    <div className={styles.userbar}>
+    <div className={classes.join(' ')}>
       <div className={containerClasses.join(' ')}>
         <div className={styles.commands}>
           <span className={styles.greeting}>

@@ -51,4 +51,4 @@ const OrderBySelectbox: FC<OrderBySelectboxProps> = ({
 
 OrderBySelectbox.displayName = 'OrderBySelectbox';
 
-export default OrderBySelectbox;
+export default React.memo(OrderBySelectbox);

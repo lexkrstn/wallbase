@@ -16,7 +16,7 @@ import { getStatistics, Statistics } from '../lib/stats';
 import { getPopularTags } from '../lib/tags';
 import { getFeaturedWallpaperSlides } from '../lib/wallpapers';
 import styles from './index.module.scss';
-import logoImage from './logo.svg';
+import logoImage from '../components/layouts/elements/header/logo.svg';
 
 interface IndexServerSideProps {
   popularTags: TagWithCategory[] | null;

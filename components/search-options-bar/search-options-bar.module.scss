@@ -1,0 +1,129 @@
+$bpPad: 600px;
+$bpWide: 1150px;
+
+.host {
+	padding: 10px 50px 10px 10px;
+	position: relative;
+	background: linear-gradient(to bottom, #171717, #0f0f0f);
+	background-color: #0F0F0F;
+	background-repeat: repeat-x;
+	background-size: 1px 55px;
+	font-size: 14px;
+}
+.groups {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-right: 25px;
+
+  @media (min-width: $bpWide) {
+    flex-direction: row;
+  }
+}
+.bundle {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  &:last-child { margin-bottom: 0; }
+
+  @media (min-width: $bpPad) {
+    flex-direction: row;
+  }
+
+  @media (min-width: $bpWide) {
+    margin-bottom: 0;
+    margin-right: 15px;
+    &:last-child { margin-right: 0; }
+  }
+}
+.group {
+  flex: 1 1 auto;
+  display: flex;
+  margin-bottom: 15px;
+  &:last-child { margin-bottom: 0; }
+
+  @media (min-width: $bpPad) {
+    @at-root .bundle & {
+      width: 50%;
+      margin-bottom: 0;
+      &:last-child { margin-left: 15px; }
+    }
+  }
+
+  @media (min-width: $bpWide) {
+    position: relative;
+    margin-bottom: 0;
+    margin-right: 10px;
+    &:last-child { margin-right: 0; }
+    @at-root .bundle & {
+      width: auto;
+      margin-bottom: 0;
+      margin-right: 0;
+      &:last-child { margin-left: 10px; }
+    }
+  }
+}
+.label {
+  flex: 0 1 auto;
+	line-height: 27px;
+	margin-right: 10px;
+	width: 80px;
+	text-align: right;
+	white-space: nowrap;
+	@media (min-width: $bpWide) {
+		width: auto;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    padding: 7px 13px 3px;
+    border-radius: 0 0 4px 4px;
+    transform: translateX(-50%);
+    background: #0f0f0f;
+    font-size: 11px;
+    color: #666;
+    line-height: 1;
+    text-transform: lowercase;
+	}
+}
+.item {
+  flex: 1 0 auto;
+}
+.submit {
+	position: absolute;
+	top: 50%;
+	margin-top: -11px;
+	right: 25px;
+	background: none;
+	padding: 0;
+	border: 0;
+	outline: none !important;
+  color: #b4b4b4;
+  cursor: pointer;
+  &:hover {
+    color: lighten(#b4b4b4, 20%);
+  }
+	> svg {
+    height: 22px;
+    transform: rotate(0deg);
+    transition: transform .2s linear;
+  }
+	&:hover > svg {
+		transform: rotate(360deg);
+	}
+}
+.board {
+  max-width: none;
+}
+.purity {
+  max-width: none;
+}
+.pageSize {
+  width: 100%;
+}
+.wideOnly {
+  display: none;
+  @media (min-width: $bpWide) {
+    display: block;
+  }
+}

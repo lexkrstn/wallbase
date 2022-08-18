@@ -61,6 +61,7 @@ const ResolutionSelectbox: FC<ResolutionSelectboxProps> = ({
           {selectedItem?.label}
         </SelectboxSwitchableField>
       )}
+      minDropdownWidth={220}
     >
       <SelectboxItemList
         items={EMPTY_ITEMS}
@@ -91,4 +92,4 @@ const ResolutionSelectbox: FC<ResolutionSelectboxProps> = ({
 
 ResolutionSelectbox.displayName = 'ResolutionSelectbox';
 
-export default ResolutionSelectbox;
+export default React.memo(ResolutionSelectbox);

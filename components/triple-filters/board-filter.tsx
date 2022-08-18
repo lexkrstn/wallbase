@@ -4,19 +4,26 @@ import Tooltip from '../tooltip';
 import styles from './board-filter.module.scss';
 
 interface BoardFilterProps {
+  className?: string;
   onChange: (bitmask: number) => void;
   value: number;
   single?: boolean;
   disabled?: boolean;
 }
 
-const BoardFilter: FC<BoardFilterProps> = ({ onChange, value, single, disabled }) => {
+const BoardFilter: FC<BoardFilterProps> = ({
+  className, onChange, value, single, disabled,
+}) => {
+  const classes = [styles.host];
+  if (className) classes.push(className);
+
   const onClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     const board = parseInt(event.currentTarget.dataset.board ?? '0', 10);
     onChange(single ? board : value ^ board);
   }, [value, single]);
+
   return (
-    <div className={styles.host}>
+    <div className={classes.join(' ')}>
       <input type="hidden" name="board" value={value} />
       <ul>
         <li className={value & BOARD_G ? styles.selected : ''}>

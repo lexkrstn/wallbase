@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import React, {
-  FC, ReactElement, ReactNode, useCallback, useEffect, useRef, useState,
+  CSSProperties,
+  FC, ReactElement, ReactNode, useCallback, useEffect, useMemo, useRef, useState,
 } from 'react';
 import { usePrevious } from '../../../lib/hooks/usePrevious';
 import { hasAncestorNode } from '../../../lib/helpers/hasAncestorNode';
@@ -17,6 +18,7 @@ export interface SelectboxProps {
   value?: string;
   defaultLabel?: string;
   notCloseOnChange?: boolean;
+  minDropdownWidth?: number;
   onChange?: (value: string) => void;
   renderItem?: (item: SelectboxItemDto, index: number) => ReactElement;
   renderLabel?: (item?: SelectboxItemDto) => ReactElement;
@@ -24,7 +26,7 @@ export interface SelectboxProps {
 
 const Selectbox: FC<SelectboxProps> = ({
   children, className, value, defaultLabel, items, name, onChange,
-  notCloseOnChange, renderItem, renderLabel,
+  notCloseOnChange, renderItem, renderLabel, minDropdownWidth,
 }) => {
   const hostRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -37,6 +39,10 @@ const Selectbox: FC<SelectboxProps> = ({
   const selectedItem = items.find(item => item.value === value);
 
   const doOpen = useCallback(() => setOpen(true), []);
+
+  const menuStyles = useMemo((): CSSProperties => ({
+    minWidth: `${minDropdownWidth}px`,
+  }), [minDropdownWidth]);
 
   // Closes the popup menu upon clicking on the document
   useEffect(() => {
@@ -74,7 +80,7 @@ const Selectbox: FC<SelectboxProps> = ({
         {!renderLabel && (selectedItem ? selectedItem.label : defaultLabel)}
         {!!renderLabel && renderLabel(selectedItem)}
       </div>
-      <div className={styles.menu}>
+      <div className={styles.menu} style={menuStyles}>
         {!!children && children}
         {!children && (
           <SelectboxItemList

@@ -38,10 +38,11 @@ const AspectSelectbox: FC<AspectSelectboxProps> = ({ onChange, value }) => {
       onChange={onChange as StringChangeCallback}
       value={value}
       renderItem={renderItem}
+      minDropdownWidth={280}
     />
   );
 };
 
 AspectSelectbox.displayName = 'AspectSelectbox';
 
-export default AspectSelectbox;
+export default React.memo(AspectSelectbox);

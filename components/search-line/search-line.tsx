@@ -46,7 +46,7 @@ const SearchLine: FC<SearchLineProps> = ({ filtersShown, searchBy, onShowFilters
 
   return (
     <div className={`${styles.host} ${styles.hostMain}`}>
-      <form action="/walls">
+      <form action="/wallpapers">
         <div className={styles.content}>
           <button className={styles.search} type="submit" tabIndex={4}>
             <FontAwesomeIcon icon={faSearch} />

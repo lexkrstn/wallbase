@@ -1,10 +1,14 @@
 .userbar {
   background: #131313;
   border-bottom: 1px solid #1A1A1A;
-  font-size: 1.4;
+  font-size: 14px;
   height: 36px;
   z-index: 999;
   white-space: nowrap;
+}
+.docked {
+  position: absolute;
+  right: 0;
 }
 .container {
   margin: 0 auto;

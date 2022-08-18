@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import styles from './tooltip.module.scss';
 
 interface TooltipProps {
+  className?: string;
   message: string | ReactNode;
   inline?: boolean;
   children: ReactNode;
@@ -11,7 +12,7 @@ interface TooltipProps {
 };
 
 const Tooltip: FC<TooltipProps> = ({
-  children, inline, message, position, offset,
+  className, children, inline, message, position, offset,
 }) => {
   const [shown, setShown] = useState(false);
   const [presented, setPresented] = useState(false);
@@ -21,6 +22,9 @@ const Tooltip: FC<TooltipProps> = ({
   const hostClasses = [styles.host];
   if (inline) {
     hostClasses.push(styles.inline);
+  }
+  if (className) {
+    hostClasses.push(className);
   }
 
   const show = useCallback(() => setShown(true), []);
