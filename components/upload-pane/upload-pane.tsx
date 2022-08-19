@@ -418,7 +418,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
                     onClick={handleThumbnailClick}
                     onDeleteClick={handleDeleteClick}
                     onPurityClick={handleThumbnailPurityClick}
-                    disabled={uploading || errors.length > 0}
+                    disabled={uploading || uploaded}
                   />
                 ))}
               </ThumbnailGrid>
