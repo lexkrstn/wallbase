@@ -174,8 +174,14 @@ $thumbnail-resolution-height: 22px;
 }
 .successMessage {
 	@extend %thumbnail__result-message;
+  width: auto;
+  border-radius: 50%;
 	background-color: #22652D;
 	background-color: rgba(4, 93, 7, 0.54);
+  > svg {
+    height: 30px;
+    vertical-align: middle;
+  }
 }
 .errorMessage {
 	@extend %thumbnail__result-message;

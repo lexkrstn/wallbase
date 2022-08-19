@@ -9,14 +9,16 @@ interface AlertProps {
   iconClassName?: string;
   className?: string;
   children: ReactNode;
+  success?: boolean;
 }
 
 const Alert: FC<AlertProps> = ({
-  icon, iconLarge, children, iconClassName, className,
+  icon, iconLarge, children, iconClassName, className, success,
 }) => {
   const hostClasses = [styles.alert];
   if (icon) hostClasses.push(styles.withIcon);
   if (className) hostClasses.push(className);
+  if (success) hostClasses.push(styles.success);
   const iconClasses = [styles.icon];
   if (iconLarge) iconClasses.push(styles.iconLarge);
   return (

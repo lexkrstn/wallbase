@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   env: {
-    ROOT: __dirname,
+    PROJECT_ROOT: __dirname,
   },
   publicRuntimeConfig: {
     siteName: 'Wallbase',

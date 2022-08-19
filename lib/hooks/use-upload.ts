@@ -2,21 +2,36 @@ import { useCallback, useState } from 'react';
 import { parse } from 'cookie';
 import { TOKEN_NAME } from '../../interfaces/constants';
 
+type FormBody = Record<string, string | number | string[] | number[]>;
+
 interface UseUploadOptions {
-  body?: Record<string, string | number>;
+  body?: FormBody;
   name?: string;
   method?: string;
   headers?: Record<string, string>;
   useCookieToken?: boolean;
-  onError?: (error: any) => void;
+  errorFormatter?: (error: unknown, response: Response) => Promise<Error>;
+  onError?: (error: Error) => void;
   onSuccess?: () => void;
 }
 
 interface UploadOptions {
   headers?: Record<string, string>;
-  body?: Record<string, string | number>;
-  onError?: (error: any) => void;
+  body?: FormBody;
+  onError?: (error: Error) => void;
   onSuccess?: () => void;
+}
+
+function addFormBody(formData: FormData, body: FormBody) {
+  for (const key of Object.keys(body)) {
+    if (Array.isArray(body[key])) {
+      for (const value of body[key] as string[]) {
+        formData.append(key, `${value}`);
+      }
+    } else {
+      formData.append(key, `${body[key]}`);
+    }
+  }
 }
 
 export function useUpload(url: string, {
@@ -25,6 +40,7 @@ export function useUpload(url: string, {
   method = 'POST',
   headers = {},
   useCookieToken = false,
+  errorFormatter = async error => error instanceof Error ? error : new Error(`${error}`),
   onError,
   onSuccess,
 }: UseUploadOptions = {}) {
@@ -41,13 +57,9 @@ export function useUpload(url: string, {
 
     const formData = new FormData();
     formData.append(name, file);
-    for (const key of Object.keys(body)) {
-      formData.append(key, `${body[key]}`);
-    }
+    addFormBody(formData, body);
     if (uploadOptions.body) {
-      for (const key of Object.keys(uploadOptions.body)) {
-        formData.append(key, `${uploadOptions.body[key]}`);
-      }
+      addFormBody(formData, uploadOptions.body);
     }
 
     const allHeaders = { ...headers };
@@ -55,30 +67,34 @@ export function useUpload(url: string, {
       const cookies = parse(document.cookie);
       const token = cookies[TOKEN_NAME];
       if (token) {
-        headers['Authorization'] = `Bearer ${useCookieToken}`;
+        allHeaders['Authorization'] = `Bearer ${token}`;
       }
     }
     if (uploadOptions.headers) {
-      Object.assign(allHeaders, uploadOptions.headers);
+      Object.assign(allHeaders, allHeaders, uploadOptions.headers);
     }
 
-    const result = await fetch(url, {
+    const response = await fetch(url, {
       method,
       body: formData,
       headers: allHeaders,
     });
 
-    if (!result.ok) {
-      const errorMessage = `HTTP error ${result.status} (${result.statusText})`;
+    if (!response.ok) {
+      const newError = await errorFormatter(
+        `HTTP error ${response.status} (${response.statusText})`,
+        response,
+      );
       setState({
         uploading: false,
-        error: errorMessage,
+        error: `${newError}`,
       });
+
       if (uploadOptions.onError) {
-        uploadOptions.onError(new Error(errorMessage));
+        uploadOptions.onError(newError);
       }
       if (onError) {
-        onError(new Error(errorMessage));
+        onError(newError);
       }
       return;
     }
@@ -94,7 +110,7 @@ export function useUpload(url: string, {
     if (onSuccess) {
       onSuccess();
     }
-  }, [uploading, method, name, JSON.stringify(body), onError, onSuccess]);
+  }, [uploading, method, name, JSON.stringify(body), onError, onSuccess, errorFormatter]);
 
   return { uploading, upload, error };
 }

@@ -1,5 +1,5 @@
 import {
-  faUpload, faFolderOpen, faTrash, faChevronRight, faExclamationCircle,
+  faUpload, faFolderOpen, faTrash, faChevronRight, faExclamationCircle, faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
@@ -40,7 +40,7 @@ interface ApiPostBody {
   sourceUrl: string;
   authorName: string;
   authorUrl: string;
-  tags: string;
+  tags: string[];
 }
 
 function getCommonPurityOfActive(thumbnails: ThumbnailState[]): number {
@@ -114,9 +114,16 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
   }, []);
 
   const {
-    uploading, errors, upload, reset: resetErrors,
+    uploading, errors, upload, reset: resetErrors, uploaded,
   } = useUploads<ApiPostBody>('/api/wallpapers', {
     useCookieToken: true,
+    errorFormatter: async (err: unknown, response: Response) => {
+      if (response.status === 400) {
+        const json = await response.json();
+        return new Error(json.error);
+      }
+      return err instanceof Error ? err : new Error(`${err}`);
+    },
     onStarted: useCallback((file: File) => {
       setImagesState(state => ({
         ...state,
@@ -298,7 +305,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
         purity: image.purity,
         board: image.board,
         sourceUrl: image.sourceUrl,
-        tags: image.tags.map(tag => tag.id).join(','),
+        tags: image.tags.map(tag => tag.id),
         authorName: image.authorName,
         authorUrl: image.authorUrl,
       },
@@ -381,6 +388,11 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
               )}
             </Alert>
           )}
+          {uploaded && errors.length === 0 && (
+            <Alert icon={faCheckCircle} className={styles.alert} success>
+              Uploaded all the wallpapers!
+            </Alert>
+          )}
           <DropZone
             className={styles.dropzone}
             disabled={uploading || errors.length > 0}
@@ -413,7 +425,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
             )}
           </DropZone>
           <footer className={styles.footer}>
-            {errors.length === 0 && (
+            {!uploaded && (
               <>
                 <Button
                   className={styles.btnClear}
@@ -437,7 +449,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
                 </Button>
               </>
             )}
-            {errors.length > 0 && (
+            {uploaded && (
               <div className={styles.continue}>
                 <Button
                   className={styles.btnContinue}

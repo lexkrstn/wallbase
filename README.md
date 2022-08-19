@@ -1,8 +1,23 @@
 # Wallbase 2
 
+## Prerequisites
+
+- NodeJS
+- PostgreSQL
+- GraphicsMagick
+  MacOS:
+  ```bash
+  brew install graphicsmagick
+  ```
+  Ubuntu:
+  ```bash
+  sudo apt install graphicsmagick
+  ```
+
 ## Installation
 
 ```bash
+cd <PROJECT_DIR>
 npm run knex migrate:latest
 npm run knex seed:run
 npm run build

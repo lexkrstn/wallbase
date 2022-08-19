@@ -1,6 +1,8 @@
 import path from 'path';
 import { MB } from '../lib/constants';
 
+const PROJECT_ROOT = process.env.PROJECT_ROOT!;
+
 export default {
   secret: process.env.SALT!,
   tokenLifeTime: 7 * 24 * 60 * 60,
@@ -15,14 +17,14 @@ export default {
 		minHeight: 640,
 		maxWidth: 10000,
 		maxHeight: 10000,
-		path: path.resolve(__dirname, '..', 'uploads'),
+		path: path.join(PROJECT_ROOT, 'uploads'),
   },
   wallpaper: {
-    path: path.resolve(__dirname, '..', 'public', 'wallpapers'),
+    path: path.join(PROJECT_ROOT, 'public', 'wallpapers'),
   },
   thumbnail: {
 		width: 250,
 		height: 200,
-    path: path.resolve(__dirname, '..', 'public', 'thumbnails'),
+    path: path.resolve(PROJECT_ROOT, 'public', 'thumbnails'),
 	},
 };

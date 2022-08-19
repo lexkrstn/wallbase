@@ -98,7 +98,6 @@ const Thumbnail: FC<ThumbnailProps> = ({
         <div className={styles.success}>
           <div className={styles.successMessage}>
             <FontAwesomeIcon icon={faCheckCircle} />
-            Success!
           </div>
         </div>
       )}

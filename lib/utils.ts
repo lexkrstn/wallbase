@@ -1,5 +1,5 @@
 import camelCase from 'lodash/camelCase';
-import kebabCase from 'lodash/kebabCase';
+import snakeCase from 'lodash/snakeCase';
 
 export function camelCaseObjectKeys(obj: Record<any, any>): Record<any, any> {
   const clone: Record<any, any> = {};
@@ -9,10 +9,10 @@ export function camelCaseObjectKeys(obj: Record<any, any>): Record<any, any> {
   return clone;
 }
 
-export function kebabCaseObjectKeys(obj: Record<any, any>): Record<any, any> {
+export function snakeCaseObjectKeys(obj: Record<any, any>): Record<any, any> {
   const clone: Record<any, any> = {};
   for (const key of Object.keys(obj)) {
-    clone[kebabCase(key)] = obj[key];
+    clone[snakeCase(key)] = obj[key];
   }
   return clone;
 }

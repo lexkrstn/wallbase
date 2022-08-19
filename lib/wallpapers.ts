@@ -1,12 +1,14 @@
 import path from 'path';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
+import omit from 'lodash/omit';
+import pick from 'lodash/pick';
 import FeaturedWallpaperSlide from '../interfaces/featured-wallpaper-slide';
 import Wallpaper from '../interfaces/wallpaper';
 import config from './config';
 import { getFileHash } from './hash';
 import knex from './knex';
-import { camelCaseObjectKeys, kebabCaseObjectKeys } from './utils';
+import { camelCaseObjectKeys, snakeCaseObjectKeys } from './utils';
 import {
   createThumbnail, getAvgColorOfRgbPixels, getImage4x4Pixels,
   getImageDistinctiveColors, getImageSize,
@@ -16,6 +18,20 @@ const MIMETYPE_TO_EXT: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
 };
+
+function camelCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
+  return {
+    ...camelCaseObjectKeys(omit(obj, ['rgb4x4', 'sha256'])),
+    ...pick(obj, ['rgb4x4', 'sha256']),
+  };
+}
+
+function snakeCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
+  return {
+    ...snakeCaseObjectKeys(omit(obj, ['rgb4x4', 'sha256'])),
+    ...pick(obj, ['rgb4x4', 'sha256']),
+  };
+}
 
 export async function getFeaturedWallpaperSlides(): Promise<FeaturedWallpaperSlide[]> {
   return [
@@ -64,9 +80,9 @@ type CreateWallpaperDto = Omit<Wallpaper,
 
 export async function insertWallpaper(dto: CreateWallpaperDto): Promise<Wallpaper> {
   const [row] = await knex('wallpapers')
-    .insert(kebabCaseObjectKeys(dto))
+    .insert(snakeCaseWallpaperKeys(dto))
     .returning('*');
-  return camelCaseObjectKeys(row) as Wallpaper;
+  return camelCaseWallpaperKeys(row) as Wallpaper;
 }
 
 function getWallpaperFileName(id: string, mimetype: string): string {
@@ -85,8 +101,8 @@ async function findIdenticalWallpaperByFile(
   filePath: string,
   sha256: string,
 ): Promise<Wallpaper | null> {
-  const rows = await knex('wallpaper').where({ sha256 });
-  const wallpapers = rows.map(camelCaseObjectKeys) as Wallpaper[];
+  const rows = await knex('wallpapers').where({ sha256 });
+  const wallpapers = rows.map(camelCaseWallpaperKeys) as Wallpaper[];
   const file = await fs.readFile(filePath);
   for (const wallpaper of wallpapers) {
     const file2 = await fs.readFile(getWallpaperPath(wallpaper.id, wallpaper.mimetype));
@@ -132,7 +148,7 @@ export async function uploadWallpaper({
   if (duplicate) {
     throw new DuplicateWallpaperError(duplicate.id);
   }
-  const id = uuid.v4();
+  const id = uuidv4();
   const thumbPath = getThumbnailPath(id, mimetype);
   const thumbWidth = config.thumbnail.width;
   const thumbHeight = config.thumbnail.height;

@@ -2,8 +2,7 @@ import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import passport from 'passport';
-import multer from 'multer';
-import config from '../../lib/config';
+import CONFIG from '../../lib/config';
 import Wallpaper from '../../interfaces/wallpaper';
 import { getImageSize } from '../../lib/image';
 import { uploadWallpaper } from '../../lib/wallpapers';
@@ -11,30 +10,30 @@ import { getArrayParam, getNumericParam, getStringParam } from '../../lib/helper
 import { BOARD_G, PURITY_SFW } from '../../interfaces/constants';
 import { jwtStrategy } from '../../lib/passport';
 import { addWallpaperTags } from '../../lib/tags';
-
-const upload = multer({
-	dest: config.upload.path,
-	limits: {
-		files: 1,
-		fileSize: config.upload.maxFileSize,
-	},
-})
+import { UploadedFile, uploadMultipartForm } from '../../lib/upload';
 
 type Data = { error?: string } | Wallpaper;
 
 export default nextConnect()
   .use(passport.initialize())
   .use(passport.authenticate(jwtStrategy, { session: false }))
-  .use(upload.single('file'))
   .post(async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const file = (req as any).file as Express.Multer.File;
     const userId = (req as any).user.id as string;
+    let file: UploadedFile | null = null;
     try {
-      if (!config.upload.allowedMimeTypes.includes(file.mimetype)) {
+      const { files } = await uploadMultipartForm(req, {
+        addFieldsToBody: true,
+      });
+      if (!files?.file.length) {
+        throw new Error('File required');
+      }
+      file = files.file[0];
+
+      if (!CONFIG.upload.allowedMimeTypes.includes(file.mimetype || '')) {
         throw new Error('Unknown file type');
       }
       const { width, height } = await getImageSize(file.path);
-      const { minWidth, minHeight, maxWidth, maxHeight } = config.upload;
+      const { minWidth, minHeight, maxWidth, maxHeight } = CONFIG.upload;
       if (width < minWidth || height < minHeight) {
         throw new Error(`Too small (min = ${minWidth}x${minHeight})`);
       }
@@ -44,7 +43,7 @@ export default nextConnect()
 
       const wallpaper = await uploadWallpaper({
         path: file.path,
-        mimetype: file.mimetype,
+        mimetype: file.mimetype!,
         fileSize: file.size,
         uploaderId: userId,
         purity: getNumericParam(req, 'purity') ?? PURITY_SFW,
@@ -61,7 +60,14 @@ export default nextConnect()
 
       res.json(wallpaper);
     } catch (error: any) {
-      fs.unlink(file.path).catch(() => {});
+      if (file) {
+        fs.unlink(file.path).catch(() => {});
+      }
       res.status(400).json({ error: error.message });
     }
   });
+
+export const config = {
+  // Disable default NextJS body parser in order the formidable's one work
+  api: { bodyParser: false },
+};

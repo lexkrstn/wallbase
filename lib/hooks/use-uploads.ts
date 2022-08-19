@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useUpload } from './use-upload';
 
 export interface UploadError {
-  error: string;
+  error: Error;
   file: File;
 }
 
@@ -12,8 +12,9 @@ interface UseUploadsOptions {
   method?: string;
   headers?: Record<string, string>;
   useCookieToken?: boolean;
+  errorFormatter?: (error: unknown, response: Response) => Promise<Error>;
   onStarted?: (file: File) => void;
-  onError?: (file: File, error: Error | string) => void;
+  onError?: (file: File, error: Error) => void;
   onSuccess?: (file: File) => void;
   onComplete?: (errors: UploadError[], successes: File[]) => void;
 }
@@ -32,8 +33,9 @@ export function useUploads<BodyType extends {} = UploadBody>(url: string, {
   onStarted,
   ...options
 }: UseUploadsOptions = {}) {
-  const [{ uploading, errors }, setState] = useState({
+  const [{ uploading, errors, uploaded }, setState] = useState({
     uploading: false,
+    uploaded: false,
     errors: [] as UploadError[],
   });
 
@@ -42,6 +44,7 @@ export function useUploads<BodyType extends {} = UploadBody>(url: string, {
   const reset = useCallback(() => {
     setState({
       uploading: false,
+      uploaded: false,
       errors: [],
     });
   }, []);
@@ -50,6 +53,7 @@ export function useUploads<BodyType extends {} = UploadBody>(url: string, {
     if (uploading || !files.length) return;
     setState({
       uploading: true,
+      uploaded: false,
       errors: [],
     });
     const errors: UploadError[] = [];
@@ -72,7 +76,10 @@ export function useUploads<BodyType extends {} = UploadBody>(url: string, {
               resolve();
             },
             onError: err => {
-              errors.push(err);
+              errors.push({
+                error: err,
+                file,
+              });
               if (onError) {
                 onError(file, err);
               }
@@ -82,11 +89,15 @@ export function useUploads<BodyType extends {} = UploadBody>(url: string, {
         });
       });
     }, Promise.resolve());
-    setState({ errors, uploading: false });
+    setState({
+      errors,
+      uploading: false,
+      uploaded: true,
+    });
     if (onComplete) {
       onComplete(errors, successes);
     }
   }, [uploadOne, uploading, onSuccess, onError, onComplete, onStarted]);
 
-  return { uploading, upload, errors, reset };
+  return { uploading, upload, errors, reset, uploaded };
 }

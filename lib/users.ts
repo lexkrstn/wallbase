@@ -5,7 +5,7 @@ import geoip from 'geoip-lite';
 import countryData from 'country-data';
 import User, { UserRole, UserWithPassword } from '../interfaces/user';
 import knex from './knex';
-import { camelCaseObjectKeys, kebabCaseObjectKeys } from './utils';
+import { camelCaseObjectKeys, snakeCaseObjectKeys } from './utils';
 
 export const ROOT_USER_ID = '1';
 
@@ -83,7 +83,7 @@ export async function updateUser(id: string, dto: UpdateUserDto): Promise<boolea
   try {
     const rows = await knex('users')
       .update({
-        ...kebabCaseObjectKeys(dto),
+        ...snakeCaseObjectKeys(dto),
         updated_at: knex.fn.now(),
       })
       .where('id', id)

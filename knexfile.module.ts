@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-const ROOT_DIR = process.env.ROOT || __dirname;
+const ROOT_DIR = process.env.PROJECT_ROOT || __dirname;
 
 const result = dotenv.config({
   path: path.resolve(ROOT_DIR, '.env'),

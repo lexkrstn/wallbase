@@ -11,6 +11,6 @@ interface Data {
 export default nextConnect()
   .use(passport.initialize())
   .use(passport.authenticate(jwtStrategy, { session: false }))
-  .get(function user(req: NextApiRequest, res: NextApiResponse<Data>) {
+  .get((req: NextApiRequest, res: NextApiResponse<Data>) => {
     res.status(200).json({ user: (req as any).user });
   });

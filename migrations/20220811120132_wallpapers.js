@@ -25,7 +25,7 @@
     table.integer('purity').notNullable().defaultTo(1);
     table.integer('board').notNullable().defaultTo(1);
     table.float('ratio').notNullable().comment('width / height');
-    table.specificType('tsv', 'tsvector').notNullable()
+    table.specificType('tsv', 'tsvector').nullable()
       .comment('Concatenated FT-search data of all tags');
     table.specificType('rgb4x4', 'float[48]').notNullable()
       .comment('4x4 rgb data to search for similars');

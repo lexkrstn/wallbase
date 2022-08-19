@@ -17,6 +17,9 @@
   padding: 15px 0 15px 15px;
   font-size: 0;
   line-height: 1;
+  @at-root .success & {
+    color: #3caa3d;
+  }
   > svg {
     height: 16px;
   }
