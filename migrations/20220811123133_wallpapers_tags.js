@@ -45,17 +45,17 @@
   await knex.schema.raw(`
     CREATE FUNCTION update_wallpaper_tsv(UUID) RETURNS void AS $$
     BEGIN
-      UPDATE wallpapers as w
-        SET w.tsv = (
-          SELECT concat_tsvector(t.tsv)
+      UPDATE wallpapers
+        SET tsv = (
+          SELECT concat_tsvectors(t.tsv)
             FROM tags AS t
             WHERE t.id IN (
               SELECT wt.tag_id
                 FROM wallpapers_tags AS wt
-                WHERE wt.wallpaper_id = NEW.wallpaper_id
+                WHERE wt.wallpaper_id = $1
             )
         )
-        WHERE w.id = $1;
+        WHERE id = $1;
     END
     $$ LANGUAGE plpgsql;
 
@@ -72,7 +72,7 @@
         UPDATE users
           SET attached_tag_count = attached_tag_count + 1
           WHERE id = (
-            SELECT creator_id FROM wallpapers WHERE id = NEW.wallpaper_id
+            SELECT uploader_id FROM wallpapers WHERE id = NEW.wallpaper_id
           );
         RETURN NEW;
       ELSE
@@ -86,7 +86,7 @@
         UPDATE users
           SET attached_tag_count = attached_tag_count - 1
           WHERE id = (
-            SELECT creator_id FROM wallpapers WHERE id = OLD.wallpaper_id
+            SELECT uploader_id FROM wallpapers WHERE id = OLD.wallpaper_id
           );
         RETURN OLD;
       END IF;
@@ -101,8 +101,8 @@
     CREATE FUNCTION on_update_tag_update_wallpaper_tsv() RETURNS trigger AS $$
     BEGIN
       UPDATE wallpapers as w
-        SET w.tsv = (
-          SELECT concat_tsvector(t.tsv)
+        SET tsv = (
+          SELECT concat_tsvectors(t.tsv)
             FROM tags AS t
             WHERE t.id IN (
               SELECT wt.tag_id
@@ -110,7 +110,7 @@
                 WHERE wt.wallpaper_id = w.id
             )
         )
-        WHERE w.id IN (
+        WHERE id IN (
           SELECT wt1.wallpaper_id
             FROM wallpapers_tags AS wt1
             WHERE wt1.tag_id = NEW.id
