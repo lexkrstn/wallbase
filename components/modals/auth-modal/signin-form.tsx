@@ -1,6 +1,6 @@
 import { faSignIn, faExclamationCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, useCallback } from 'react';
-import { useSignIn } from '../../../lib/hooks/useSignIn';
+import { useSignIn } from '../../../lib/hooks/use-sign-in';
 import Alert from '../../alert';
 import Button from '../../buttons/button';
 import { FormGroup, Label, TextField } from '../../form';

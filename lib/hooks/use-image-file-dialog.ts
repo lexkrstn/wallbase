@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ImageFileData, readImageFile } from "../../lib/helpers/image";
-import { useFileDialog } from "./useFileDialog";
+import { useFileDialog } from "./use-file-dialog";
 
 interface UseImageFileDialogProps {
   mimetypes?: string[];

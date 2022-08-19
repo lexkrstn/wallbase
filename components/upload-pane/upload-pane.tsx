@@ -13,7 +13,7 @@ import ThumbnailGrid from '../thumbnail/grid';
 import DropZone from '../dropzone';
 import Thumbnail from '../thumbnail';
 import styles from './upload-pane.module.scss';
-import { useImageFileDialog } from '../../lib/hooks/useImageFileDialog';
+import { useImageFileDialog } from '../../lib/hooks/use-image-file-dialog';
 import NotAllSetModal from './not-all-set-modal';
 import TagInput from '../form/tag-input';
 import Tag from '../../interfaces/tag';

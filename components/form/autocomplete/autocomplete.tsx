@@ -3,7 +3,7 @@ import React, {
   KeyboardEvent, KeyboardEventHandler, MouseEvent, useCallback, useEffect, useRef, useState,
 } from 'react';
 import { hasAncestorNode } from '../../../lib/helpers/hasAncestorNode';
-import { useAutocomplete } from '../../../lib/hooks/useAutocomplete';
+import { useAutocomplete } from '../../../lib/hooks/use-autocomplete';
 import TextField from '../text-field';
 import styles from './autocomplete.module.scss';
 
