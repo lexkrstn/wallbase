@@ -3,7 +3,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import React, { ChangeEvent, FC, useCallback, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useReducer, useRef, useState } from 'react';
 import { ImageFileData } from '../../lib/helpers/image';
 import Button from '../buttons/button';
 import { TextField } from '../form';
@@ -19,22 +19,9 @@ import TagInput from '../form/tag-input';
 import Tag from '../../interfaces/tag';
 import { UploadError, useUploads } from '../../lib/hooks/use-uploads';
 import Alert from '../alert';
+import reducer, { initialState } from './reducer';
 
-interface ThumbnailState extends ImageFileData {
-  id: string;
-  active: boolean;
-  purity: number;
-  board: number;
-  sourceUrl: string;
-  authorName: string;
-  authorUrl: string;
-  tags: Tag[],
-  loading?: boolean;
-  success?: boolean;
-  error?: string;
-}
-
-interface ApiPostBody {
+interface ApiRequestBody {
   purity: number;
   board: number;
   sourceUrl: string;
@@ -43,262 +30,82 @@ interface ApiPostBody {
   tags: string[];
 }
 
-function getCommonPurityOfActive(thumbnails: ThumbnailState[]): number {
-  const active = thumbnails.filter(t => t.active);
-  if (!active.length) return 0;
-  const { purity } = active[0];
-  return active.every(t => t.purity === purity) ? purity : 0;
-}
-
-function getCommonBoardOfActive(thumbnails: ThumbnailState[]): number {
-  const active = thumbnails.filter(t => t.active);
-  if (!active.length) return 0;
-  const { board } = active[0];
-  return active.every(t => t.board === board) ? board : 0;
-}
-
-function getCommonSourceUrlOfActive(thumbnails: ThumbnailState[]): string {
-  const active = thumbnails.filter(t => t.active);
-  if (!active.length) return '';
-  const { sourceUrl } = active[0];
-  return active.every(t => t.sourceUrl === sourceUrl) ? sourceUrl : '/* multiple */';
-}
-
-function areTagArraysEqual(a: Tag[], b: Tag[]): boolean {
-  const idsA = a.map(tag => tag.id).sort();
-  const idsB = b.map(tag => tag.id).sort();
-  return JSON.stringify(idsA) === JSON.stringify(idsB);
-}
-
-function getCommonTagsOfActive(thumbnails: ThumbnailState[]): Tag[] {
-  const active = thumbnails.filter(t => t.active);
-  if (!active.length) return [];
-  const { tags } = active[0];
-  return active.every(t => areTagArraysEqual(t.tags, tags)) ? tags : [];
-}
-
-function getNextPurity(purity: number) {
-  return (purity === 0 || purity === 4) ? 1 : purity << 1;
-}
-
 interface UploadPaneProps {
   onUploaded?: (errors: UploadError[], successes: File[]) => void;
 }
 
 const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
-  const idCounterRef = useRef(0);
   const [notAllSetModalShown, setNotAllSetModalShown] = useState(false);
-  const [multiselect, setMultiselect] = useState(true);
-  const [{ images, board, purity, sourceUrl, tags }, setImagesState] = useState({
-    images: [] as ThumbnailState[],
-    board: 0,
-    purity: 0,
-    sourceUrl: '',
-    tags: [] as Tag[],
-  });
+  const [{ images, board, purity, sourceUrl, tags }, dispatch] = useReducer(reducer, initialState);
   const imagesHaveBoard = images.every(image => image.board !== 0);
   const imagesHavePurity = images.every(image => image.purity !== 0);
   const imagesHaveTags = images.every(image => image.tags.length > 0);
   const canUpload = images.length > 0 && imagesHaveBoard && imagesHavePurity && imagesHaveTags;
   const activeImageCount = images.reduce((count, image) => count + (image.active ? 1 : 0), 0);
 
-  const resetPaneState = useCallback(() => {
-    resetErrors();
-    setImagesState({
-      images: [],
-      purity: 0,
-      board: 0,
-      tags: [],
-      sourceUrl: '',
-    });
-  }, []);
-
   const {
     uploading, errors, upload, reset: resetErrors, uploaded,
-  } = useUploads<ApiPostBody>('/api/wallpapers', {
+  } = useUploads<ApiRequestBody>('/api/wallpapers', {
     useCookieToken: true,
-    errorFormatter: async (err: unknown, response: Response) => {
-      if (response.status === 400) {
-        const json = await response.json();
-        return new Error(json.error);
-      }
-      return err instanceof Error ? err : new Error(`${err}`);
-    },
     onStarted: useCallback((file: File) => {
-      setImagesState(state => ({
-        ...state,
-        images: state.images.map(image => ({
-          ...image,
-          loading: image.file === file ? true : image.loading,
-        })),
-      }));
+      dispatch({ type: 'set image loading', file });
     }, []),
     onError: useCallback((file: File, error: Error | string) => {
-      setImagesState(state => ({
-        ...state,
-        images: state.images.map(image => ({
-          ...image,
-          loading: false,
-          error: image.file === file ? (error as Error).message || error as string : image.error,
-        })),
-      }));
+      dispatch({ type: 'fail image loading', file, error });
     }, []),
     onSuccess: useCallback((file: File) => {
-      setImagesState(state => ({
-        ...state,
-        images: state.images.map(image => ({
-          ...image,
-          loading: false,
-          success: image.file === file ? true : image.success,
-        })),
-      }));
+      dispatch({ type: 'succeed image loading', file });
     }, []),
     onComplete: onUploaded,
   });
 
   const inputDisabled = activeImageCount === 0 || uploading || errors.length > 0;
 
+  const resetPaneState = useCallback(() => {
+    resetErrors();
+    dispatch({ type: 'reset' });
+  }, []);
+
   const closeNotAllSetModal = useCallback(() => setNotAllSetModalShown(false), []);
 
-  const handleThumbnailClick = useCallback((id: string) => {
-    setImagesState(oldState => {
-      const newImages = oldState.images.map(image => ({
-        ...image,
-        active: multiselect
-          ? (image.id === id ? !image.active : image.active)
-          : (image.id === id ? !image.active : false),
-      }));
-      return {
-        images: newImages,
-        board: getCommonBoardOfActive(newImages),
-        purity: getCommonPurityOfActive(newImages),
-        sourceUrl: getCommonSourceUrlOfActive(newImages),
-        tags: getCommonTagsOfActive(newImages),
-      };
-    });
-  }, [multiselect]);
-
-  const handleDeleteClick = useCallback((id: string) => {
-    setImagesState(oldState => {
-      const newImages = oldState.images.filter(image => {
-        if (image.id !== id) return true;
-        image.dispose(); // calls URL.revokeObjectURL()
-        return false;
-      });
-      return {
-        images: newImages,
-        board: getCommonBoardOfActive(newImages),
-        purity: getCommonPurityOfActive(newImages),
-        sourceUrl: getCommonSourceUrlOfActive(newImages),
-        tags: getCommonTagsOfActive(newImages),
-      };
-    });
+  const toggleImageActive = useCallback((id: string) => {
+    dispatch({ type: 'toggle image active', id });
   }, []);
 
-  const clearImages = useCallback(() => {
-    setImagesState(oldState => ({
-      purity: 0,
-      board: 0,
-      sourceUrl: '',
-      tags: [],
-      images: oldState.images.filter(image => {
-        image.dispose(); // calls URL.revokeObjectURL()
-        return false; // filter out all
-      }),
-    }));
+  const deleteImage = useCallback((id: string) => {
+    dispatch({ type: 'delete image', id });
   }, []);
 
-  const handleImagesLoaded = useCallback((newImages: ImageFileData[]) => {
-    setImagesState(oldState => ({
-      ...oldState,
-      images: [
-        ...oldState.images,
-        ...newImages.map((image): ThumbnailState => ({
-          ...image,
-          id: `${idCounterRef.current++}`,
-          active: false,
-          board: 0,
-          purity: 0,
-          sourceUrl: '',
-          authorName: '',
-          authorUrl: '',
-          tags: [],
-        })),
-      ],
-    }));
+  const addImages = useCallback((images: ImageFileData[]) => {
+    dispatch({ type: 'add images', images });
   }, []);
 
-  const handlePurityChange = useCallback((newPurity: number) => {
-    setImagesState(oldState => ({
-      ...oldState,
-      purity: newPurity,
-      images: oldState.images.map(image => ({
-        ...image,
-        purity: image.active ? newPurity : image.purity,
-      })),
-    }));
+  const setPurity = useCallback((purity: number) => {
+    dispatch({ type: 'set purity', purity });
   }, []);
 
-  const handleThumbnailPurityClick = useCallback((id: string) => {
-    setImagesState(oldState => {
-      const newImages = oldState.images.map(image => ({
-        ...image,
-        purity: image.id === id ? getNextPurity(image.purity) : image.purity,
-      }));
-      return {
-        ...oldState,
-        purity: getCommonPurityOfActive(newImages),
-        images: newImages,
-      };
-    });
+  const scrollImagePurity = useCallback((id: string) => {
+    dispatch({ type: 'scroll image purity', id });
   }, []);
 
-  const handleBoardChange = useCallback((newBoard: number) => {
-    setImagesState(oldState => ({
-      ...oldState,
-      board: newBoard,
-      images: oldState.images.map(image => ({
-        ...image,
-        board: image.active ? newBoard : image.board,
-      })),
-    }));
+  const setBoard = useCallback((board: number) => {
+    dispatch({ type: 'set board', board });
   }, []);
 
   const handleSourceUrlChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    const newSourceUrl = event.currentTarget.value;
-    setImagesState(oldState => ({
-      ...oldState,
-      sourceUrl: newSourceUrl,
-      images: oldState.images.map(image => ({
-        ...image,
-        sourceUrl: image.active ? newSourceUrl : image.sourceUrl,
-      })),
-    }));
+    dispatch({ type: 'set source url', sourceUrl: event.currentTarget.value });
   }, []);
 
-  const handleTagsChange = useCallback((newTags: Tag[]) => {
-    setImagesState(oldState => ({
-      ...oldState,
-      tags: newTags,
-      images: oldState.images.map(image => ({
-        ...image,
-        tags: image.active ? newTags : image.tags,
-      })),
-    }));
+  const setTags = useCallback((tags: Tag[]) => {
+    dispatch({ type: 'set tags', tags });
   }, []);
 
-  const handleUploadClick = useCallback(() => {
+  const tryStartUploading = useCallback(() => {
     if (!canUpload) {
       setNotAllSetModalShown(true);
       return;
     }
-    setImagesState(state => ({
-      ...state,
-      images: state.images.map(image => ({
-        ...image,
-        active: false,
-      })),
-    }));
+    dispatch({ type: 'unselect images' });
     upload(images.map(image => ({
       file: image.file,
       body: {
@@ -312,9 +119,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
     })));
   }, [canUpload, images]);
 
-  const { open: openFileDialog } = useImageFileDialog({
-    onChange: handleImagesLoaded,
-  });
+  const { open: openFileDialog } = useImageFileDialog({ onChange: addImages });
 
   return (
     <div className={styles.host}>
@@ -345,7 +150,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
               <div className={styles.label}>Purity</div>
               <PurityFilter
                 value={purity}
-                onChange={handlePurityChange}
+                onChange={setPurity}
                 disabled={inputDisabled}
                 single
               />
@@ -354,7 +159,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
               <div className={styles.label}>Board</div>
               <BoardFilter
                 value={board}
-                onChange={handleBoardChange}
+                onChange={setBoard}
                 disabled={inputDisabled}
                 single
               />
@@ -363,7 +168,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
               <div className={styles.label}>Tags</div>
               <TagInput
                 value={tags}
-                onChange={handleTagsChange}
+                onChange={setTags}
                 disabled={inputDisabled}
               />
             </div>
@@ -396,7 +201,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
           <DropZone
             className={styles.dropzone}
             disabled={uploading || errors.length > 0}
-            onImagesLoaded={handleImagesLoaded}
+            onImagesLoaded={addImages}
             onClick={openFileDialog}
           >
             {images.length > 0 && (
@@ -415,9 +220,9 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
                     loading={image.loading}
                     success={image.success}
                     error={image.error}
-                    onClick={handleThumbnailClick}
-                    onDeleteClick={handleDeleteClick}
-                    onPurityClick={handleThumbnailPurityClick}
+                    onClick={toggleImageActive}
+                    onDeleteClick={deleteImage}
+                    onPurityClick={scrollImagePurity}
                     disabled={uploading || uploaded}
                   />
                 ))}
@@ -432,7 +237,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
                   iconPrepend={faTrash}
                   rounded
                   dark
-                  onClick={clearImages}
+                  onClick={resetPaneState}
                   disabled={images.length === 0 || uploading || errors.length > 0}
                 >
                   Clear
@@ -442,7 +247,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
                   iconPrepend={faUpload}
                   rounded
                   loading={uploading}
-                  onClick={handleUploadClick}
+                  onClick={tryStartUploading}
                   disabled={images.length === 0}
                 >
                   Upload

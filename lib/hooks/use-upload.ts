@@ -34,13 +34,25 @@ function addFormBody(formData: FormData, body: FormBody) {
   }
 }
 
+async function defaultErrorFormatter(err: unknown, response: Response) {
+  if (response.status === 400) {
+    const isJson = response.headers.get('content-type')?.includes('application/json');
+    if (isJson) {
+      const json = await response.json();
+      return new Error(typeof json.error === 'string' ? json.error : json.message);
+    }
+    return new Error(await response.text());
+  }
+  return err instanceof Error ? err : new Error(`${err}`);
+}
+
 export function useUpload(url: string, {
   body = {},
   name = 'file',
   method = 'POST',
   headers = {},
   useCookieToken = false,
-  errorFormatter = async error => error instanceof Error ? error : new Error(`${error}`),
+  errorFormatter = defaultErrorFormatter,
   onError,
   onSuccess,
 }: UseUploadOptions = {}) {
