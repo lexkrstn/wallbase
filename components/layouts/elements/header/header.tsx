@@ -49,7 +49,7 @@ const Header: FC<HeaderProps> = ({
     <div className={styles.host}>
       <Link href="/">
         <a className={styles.logo} title="Wallpapers">
-          <Image src={logoImage} />
+          <Image src={logoImage} alt="" />
         </a>
       </Link>
       <ul className={styles.nav}>

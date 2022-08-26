@@ -14,7 +14,7 @@ const SearchOptionsHelp: FC = () => (
       {'Examples: '}
       <span>jessica alba not:biel page:46</span>
       {' or '}
-      <span>"ergo proxy" imgtype:png imgtype:gif</span>
+      <span>&quot;ergo proxy&quot; imgtype:png imgtype:gif</span>
       {' or '}
       <span>nature uploader:users</span>
     </div>
@@ -27,7 +27,7 @@ const SearchOptionsHelp: FC = () => (
           (every word is a keyword).
         </div>
         <div className={styles.cell}>
-          <span className={styles.key}>"some words"</span>
+          <span className={styles.key}>&quot;some words&quot;</span>
           <br/>
           Use quotation marks to make the query more strict (the words are
           treated as a keyword).
@@ -37,7 +37,7 @@ const SearchOptionsHelp: FC = () => (
           :
           <span className={styles.value}>word</span>
           <br/>
-          Exclude keywords you don't want to appear in the results page.
+          Exclude keywords you don&apos;t want to appear in the results page.
           To use spaces wrap your words in quotation marks.
         </div>
       </div>

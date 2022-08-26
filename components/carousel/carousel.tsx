@@ -4,6 +4,7 @@ import React, { FC, ReactElement, useCallback, useEffect, useRef, useState } fro
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from 'next/link';
 import styles from './carousel.module.scss';
+import Image from 'next/image';
 
 interface SlideData {
   image: string;

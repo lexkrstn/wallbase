@@ -70,6 +70,7 @@ const Footer: FC = () => {
             className={styles.facebook}
             href={facebookUrl}
             target="_blank"
+            rel="noreferrer"
           >
             <FontAwesomeIcon icon={faFacebookF} />
           </a>
@@ -77,6 +78,7 @@ const Footer: FC = () => {
             className={styles.twitter}
             href={twitterUrl}
             target="_blank"
+            rel="noreferrer"
           >
             <FontAwesomeIcon icon={faTwitter} />
           </a>
@@ -84,6 +86,7 @@ const Footer: FC = () => {
             className={styles.irc}
             href={ircUrl}
             target="_blank"
+            rel="noreferrer"
             title="click to open webirc"
           >
             <div>

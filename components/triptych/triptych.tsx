@@ -65,7 +65,7 @@ const Triptych: FC<TriptychProps> = ({ popularTags, stats }) => (
       </div>
       <div className={styles.paypal}>
         <a href="https://patreon.com" target="blank" rel="nofollow">
-          <Image src={patreonImage} width="180" height="42" />
+          <Image src={patreonImage} width="180" height="42" alt="Patreon" />
         </a>
         <br/>
         Thank you!

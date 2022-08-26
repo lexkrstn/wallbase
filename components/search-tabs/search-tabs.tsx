@@ -28,7 +28,7 @@ const SearchTabs: FC<SearchTabsProps> = ({ defaultTab, onTabChanged }) => {
       <div className={styles.tip}>
         {'— Available search options: '}
         <Tooltip message="Use quotation marks to make the query more strict." inline>
-          <code>"keyword"</code>
+          <code>&quot;keyword&quot;</code>
         </Tooltip>,
         {' '}
         <Tooltip message="Exclude keywords you don't want to appear in the results page." inline>

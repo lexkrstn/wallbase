@@ -3,7 +3,7 @@ import { MB } from '../lib/constants';
 
 const PROJECT_ROOT = process.env.PROJECT_ROOT!;
 
-export default {
+const config = {
   secret: process.env.SALT!,
   tokenLifeTime: 7 * 24 * 60 * 60,
   site: {
@@ -28,3 +28,5 @@ export default {
     path: path.resolve(PROJECT_ROOT, 'public', 'thumbnails'),
 	},
 };
+
+export default config;
