@@ -1,5 +1,5 @@
 import React, { FC, MouseEvent, useCallback } from 'react';
-import { PURITY_NSFW, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
+import { Purity } from '../../interfaces/constants';
 import Tooltip from '../tooltip';
 import styles from './purity-filter.module.scss';
 
@@ -27,7 +27,7 @@ const PurityFilter: FC<PurityFilterProps> = ({
     <div className={classes.join(' ')}>
       <input type="hidden" name="purity" value={value} />
       <ul>
-        <li className={value & PURITY_SFW ? styles.selected : ''}>
+        <li className={value & Purity.SFW ? styles.selected : ''}>
           <Tooltip
             message="Clean wallpapers"
             position="bottom"
@@ -35,14 +35,14 @@ const PurityFilter: FC<PurityFilterProps> = ({
           >
             <button
               onClick={onClick}
-              data-purity={PURITY_SFW}
+              data-purity={Purity.SFW}
               disabled={disabled}
             >
               SFW
             </button>
           </Tooltip>
         </li>
-        <li className={value & PURITY_SKETCHY ? styles.selected : ''}>
+        <li className={value & Purity.SKETCHY ? styles.selected : ''}>
           <Tooltip
             message="Wallpapers with soft/erotic poses, blood, etc."
             position="bottom"
@@ -50,14 +50,14 @@ const PurityFilter: FC<PurityFilterProps> = ({
           >
             <button
               onClick={onClick}
-              data-purity={PURITY_SKETCHY}
+              data-purity={Purity.SKETCHY}
               disabled={disabled}
             >
               SKETCHY
             </button>
           </Tooltip>
         </li>
-        <li className={value & PURITY_NSFW ? styles.selected : ''}>
+        <li className={value & Purity.NSFW ? styles.selected : ''}>
           <Tooltip
             message="Wallpapers with visible boobs, testicles/vagina, gore, etc"
             position="bottom"
@@ -66,7 +66,7 @@ const PurityFilter: FC<PurityFilterProps> = ({
             <button
               onClick={nsfwDisabled ? undefined : onClick}
               disabled={nsfwDisabled || disabled}
-              data-purity={PURITY_NSFW}
+              data-purity={Purity.NSFW}
             >
               NSFW
             </button>

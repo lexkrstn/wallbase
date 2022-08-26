@@ -7,7 +7,7 @@ import Wallpaper from '../../interfaces/wallpaper';
 import { getImageSize } from '../../lib/image';
 import { uploadWallpaper } from '../../lib/wallpapers';
 import { getArrayParam, getNumericParam, getStringParam } from '../../lib/helpers/query';
-import { BOARD_G, PURITY_SFW } from '../../interfaces/constants';
+import { Board, Purity } from '../../interfaces/constants';
 import { jwtStrategy } from '../../lib/passport';
 import { addWallpaperTags } from '../../lib/tags';
 import { UploadedFile, uploadMultipartForm } from '../../lib/upload';
@@ -46,8 +46,8 @@ export default nextConnect()
         mimetype: file.mimetype!,
         fileSize: file.size,
         uploaderId: userId,
-        purity: getNumericParam(req, 'purity') ?? PURITY_SFW,
-        board: getNumericParam(req, 'board') ?? BOARD_G,
+        purity: getNumericParam(req, 'purity') ?? Purity.SFW,
+        board: getNumericParam(req, 'board') ?? Board.G,
         sourceUrl: getStringParam(req, 'sourceUrl'),
         authorName: getStringParam(req, 'authorName'),
         authorUrl: getStringParam(req, 'authorUrl'),

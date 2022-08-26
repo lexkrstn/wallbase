@@ -1,7 +1,7 @@
 import { wrapError, UniqueViolationError } from 'db-errors';
 import uniq from 'lodash/uniq';
 import Category from '../interfaces/category';
-import { PURITY_ALL } from '../interfaces/constants';
+import { Purity } from '../interfaces/constants';
 import Tag, { TagWithCategory } from '../interfaces/tag';
 import knex from './knex';
 import { camelCaseObjectKeys } from './utils';
@@ -45,7 +45,7 @@ export async function findTags({
   query,
   page = 1,
   perPage = 24,
-  purity = PURITY_ALL,
+  purity = Purity.ALL,
   categoryId = '',
   order = 'desc',
   orderBy,
@@ -65,8 +65,8 @@ export async function findTags({
   if (categoryId) {
     countBuilder.where('category_id', categoryId);
   }
-  const purityBitmask = purity & PURITY_ALL;
-  if (purityBitmask !== 0 && purityBitmask !== PURITY_ALL) {
+  const purityBitmask = purity & Purity.ALL;
+  if (purityBitmask !== 0 && purityBitmask !== Purity.ALL) {
     countBuilder.whereRaw(`(purity & ?) <> 0`, purityBitmask);
   }
 

@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useCallback, useState } from 'react';
 import Router from 'next/router';
-import { BOARD_ALL, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
+import { Purity, Board } from '../../interfaces/constants';
 import User from '../../interfaces/user';
 import { makeQueryString } from '../../lib/helpers/make-query-string';
 import SearchOptionsBar from '../search-options-bar';
@@ -22,8 +22,8 @@ interface RegularLayoutProps {
 const RegularLayout: FC<RegularLayoutProps> = ({ children, user, userLoading }) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
-  const [boards, setBoards] = useState(BOARD_ALL);
-  const [purity, setPurity] = useState(PURITY_SFW | PURITY_SKETCHY);
+  const [boards, setBoards] = useState(Board.ALL);
+  const [purity, setPurity] = useState(Purity.SFW | Purity.SKETCHY);
   const [resolution, setResolution] = useState<ResolutionType>('');
   const [resolutionOp, setResolutionOp] = useState<ResolutionOperatorType>('gt');
   const [aspect, setAspect] = useState<AspectType>('');

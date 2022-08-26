@@ -1,14 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faTag } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, MouseEvent, useCallback } from 'react';
-import { PURITY_NSFW, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
+import { Purity } from '../../interfaces/constants';
 import Tag from '../../interfaces/tag';
 import styles from './tag-list.module.scss';
 
 const PURITY_TO_CLASS: Record<number, string> = {
-  [PURITY_SFW]: styles.sfw,
-  [PURITY_SKETCHY]: styles.sketchy,
-  [PURITY_NSFW]: styles.nsfw,
+  [Purity.SFW]: styles.sfw,
+  [Purity.SKETCHY]: styles.sketchy,
+  [Purity.NSFW]: styles.nsfw,
 };
 
 interface TagListProps {

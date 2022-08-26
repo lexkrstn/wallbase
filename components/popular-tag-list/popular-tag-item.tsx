@@ -4,13 +4,13 @@ import React, { FC } from 'react';
 import Link from 'next/link';
 import { thousands } from '../../lib/helpers/formatters';
 import { TagWithCategory } from '../../interfaces/tag';
-import { PURITY_NSFW, PURITY_SFW, PURITY_SKETCHY } from '../../interfaces/constants';
+import { Purity } from '../../interfaces/constants';
 import styles from './popular-tag-item.module.scss';
 
 const PURITY_TO_CLASS = {
-  [PURITY_SFW]: styles.sfw,
-  [PURITY_SKETCHY]: styles.sketchy,
-  [PURITY_NSFW]: styles.nsfw,
+  [Purity.SFW]: styles.sfw,
+  [Purity.SKETCHY]: styles.sketchy,
+  [Purity.NSFW]: styles.nsfw,
 };
 
 interface PopularTagItemProps {
