@@ -40,6 +40,7 @@ const DeleteWallpaperModal: FC<DeleteWallpaperModalProps> = ({
             width={wallpaper.width}
             height={wallpaper.height}
             url={getThumbnailUrl(wallpaper.id, wallpaper.mimetype)}
+            purity={wallpaper.purity}
           />
         )}
       </ModalBody>
