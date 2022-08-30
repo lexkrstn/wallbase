@@ -26,6 +26,10 @@ export function useWallpapersInfinite(searchOptions: SearchOptions) {
       return `/api/wallpapers?${qs}`;
     },
     fetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+    },
   );
 
   const wallpapers: Wallpaper[] = data
