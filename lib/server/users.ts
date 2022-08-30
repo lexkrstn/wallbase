@@ -101,22 +101,31 @@ export async function updateUser(id: string, dto: UpdateUserDto): Promise<boolea
 }
 
 /**
- * Returns user record from DB.
- *
- * @param id User ID.
- * @param dto User DTO.
- * @returns The user record or null.
+ * Returns user entities from DB.
  */
- export async function findUserById(id: string): Promise<User | null> {
+export async function findUsersById(ids: string[]) {
+  if (ids.length === 0) return [];
   try {
-    const rows = await knex('users')
-      .where('id', id)
-      .returning('*');
-    if (!rows.length) return null;
-    return dbRowToUser(rows[0]);
+    const qb = knex('users');
+    if (ids.length === 1) {
+      qb.where('id', ids[0]);
+    } else {
+      qb.whereIn('id', ids);
+    }
+    const rows = await qb;
+    if (!rows.length) return [];
+    return rows.map(dbRowToUser);
   } catch(err) {
     throw wrapError(err as Error);
   }
+}
+
+/**
+ * Returns user record from DB.
+ */
+export async function findUserById(id: string) {
+  const users = await findUsersById([id]);
+  return users.length > 0 ? users[0] : null;
 }
 
 /**

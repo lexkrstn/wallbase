@@ -340,18 +340,33 @@ interface FindWallpaperByIdOptions {
 }
 
 /**
- * Resolves with the wallpaper found or null.
+ * Resolves the promise with the wallpaper found (or null if nothing found).
  */
-export async function findWallpaperById(id: string, {
+export async function findWallpaperById(id: string, options: FindWallpaperByIdOptions = {}) {
+  const wallpapers = await findWallpapersById([id], options);
+  return wallpapers.length > 0 ? wallpapers[0] : null;
+}
+
+/**
+ * Resolves a promise with the wallpapers found.
+ */
+export async function findWallpapersById(ids: string[], {
   withTags,
 }: FindWallpaperByIdOptions = {}) {
-  const rows = await knex('wallpapers').where({ id });
-  if (rows.length === 0) return null;
-  let wallpaper = dbRowToWallpaper(rows[0]);
-  if (withTags) {
-    [wallpaper] = await injectWallpaperTags([wallpaper]);
+  if (ids.length === 0) return [];
+  const qb = knex('wallpapers');
+  if (ids.length === 1) {
+    qb.where('id', ids[0]);
+  } else {
+    qb.whereIn('id', ids);
   }
-  return wallpaper;
+  const rows = await qb;
+  if (rows.length === 0) return [];
+  let wallpapers = rows.map(dbRowToWallpaper);
+  if (withTags) {
+    wallpapers = await injectWallpaperTags(wallpapers);
+  }
+  return wallpapers;
 }
 
 /**
