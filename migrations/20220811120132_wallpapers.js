@@ -50,7 +50,7 @@
           WHERE id = NEW.uploader_id;
         RETURN NEW;
       ELSE
-        UPDATE categories
+        UPDATE users
           SET upload_count = upload_count - 1
           WHERE id = OLD.uploader_id;
         RETURN OLD;

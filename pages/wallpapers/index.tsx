@@ -1,13 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { NextPage } from 'next';
-import { useRouter, withRouter } from 'next/router';
 import React, { useCallback, useState } from 'react';
 import RegularLayout from '@/components/layouts/regular-layout';
 import SearchInfoBar from '@/components/search-info-bar';
 import ThumbnailGrid from '@/components/thumbnail/grid';
 import User from '@/entities/user';
-import { getThumbnailUrl } from '@/entities/wallpaper';
+import { canDeleteWallpaper, getThumbnailUrl } from '@/entities/wallpaper';
 import {
   DEFAULT_SEARCH_OPTIONS,
   getSearchOptionsFromQuery,
@@ -20,6 +19,7 @@ import ThumbnailPageSeparator from '@/components/thumbnail/page-separator';
 import { useWallpapersInfinite } from '@/lib/hooks/use-wallpapers-infinite';
 import IntersectionTrigger from '@/components/intersection-trigger';
 import styles from './wallpapers.module.scss';
+import { useDeleteWallpaperModal } from '@/components/modals/delete-wallpaper-modal';
 
 interface WallpapersProps {
   user: User | null;
@@ -34,8 +34,12 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
   const [searchOptions, setSearchOptions] = useState(initialSearchOptions);
   const {
     totalPages, totalCount, pages, reload, isReachingEnd, firstPage, isLoading,
-    loadMore,
+    loadMore, wallpapers, removeWallpaper,
   } = useWallpapersInfinite(searchOptions);
+
+  const deleteModal = useDeleteWallpaperModal({
+    onSuccess: removeWallpaper,
+  });
 
   const handleSearch = useCallback((so: SearchOptions) => {
     updateLocationSearchOptions(so);
@@ -44,11 +48,21 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
   }, []);
 
   const handleScrolledToEnd = useCallback(() => {
-    console.log('SCROLL END')
     if (!isReachingEnd && !isLoading) {
       loadMore(newLastPage => updateLocationPage(newLastPage));
     }
   }, [isReachingEnd, isLoading]);
+
+  const handleDeleteClick = useCallback((id: string) => {
+    const wallpaper = wallpapers.find(w => w.id === id);
+    if (wallpaper) {
+      if (canDeleteWallpaper(user, wallpaper)) {
+        deleteModal.show(wallpaper);
+      } else {
+        // TODO: show complaint dialog
+      }
+    }
+  }, [pages, user]);
 
   return (
     <RegularLayout
@@ -82,9 +96,13 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
                   width={w.width}
                   height={w.height}
                   url={getThumbnailUrl(w.id, w.mimetype)}
-                  board={w.board}
                   purity={w.purity}
                   tags={w.tags}
+                  favs={w.favCount}
+                  faved={w.faved}
+                  mimetype={w.mimetype}
+                  onDeleteClick={handleDeleteClick}
+                  deleteBtnTitle={canDeleteWallpaper(user, w) ? 'Delete' : 'Make a complaint'}
                   interactive
                 />
               ))}
@@ -108,6 +126,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
           <IntersectionTrigger onIntersect={handleScrolledToEnd} />
         )}
       </div>
+      {deleteModal.jsx}
     </RegularLayout>
   );
 };

@@ -1,7 +1,14 @@
-import { Knex } from 'knex';
-import { Purity } from '@/lib/constants';
+const Purity = {
+  SFW: 1,
+  SKETCHY: 2,
+  NSFW: 4,
+};
 
-export async function seed(knex: Knex): Promise<void> {
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.seed = async function(knex) {
   await knex('tags').insert([
     {
       id: 62,

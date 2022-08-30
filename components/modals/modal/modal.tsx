@@ -11,17 +11,23 @@ interface ModalProps {
   large?: boolean;
   small?: boolean;
   xsmall?: boolean;
+  nonClosable?: boolean;
   onClose?: () => void;
 }
 
 const Modal: FC<ModalProps> = ({
-  children, shown, title, onClose, small, xsmall, large,
+  children, shown, title, onClose, small, xsmall, large, nonClosable,
 }) => {
   const [presented, setPresented] = useState(false);
-  const closeClickHandler = useCallback(() => onClose && onClose(), []);
+  const closeClickHandler = useCallback(() => {
+    if (onClose && !nonClosable) {
+      onClose();
+    }
+  }, [nonClosable, onClose]);
 
   const modalClasses = [styles.modal];
   if (shown) modalClasses.push(styles.shown);
+  if (nonClosable) modalClasses.push(styles.nonClosable);
   const dialogClasses = [styles.dialog];
   if (large) dialogClasses.push(styles.large);
   if (small) dialogClasses.push(styles.small);

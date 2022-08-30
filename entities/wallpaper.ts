@@ -1,5 +1,6 @@
 import { MIMETYPE_TO_EXT } from '@/lib/constants';
 import Tag from '@/entities/tag';
+import User from '@/entities/user';
 
 /**
  * Represents the wallpaper image.
@@ -39,6 +40,11 @@ export default interface Wallpaper {
    * @see injectWallpaperTags()
    */
   tags: Tag[];
+  /**
+   * Note, that in most cases it is undefined unless you explicitly call a
+   * service function with an option that includes this field.
+   */
+  faved?: boolean;
 }
 
 /**
@@ -60,4 +66,12 @@ export function getWallpaperUrl(id: string, mimetype: string): string {
  */
 export function getThumbnailUrl(id: string, mimetype: string): string {
   return `/thumbnails/${getWallpaperFileName(id, mimetype)}`;
+}
+
+/**
+ * Determines whether a specified user can delete a wallpaper.
+ */
+export function canDeleteWallpaper(user: User | null, wallpaper: Wallpaper) {
+  if (!user) return false;
+  return wallpaper.uploaderId === user.id || user.role === 'moderator' || user.role === 'admin';
 }

@@ -54,6 +54,15 @@ export function useWallpapersInfinite(searchOptions: SearchOptions) {
     setSize(0);
   };
 
+  const removeWallpaper = (id: string) => {
+    mutate((oldData) => {
+      return oldData?.map(dataPage => ({
+        ...dataPage,
+        wallpapers: dataPage.wallpapers.filter(w => w.id !== id),
+      }));
+    });
+  };
+
   return {
     wallpapers,
     isLoading,
@@ -66,5 +75,6 @@ export function useWallpapersInfinite(searchOptions: SearchOptions) {
     totalPages,
     loadMore,
     reload,
+    removeWallpaper,
   }
 }

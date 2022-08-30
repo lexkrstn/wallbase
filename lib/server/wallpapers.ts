@@ -334,3 +334,33 @@ export async function addWallpaperTags(
   });
   return Promise.all(promises);
 }
+
+interface FindWallpaperByIdOptions {
+  withTags?: boolean;
+}
+
+/**
+ * Resolves with the wallpaper found or null.
+ */
+export async function findWallpaperById(id: string, {
+  withTags,
+}: FindWallpaperByIdOptions = {}) {
+  const rows = await knex('wallpapers').where({ id });
+  if (rows.length === 0) return null;
+  let wallpaper = dbRowToWallpaper(rows[0]);
+  if (withTags) {
+    [wallpaper] = await injectWallpaperTags([wallpaper]);
+  }
+  return wallpaper;
+}
+
+/**
+ * Deletes the wallpaper from DB and removes all the files.
+ */
+export async function deleteWallpaper(wallpaper: Wallpaper) {
+  await knex('wallpapers')
+    .where('id', wallpaper.id)
+    .delete();
+  await fs.unlink(getWallpaperPath(wallpaper.id, wallpaper.mimetype));
+  await fs.unlink(getThumbnailPath(wallpaper.id, wallpaper.mimetype));
+}

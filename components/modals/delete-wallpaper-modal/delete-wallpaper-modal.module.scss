@@ -1,0 +1,12 @@
+.para {
+  margin: 15px 0;
+  text-indent: 0;
+  &:first-child { margin-top: 0; }
+  &:last-child { margin-bottom: 0; }
+}
+.body {
+  text-align: center;
+}
+.thumbnail {
+  margin: 15px auto 0;
+}

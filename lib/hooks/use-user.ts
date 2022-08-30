@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import Router from 'next/router';
 import useSWR from 'swr';
-import { parse } from 'cookie';
 import User from '@/entities/user';
-import { TOKEN_NAME } from '@/lib/constants';
+import { forgetAuthToken, getAuthToken } from '@/lib/helpers/browser-auth-token';
 
 interface Data {
   user: User | null;
@@ -11,7 +10,7 @@ interface Data {
 
 const fetcher = async (url: string): Promise<Data> => {
   // Do not request if there is not token in cookies
-  const token = parse(document.cookie)[TOKEN_NAME];
+  const token = getAuthToken();
   if (!token) {
     return { user: null };
   }
@@ -23,7 +22,7 @@ const fetcher = async (url: string): Promise<Data> => {
   });
   // Do not retry if status = 401
   if (res.status === 401) {
-    document.cookie = `${TOKEN_NAME}=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+    forgetAuthToken();
     return { user: null };
   }
   const json = await res.json();
