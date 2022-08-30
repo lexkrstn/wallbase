@@ -1,6 +1,6 @@
 import React, { FC, MouseEvent, useCallback } from 'react';
-import { Purity } from '../../interfaces/constants';
-import Tooltip from '../tooltip';
+import { Purity } from '@/lib/constants';
+import Tooltip from '@/components/tooltip';
 import styles from './purity-filter.module.scss';
 
 interface PurityFilterProps {
@@ -34,6 +34,7 @@ const PurityFilter: FC<PurityFilterProps> = ({
             offset={15}
           >
             <button
+              type="button"
               onClick={onClick}
               data-purity={Purity.SFW}
               disabled={disabled}
@@ -49,6 +50,7 @@ const PurityFilter: FC<PurityFilterProps> = ({
             offset={15}
           >
             <button
+              type="button"
               onClick={onClick}
               data-purity={Purity.SKETCHY}
               disabled={disabled}
@@ -64,6 +66,7 @@ const PurityFilter: FC<PurityFilterProps> = ({
             offset={15}
           >
             <button
+              type="button"
               onClick={nsfwDisabled ? undefined : onClick}
               disabled={nsfwDisabled || disabled}
               data-purity={Purity.NSFW}

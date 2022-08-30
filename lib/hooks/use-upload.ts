@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { parse } from 'cookie';
-import { TOKEN_NAME } from '../../interfaces/constants';
+import { TOKEN_NAME } from '@/lib/constants';
 
 type FormBody = Record<string, string | number | string[] | number[]>;
 

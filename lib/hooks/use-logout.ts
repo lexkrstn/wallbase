@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useSWRConfig } from 'swr';
-import { TOKEN_NAME } from '../../interfaces/constants';
+import { TOKEN_NAME } from '@/lib/constants';
 
 export function useLogout() {
   const { mutate } = useSWRConfig();

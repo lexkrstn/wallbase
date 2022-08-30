@@ -1,0 +1,97 @@
+.host {
+  border-radius: 4px;
+  background: #0F0F0F;
+  background-image: linear-gradient(to bottom, #171717, #0f0f0f);
+  border: 1px solid #363636;
+  padding: 10px;
+  position: relative;
+  display: table;
+  border-spacing: 0;
+  width: 95%;
+  margin: 10px auto;
+  @media (min-width: 960px) {
+    width: 90%;
+    margin: 30px auto 10px;
+  }
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+.imgshow {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 15px 0 5px;
+  text-align: left;
+  font-size: 20px;
+  @media (min-width: 400px) {
+    font-size: 29px;
+  }
+}
+.content {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+  small {
+    color: #666666;
+    font-size: 13px;
+  }
+  code {
+    white-space: nowrap;
+  }
+}
+.searchSubject {
+  color: #EE9D3F;
+}
+.right {
+  display: table-cell;
+  vertical-align: middle;
+}
+.tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: table;
+  border-spacing: 0;
+  float: right;
+}
+.tab {
+  font-size: 14px;
+  padding-left: 10px;
+  white-space: nowrap;
+  @media (min-width: 960px) {
+    display: table-cell;
+    vertical-align: top;
+  }
+}
+.tabBtn {
+  color: #fff;
+  display: block;
+  padding: 7px 10px;
+  margin: 0;
+  background: transparent;
+  border: 1px dotted #121212;
+  color: #666;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    color: #fff
+  }
+  @at-root .active & {
+    background: #151515;
+    background-image: linear-gradient(to bottom, #1e1e1e, #151515);
+    border: 1px solid #2C2C2C;
+    color: #EE9D3F;
+    &:hover {
+      color: #fff
+    }
+  }
+  >span {
+    background: #0F0F0F;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 11px;
+    padding: 3px 5px;
+  }
+}

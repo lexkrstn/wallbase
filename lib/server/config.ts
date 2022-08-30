@@ -1,5 +1,5 @@
 import path from 'path';
-import { MB } from '../lib/constants';
+import { MB } from '@/lib/constants';
 
 const PROJECT_ROOT = process.env.PROJECT_ROOT!;
 
@@ -11,7 +11,7 @@ const config = {
     domain: process.env.DOMAIN!,
   },
   upload: {
-    maxFileSize: parseInt(process.env.MAX_WALLPAPER_FILE_SIZE || '', 10) || 10 * MB,
+    maxFileSize: parseInt(process.env.MAX_WALLPAPER_FILE_SIZE || '', 10) || 15 * MB,
     allowedMimeTypes: ['image/jpeg', 'image/png'],
 		minWidth: 640,
 		minHeight: 640,

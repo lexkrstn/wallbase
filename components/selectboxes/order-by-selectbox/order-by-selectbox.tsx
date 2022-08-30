@@ -1,8 +1,6 @@
+import { OrderByType, OrderType } from '@/lib/types';
 import React, { FC } from 'react';
 import Selectbox, { SelectboxItemDto, SelectboxSwitchableField } from '../selectbox';
-
-export type OrderByType = 'relevancy' | 'date' | 'views' | 'favs';
-export type OrderType = 'asc' | 'desc';
 
 const ITEMS: SelectboxItemDto<OrderByType>[] = [
   { value: 'relevancy', label: 'Relevancy' },
@@ -31,7 +29,7 @@ const OrderBySelectbox: FC<OrderBySelectboxProps> = ({
   const selectedItem = ITEMS.find(item => item.value === value);
   return (
     <Selectbox
-      name="orderby"
+      name="orderBy"
       items={ITEMS}
       onChange={onChange as StringChangeCallbackType}
       value={`${value}`}

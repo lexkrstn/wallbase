@@ -1,6 +1,6 @@
 import { Reducer } from 'react';
-import Tag from '../../interfaces/tag';
-import { ImageFileData } from '../../lib/helpers/image';
+import Tag from '@/entities/tag';
+import { ImageFileData } from '@/lib/helpers/image';
 
 interface ThumbnailState extends ImageFileData {
   id: string;

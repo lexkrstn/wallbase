@@ -1,5 +1,8 @@
 import React, {
-  ChangeEventHandler, FocusEventHandler, forwardRef, KeyboardEventHandler,
+  ChangeEventHandler,
+  FocusEventHandler,
+  forwardRef,
+  KeyboardEventHandler,
 } from 'react';
 import styles from './text-field.module.scss';
 

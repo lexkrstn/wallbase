@@ -1,4 +1,4 @@
-import knex from './knex';
+import knex from '@/lib/server/knex';
 import os from 'os';
 import checkDiskSpace from 'check-disk-space';
 import config from './config';

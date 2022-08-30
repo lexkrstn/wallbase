@@ -1,42 +1,37 @@
 import { faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { FC } from 'react';
-import AspectSelectbox, { AspectType } from '../selectboxes/aspect-selectbox';
-import OrderBySelectbox, { OrderByType, OrderType } from '../selectboxes/order-by-selectbox';
-import PageSizeSelectbox, { PageSizeType } from '../selectboxes/page-size-selectbox';
-import ResolutionSelectbox, {
-  ResolutionOperatorType, ResolutionType,
-} from '../selectboxes/resolution-selectbox';
-import BoardFilter from '../triple-filters/board-filter';
-import PurityFilter from '../triple-filters/purity-filter';
+import React, { FC, useState } from 'react';
+import { SearchOptions } from '@/lib/search-options';
+import AspectSelectbox from '@/components/selectboxes/aspect-selectbox';
+import OrderBySelectbox from '@/components/selectboxes/order-by-selectbox';
+import PageSizeSelectbox from '@/components/selectboxes/page-size-selectbox';
+import ResolutionSelectbox from '@/components/selectboxes/resolution-selectbox';
+import BoardFilter from '@/components/triple-filters/board-filter';
+import PurityFilter from '@/components/triple-filters/purity-filter';
 import styles from './search-options-bar.module.scss';
 
+type SearchBarOptions = Pick<SearchOptions, 'boards' | 'purity' | 'resolution'
+  | 'resolutionOp' | 'aspect' | 'pageSize' | 'orderBy' | 'order'>;
+
 interface SearchOptionsBarProps {
-  boards: number;
-  onBoardsChange: (boards: number) => void;
-  purity: number;
-  onPurityChange: (purity: number) => void;
-  resolution: ResolutionType;
-  onResolutionChange: (resolution: ResolutionType) => void;
-  resolutionOp: ResolutionOperatorType;
-  onResolutionOpChange: (op: ResolutionOperatorType) => void;
-  aspect: AspectType;
-  onAspectChange: (aspect: AspectType) => void;
-  pageSize: PageSizeType;
-  onPageSizeChange: (pageSize: PageSizeType) => void;
-  orderBy: OrderByType;
-  onOrderByChange: (orderBy: OrderByType) => void;
-  order: OrderType;
-  onOrderChange: (order: OrderType) => void;
-  onSubmitClick?: () => void;
+  /**
+   * Default inner state of the component.
+   */
+  defaultValue: SearchBarOptions;
 }
 
-const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
-  boards, onBoardsChange, purity, onPurityChange, resolution,
-  onResolutionChange, resolutionOp, onResolutionOpChange, aspect, onAspectChange,
-  pageSize, onPageSizeChange, order, onOrderChange, orderBy, onOrderByChange,
-  onSubmitClick,
-}) => {
+/**
+ * Search options bar below the header. It's an uncontrolled React component.
+ */
+const SearchOptionsBar: FC<SearchOptionsBarProps> = ({ defaultValue }) => {
+  const [boards, setBoards] = useState(defaultValue.boards);
+  const [purity, setPurity] = useState(defaultValue.purity);
+  const [resolution, setResolution] = useState(defaultValue.resolution);
+  const [resolutionOp, setResolutionOp] = useState(defaultValue.resolutionOp);
+  const [aspect, setAspect] = useState(defaultValue.aspect);
+  const [pageSize, setPageSize] = useState(defaultValue.pageSize);
+  const [orderBy, setOrderBy] = useState(defaultValue.orderBy);
+  const [order, setOrder] = useState(defaultValue.order);
   return (
     <div className={styles.host}>
       <div className={styles.groups}>
@@ -48,7 +43,7 @@ const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
               <BoardFilter
                 className={styles.board}
                 value={boards}
-                onChange={onBoardsChange}
+                onChange={setBoards}
               />
             </div>
           </div>
@@ -58,7 +53,7 @@ const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
               <PurityFilter
                 className={styles.purity}
                 value={purity}
-                onChange={onPurityChange}
+                onChange={setPurity}
               />
             </div>
           </div>
@@ -70,8 +65,8 @@ const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
             <ResolutionSelectbox
               value={resolution}
               operator={resolutionOp}
-              onChange={onResolutionChange}
-              onOperatorChange={onResolutionOpChange}
+              onChange={setResolution}
+              onOperatorChange={setResolutionOp}
             />
           </div>
         </div>
@@ -81,7 +76,7 @@ const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
           <div className={styles.item}>
             <AspectSelectbox
               value={aspect}
-              onChange={onAspectChange}
+              onChange={setAspect}
             />
           </div>
         </div>
@@ -93,17 +88,17 @@ const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
               <OrderBySelectbox
                 value={orderBy}
                 order={order}
-                onChange={onOrderByChange}
-                onOrderChange={onOrderChange}
+                onChange={setOrderBy}
+                onOrderChange={setOrder}
               />
             </div>
           </div>
           <div className={styles.group}>
             <div className={styles.label}>Show</div>
-            <div className={styles.item} id="limit">
+            <div className={styles.item}>
               <PageSizeSelectbox
                 value={pageSize}
-                onChange={onPageSizeChange}
+                onChange={setPageSize}
                 className={styles.pageSize}
               />
             </div>
@@ -112,7 +107,7 @@ const SearchOptionsBar: FC<SearchOptionsBarProps> = ({
 
       </div>
 
-      <button type="button" className={styles.submit} onClick={onSubmitClick}>
+      <button type="submit" className={styles.submit}>
         <FontAwesomeIcon icon={faRotateRight} />
       </button>
     </div>

@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import Router from 'next/router';
 import useSWR from 'swr';
 import { parse } from 'cookie';
-import User from '../../interfaces/user';
-import { TOKEN_NAME } from '../../interfaces/constants';
+import User from '@/entities/user';
+import { TOKEN_NAME } from '@/lib/constants';
 
 interface Data {
   user: User | null;

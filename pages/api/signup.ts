@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createUser } from '../../lib/users';
+import { createUser } from '@/lib/server/users';
 
 export default async function signup(req: NextApiRequest, res: NextApiResponse) {
   try {

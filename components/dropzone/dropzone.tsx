@@ -1,7 +1,7 @@
 import { faImage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { DragEvent, FC, MouseEvent, ReactNode, useCallback, useState } from 'react';
-import { ImageFileData, readImageFile } from '../../lib/helpers/image';
+import { ImageFileData, readImageFile } from '@/lib/helpers/image';
 import styles from './dropzone.module.scss';
 
 interface DropZoneProps {

@@ -1,5 +1,5 @@
 import { Knex } from 'knex';
-import { Purity } from '../interfaces/constants';
+import { Purity } from '@/lib/constants';
 
 export async function seed(knex: Knex): Promise<void> {
   await knex('tags').insert([

@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import React, { FC } from 'react';
 import Link from 'next/link';
-import { thousands } from '../../lib/helpers/formatters';
-import { TagWithCategory } from '../../interfaces/tag';
-import { Purity } from '../../interfaces/constants';
+import { thousands } from '@/lib/helpers/formatters';
+import { Purity } from '@/lib/constants';
+import { TagWithCategory } from '@/entities/tag';
 import styles from './popular-tag-item.module.scss';
 
 const PURITY_TO_CLASS = {

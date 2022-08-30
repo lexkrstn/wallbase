@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { serialize, parse } from 'cookie';
 import JWT, { JwtPayload } from 'jsonwebtoken';
-import { TOKEN_MAX_AGE, TOKEN_NAME } from '../interfaces/constants';
-import config from './config';
+import { TOKEN_MAX_AGE, TOKEN_NAME } from '@/lib/constants';
+import config from '@/lib/server/config';
 
 export function setTokenCookie(res: NextApiResponse, token: string): void {
   res.setHeader('Set-Cookie', serialize(TOKEN_NAME, token, {

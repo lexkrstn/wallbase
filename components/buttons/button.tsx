@@ -18,11 +18,12 @@ interface ButtonProps {
   iconAppend?: IconProp;
   loading?: boolean;
   disabled?: boolean;
+  title?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 const Button: FC<ButtonProps> = ({
-  className, children, rounded, small, xsmall, dark,
+  className, children, rounded, small, xsmall, dark, title,
   submit, href, onClick, iconAppend, iconPrepend, loading, disabled,
 }) => {
   const classes = [styles.button, dark ? styles.dark : styles.light];
@@ -53,13 +54,14 @@ const Button: FC<ButtonProps> = ({
           className={classes.join(' ')}
           onClick={onClick}
           disabled={disabled}
+          title={title}
         >
           {inner}
         </button>
       )}
       {!!href && (
         <Link href={href}>
-          <a className={classes.join(' ')}>
+          <a className={classes.join(' ')} title={title}>
             {inner}
           </a>
         </Link>

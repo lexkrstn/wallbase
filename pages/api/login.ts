@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import passport from 'passport';
 import nextConnect from 'next-connect';
-import { issueUserToken, setTokenCookie } from '../../lib/auth';
-import { localStrategy } from '../../lib/passport';
-import User from '../../interfaces/user';
-import { addUserVisit } from '../../lib/users';
+import { issueUserToken, setTokenCookie } from '@/lib/server/auth';
+import { localStrategy } from '@/lib/server/passport';
+import User from '@/entities/user';
+import { addUserVisit } from '@/lib/server/users';
 
 function authenticate(req: NextApiRequest, res: NextApiResponse) {
   return new Promise<User>((resolve, reject) => {

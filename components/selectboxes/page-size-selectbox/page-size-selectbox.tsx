@@ -1,16 +1,12 @@
+import { PageSizeType, PageSizeTypeString, PAGE_SIZES } from '@/lib/types';
 import React, { FC, useCallback } from 'react';
 import Selectbox, { SelectboxItemDto } from '../selectbox';
 import styles from './page-size-selectbox.module.scss';
 
-export type PageSizeType = 24 | 36 | 48 | 60;
-export type PageSizeTypeString = '24' | '36' | '48' | '60';
-
-const ITEMS: SelectboxItemDto<PageSizeTypeString>[] = [
-  { value: '24', label: '24' },
-  { value: '36', label: '36' },
-  { value: '48', label: '48' },
-  { value: '60', label: '60' },
-];
+const ITEMS: SelectboxItemDto<PageSizeTypeString>[] = PAGE_SIZES.map(size => ({
+  value: `${size}`,
+  label: `${size}`,
+}));
 
 interface PageSizeSelectboxProps {
   className?: string;

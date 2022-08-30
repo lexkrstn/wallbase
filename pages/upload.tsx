@@ -1,9 +1,9 @@
 import { NextPage } from 'next';
 import React, { useEffect } from 'react';
 import Router from 'next/router';
-import RegularLayout from '../components/layouts/regular-layout';
-import UploadPane from '../components/upload-pane';
-import User from '../interfaces/user';
+import RegularLayout from '@/components/layouts/regular-layout';
+import UploadPane from '@/components/upload-pane';
+import User from '@/entities/user';
 import styles from './upload.module.scss';
 
 interface UploadProps {
@@ -18,7 +18,7 @@ const Upload: NextPage<UploadProps> = ({ user, userLoading }) => {
     }
   }, [user, userLoading]);
   return (
-    <RegularLayout user={user} userLoading={userLoading}>
+    <RegularLayout user={user} userLoading={userLoading} center>
       <div className={styles.host}>
         <UploadPane />
       </div>

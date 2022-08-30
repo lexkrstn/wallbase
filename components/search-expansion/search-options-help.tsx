@@ -1,6 +1,6 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { FC } from "react";
+import { FC } from 'react';
 import styles from './search-options-help.module.scss';
 
 const SearchOptionsHelp: FC = () => (

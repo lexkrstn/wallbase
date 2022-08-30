@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function createHiddenFileInput(mimetypes: string[], onChange: (files: File[]) => void) {
   const input = document.createElement('input');

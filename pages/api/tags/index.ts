@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import Tag from '../../../interfaces/tag';
-import { getEnumParam, getNumericParam, getStringParam } from '../../../lib/helpers/query';
-import { findTags } from '../../../lib/tags';
+import Tag from '@/entities/tag';
+import { getEnumParam, getNumericParam, getStringParam } from '@/lib/helpers/query';
+import { findTags } from '@/lib/server/tags';
 
 export default async function listTags(req: NextApiRequest, res: NextApiResponse<Tag[]>) {
 	const { tags, totalCount } = await findTags({

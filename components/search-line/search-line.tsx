@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders, faSearch, faPizzaSlice } from '@fortawesome/free-solid-svg-icons';
 import styles from './search-line.module.scss';
 import Link from 'next/link';
-import { hasAncestorNode } from '../../lib/helpers/hasAncestorNode';
-import { rgbToHex } from '../../lib/helpers/rgbToHex';
+import { hasAncestorNode } from '@/lib/helpers/hasAncestorNode';
+import { rgbToHex } from '@/lib/helpers/rgbToHex';
 import ColorPicker, { Rgb } from '../color-picker';
 
 export type SearchByType = 'keyword' | 'color';

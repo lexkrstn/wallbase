@@ -2,22 +2,60 @@ import fs from 'fs/promises';
 import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import passport from 'passport';
-import CONFIG from '../../lib/config';
-import Wallpaper from '../../interfaces/wallpaper';
-import { getImageSize } from '../../lib/image';
-import { uploadWallpaper } from '../../lib/wallpapers';
-import { getArrayParam, getNumericParam, getStringParam } from '../../lib/helpers/query';
-import { Board, Purity } from '../../interfaces/constants';
-import { jwtStrategy } from '../../lib/passport';
-import { addWallpaperTags } from '../../lib/tags';
-import { UploadedFile, uploadMultipartForm } from '../../lib/upload';
+import CONFIG from '@/lib/server/config';
+import Wallpaper from '@/entities/wallpaper';
+import { getImageSize } from '@/lib/server/image';
+import { findWallpapers, uploadWallpaper } from '@/lib/server/wallpapers';
+import {
+  getArrayParam,
+  getEnumParam,
+  getNumericParam,
+  getStringParam,
+} from '@/lib/helpers/query';
+import { Board, Purity } from '@/lib/constants';
+import { jwtStrategy } from '@/lib/server/passport';
+import { addWallpaperTags } from '@/lib/server/wallpapers';
+import { UploadedFile, uploadMultipartForm } from '@/lib/server/upload';
+import {
+  ASPECTS,
+  RESOLUTIONS,
+  RESOLUTION_OPERATORS,
+  ORDERS,
+  ORDER_BY_FIELDS,
+  PAGE_SIZES,
+  PageSizeType,
+} from '@/lib/types';
 
-type Data = { error?: string } | Wallpaper;
+type PostData = { error?: string } | Wallpaper;
+type GetData = { error?: string } | Wallpaper[];
 
 export default nextConnect()
+  .get(async (req: NextApiRequest, res: NextApiResponse<GetData>) => {
+    try {
+      const { wallpapers, totalCount } = await findWallpapers({
+        purity: getNumericParam(req, 'purity'),
+        boards: getNumericParam(req, 'boards'),
+        query: getStringParam(req, 'query'),
+        aspect: getEnumParam(req, 'aspect', ASPECTS),
+        resolution: getEnumParam(req, 'resolution', RESOLUTIONS),
+        resolutionOp: getEnumParam(req, 'resolutionOp', RESOLUTION_OPERATORS),
+        order: getEnumParam(req, 'order', ORDERS),
+        orderBy: getEnumParam(req, 'orderBy', ORDER_BY_FIELDS),
+        page: getNumericParam(req, 'page', 'both', { min: 1 }),
+        pageSize: parseInt(getEnumParam(req, 'pageSize', PAGE_SIZES) as string, 10) as PageSizeType,
+      }, { withTags: true });
+      res.setHeader('X-Total-Count', totalCount);
+      res.json(wallpapers);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        error: `${(err as Error).message || err}`,
+      });
+    }
+  })
   .use(passport.initialize())
   .use(passport.authenticate(jwtStrategy, { session: false }))
-  .post(async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  .post(async (req: NextApiRequest, res: NextApiResponse<PostData>) => {
     const userId = (req as any).user.id as string;
     let file: UploadedFile | null = null;
     try {

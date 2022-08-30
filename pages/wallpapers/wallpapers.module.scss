@@ -1,0 +1,26 @@
+.host {
+  margin: 15px;
+}
+.end {
+  text-align: center;
+  margin: 15px 0;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.loading {
+  display: block;
+  margin: 15px 0;
+  text-align: center;
+  > svg {
+    vertical-align: middle;
+    height: 24px;
+    animation: spin 1s linear 0s infinite normal forwards;
+  }
+}
+.nothing {
+  height: 425px;
+	margin: 10px;
+	background: url("/images/nothing.png") no-repeat center center;
+}

@@ -1,5 +1,5 @@
-import makeKnex, { Knex } from 'knex';
-import knexfile from '../knexfile.module';
+import makeKnex from 'knex';
+import knexfile from '../../knexfile.module';
 
 const env = process.env.NODE_ENV || 'development';
 const envMap: Record<typeof env[number], keyof typeof knexfile> = {

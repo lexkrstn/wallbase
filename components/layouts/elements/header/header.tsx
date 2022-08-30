@@ -2,7 +2,7 @@ import {
   faBarChart, faComments, faInfoCircle, faRandom, faSearch,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { ChangeEvent, FC, FormEvent, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Router from 'next/router';
 import Image from 'next/image';
@@ -13,16 +13,13 @@ import logoImage from './logo.svg';
 
 interface HeaderProps {
   onSearchOpen?: (open: boolean) => void;
-  onSearchSubmit?: () => void;
   searchOpen?: boolean;
-  query?: string;
-  onQueryChange?: (event: string) => void;
+  defaultQuery?: string;
 }
 
-const Header: FC<HeaderProps> = ({
-  searchOpen, onSearchOpen, onSearchSubmit, query, onQueryChange,
-}) => {
+const Header: FC<HeaderProps> = ({ searchOpen, onSearchOpen, defaultQuery }) => {
   const [pathname, setPathname] = useState('');
+  const [query, setQuery] = useState(defaultQuery);
 
   const toggleSearchOpen = useCallback(() => {
     if (onSearchOpen) {
@@ -30,17 +27,8 @@ const Header: FC<HeaderProps> = ({
     }
   }, [searchOpen, onSearchOpen]);
 
-  const handleSearchSubmit = useCallback((event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (onSearchSubmit) {
-      onSearchSubmit();
-    }
-  }, [onSearchSubmit]);
-
   const handleQueryChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-    if (onQueryChange) {
-      onQueryChange(event.currentTarget.value);
-    }
+    setQuery(event.currentTarget.value);
   }, []);
 
   useEffect(() => setPathname(Router.pathname), []);
@@ -59,14 +47,14 @@ const Header: FC<HeaderProps> = ({
               <FontAwesomeIcon icon={faSearch} />
             </span>
           </Tooltip>
-          <form className={styles.searchbar} action="/wallpapers" onSubmit={handleSearchSubmit}>
+          <div className={styles.searchbar}>
             <TextField
               name="query"
               placeholder="Search..."
               value={query}
               onChange={handleQueryChange}
             />
-          </form>
+          </div>
         </li>
         <li className={`${styles.random} ${pathname === '/random' ? styles.active : ''}`}>
           <Tooltip message="Random" position="bottom" className={styles.tooltip}>

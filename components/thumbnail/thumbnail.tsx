@@ -2,8 +2,8 @@ import { faCheckCircle, faTimes, faFlag, faTags } from '@fortawesome/free-solid-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React, { FC, MouseEvent, useCallback } from 'react';
-import { Board, Purity } from '../../interfaces/constants';
-import Tag from '../../interfaces/tag';
+import { Board, Purity } from '@/lib/constants';
+import Tag from '@/entities/tag';
 import styles from './thumbnail.module.scss';
 
 const PURITY_TO_CLASS: Record<number, string> = {

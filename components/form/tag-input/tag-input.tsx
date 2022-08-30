@@ -1,7 +1,10 @@
 import React, { FC, useCallback, useState } from 'react';
-import Tag from '../../../interfaces/tag';
-import TagList from '../../tag-list';
-import Autocomplete, { AutocompleteFetcher, AutocompleteItem } from '../autocomplete';
+import Tag from '@/entities/tag';
+import TagList from '@/components/tag-list';
+import Autocomplete, {
+  AutocompleteFetcher,
+  AutocompleteItem,
+} from '@/components/form/autocomplete';
 import styles from './tag-input.module.scss';
 
 interface TagInputProps {

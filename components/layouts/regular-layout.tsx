@@ -1,13 +1,9 @@
-import React, { FC, ReactNode, useCallback, useState } from 'react';
+import React, { FC, FormEvent, ReactNode, useCallback, useState } from 'react';
 import Router from 'next/router';
-import { Purity, Board } from '../../interfaces/constants';
-import User from '../../interfaces/user';
-import { makeQueryString } from '../../lib/helpers/make-query-string';
+import User from '@/entities/user';
+import { makeQueryString } from '@/lib/helpers/query-string';
+import { DEFAULT_SEARCH_OPTIONS, SearchOptions } from '@/lib/search-options';
 import SearchOptionsBar from '../search-options-bar';
-import { AspectType } from '../selectboxes/aspect-selectbox';
-import { OrderByType, OrderType } from '../selectboxes/order-by-selectbox';
-import { PageSizeType } from '../selectboxes/page-size-selectbox';
-import { ResolutionOperatorType, ResolutionType } from '../selectboxes/resolution-selectbox';
 import Footer from './elements/footer';
 import Header from './elements/header';
 import Userbar from './elements/userbar';
@@ -17,61 +13,63 @@ interface RegularLayoutProps {
   children: ReactNode;
   user: User | null;
   userLoading: boolean;
+  defaultSearchOpen?: boolean;
+  center?: boolean;
+  initialSearchOptions?: SearchOptions;
+  /**
+   * An optional callback that is executed when the user submits the search
+   * options form (either by clicking the Refresh button or pressing enter in
+   * the search bar). If the callback is not set the default behaviour is to
+   * redirect to search page with options set as GET query parameters.
+   */
+  onSearch?: (so: SearchOptions) => void;
 }
 
-const RegularLayout: FC<RegularLayoutProps> = ({ children, user, userLoading }) => {
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [query, setQuery] = useState('');
-  const [boards, setBoards] = useState(Board.ALL);
-  const [purity, setPurity] = useState(Purity.SFW | Purity.SKETCHY);
-  const [resolution, setResolution] = useState<ResolutionType>('');
-  const [resolutionOp, setResolutionOp] = useState<ResolutionOperatorType>('gt');
-  const [aspect, setAspect] = useState<AspectType>('');
-  const [pageSize, setPageSize] = useState<PageSizeType>(24);
-  const [orderBy, setOrderBy] = useState<OrderByType>('relevancy');
-  const [order, setOrder] = useState<OrderType>('desc');
-  const formData: Record<string, string | number> = {
-    boards, purity, resolution, resolutionOp, aspect, pageSize,
-    orderBy, order, query,
-  };
+const RegularLayout: FC<RegularLayoutProps> = ({
+  children, user, userLoading, defaultSearchOpen = false, center = false,
+  initialSearchOptions = DEFAULT_SEARCH_OPTIONS, onSearch,
+}) => {
+  const mainClasses = [styles.main];
+  if (center) mainClasses.push(styles.center);
+  const [searchOpen, setSearchOpen] = useState(defaultSearchOpen);
 
-  const submitSearchForm = useCallback(
-    () => Router.push(`/wallpapers?${makeQueryString(formData)}`),
-    [JSON.stringify(formData)],
-  );
+  const handleSubmitSearchForm = useCallback((event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const searchOptions = Object.keys(initialSearchOptions)
+      .reduce((accum, key) => {
+        const item = form.elements.namedItem(key);
+        if (!item) return accum;
+        return {
+          ...accum,
+          [key]: (item as HTMLInputElement).value,
+        };
+      }, {} as Partial<SearchOptions>);
+    if (onSearch) {
+      onSearch(searchOptions as SearchOptions);
+      return;
+    }
+    Router.push(`/wallpapers?${makeQueryString(searchOptions)}`);
+  }, [onSearch]);
 
   return (
     <div className={styles.host}>
       <Userbar user={user} userLoading={userLoading} wide docked />
-      <Header
-        searchOpen={searchOpen}
-        onSearchOpen={setSearchOpen}
-        onSearchSubmit={submitSearchForm}
-        onQueryChange={setQuery}
-        query={query}
-      />
-      {searchOpen && (
-        <SearchOptionsBar
-          boards={boards}
-          onBoardsChange={setBoards}
-          purity={purity}
-          onPurityChange={setPurity}
-          resolution={resolution}
-          onResolutionChange={setResolution}
-          resolutionOp={resolutionOp}
-          onResolutionOpChange={setResolutionOp}
-          aspect={aspect}
-          onAspectChange={setAspect}
-          pageSize={pageSize}
-          onPageSizeChange={setPageSize}
-          orderBy={orderBy}
-          onOrderByChange={setOrderBy}
-          order={order}
-          onOrderChange={setOrder}
-          onSubmitClick={submitSearchForm}
+      <form
+        className={styles.form}
+        onSubmit={handleSubmitSearchForm}
+        action="/wallpapers"
+      >
+        <Header
+          searchOpen={searchOpen}
+          onSearchOpen={setSearchOpen}
+          defaultQuery={initialSearchOptions.query}
         />
-      )}
-      <main className={styles.main + ' ' + styles.center}>
+        {searchOpen && (
+          <SearchOptionsBar defaultValue={initialSearchOptions} />
+        )}
+      </form>
+      <main className={mainClasses.join(' ')}>
         {children}
       </main>
       <Footer />

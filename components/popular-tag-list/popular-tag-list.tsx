@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { TagWithCategory } from '../../interfaces/tag';
+import { TagWithCategory } from '@/entities/tag';
 import PopularTagItem from './popular-tag-item';
 import styles from './popular-tag-list.module.scss';
 

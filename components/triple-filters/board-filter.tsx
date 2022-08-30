@@ -1,6 +1,6 @@
 import React, { FC, MouseEvent, useCallback } from 'react';
-import { BOARD_A, BOARD_G, BOARD_P } from '../../interfaces/constants';
-import Tooltip from '../tooltip';
+import { Board } from '@/lib/constants';
+import Tooltip from '@/components/tooltip';
 import styles from './board-filter.module.scss';
 
 interface BoardFilterProps {
@@ -24,21 +24,42 @@ const BoardFilter: FC<BoardFilterProps> = ({
 
   return (
     <div className={classes.join(' ')}>
-      <input type="hidden" name="board" value={value} />
+      <input type="hidden" name="boards" value={value} />
       <ul>
-        <li className={value & BOARD_G ? styles.selected : ''}>
+        <li className={value & Board.G ? styles.selected : ''}>
           <Tooltip message="General" position="bottom" offset={15}>
-            <button onClick={onClick} data-board={BOARD_G} disabled={disabled}>G</button>
+            <button
+              type="button"
+              onClick={onClick}
+              data-board={Board.G}
+              disabled={disabled}
+            >
+              G
+            </button>
           </Tooltip>
         </li>
-        <li className={value & BOARD_A ? styles.selected : ''}>
+        <li className={value & Board.A ? styles.selected : ''}>
           <Tooltip message="Anime / Manga" position="bottom" offset={15}>
-            <button onClick={onClick} data-board={BOARD_A} disabled={disabled}>A</button>
+            <button
+              type="button"
+              onClick={onClick}
+              data-board={Board.A}
+              disabled={disabled}
+            >
+              A
+            </button>
           </Tooltip>
         </li>
-        <li className={value & BOARD_P ? styles.selected : ''}>
+        <li className={value & Board.P ? styles.selected : ''}>
           <Tooltip message="People" position="bottom" offset={15}>
-            <button onClick={onClick} data-board={BOARD_P} disabled={disabled}>P</button>
+            <button
+              type="button"
+              onClick={onClick}
+              data-board={Board.P}
+              disabled={disabled}
+            >
+              P
+            </button>
           </Tooltip>
         </li>
       </ul>

@@ -1,5 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import User from '../../interfaces/user';
+import User from '@/entities/user';
 import Footer from './elements/footer';
 import Userbar from './elements/userbar';
 

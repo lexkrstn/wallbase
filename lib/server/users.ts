@@ -3,9 +3,9 @@ import { wrapError } from 'db-errors';
 import omit from 'lodash/omit';
 import geoip from 'geoip-lite';
 import countryData from 'country-data';
-import User, { UserRole, UserWithPassword } from '../interfaces/user';
-import knex from './knex';
-import { camelCaseObjectKeys, snakeCaseObjectKeys } from './utils';
+import User, { UserRole, UserWithPassword } from '@/entities/user';
+import knex from '@/lib/server/knex';
+import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 
 export const ROOT_USER_ID = '1';
 
@@ -119,9 +119,7 @@ export async function updateUser(id: string, dto: UpdateUserDto): Promise<boolea
  * @param loginOrEmail User login or email.
  * @returns The user record or null.
  */
- export async function findUserByLoginOrEmail(
-  loginOrEmail: string,
-): Promise<UserWithPassword | null> {
+ export async function findUserByLoginOrEmail(loginOrEmail: string) {
   try {
     const rows = await knex('users')
       .where('login', loginOrEmail)
@@ -155,7 +153,7 @@ export async function findUsers({
   order = 'desc',
   orderBy = 'createdAt',
   role,
-}: UserSearchOptions): Promise<{ users: User[]; totalPages: number }> {
+}: UserSearchOptions) {
   try {
     let query = knex('users')
       .orderBy(orderBy, order);
@@ -167,6 +165,7 @@ export async function findUsers({
       .offset((page - 1) * perPage)
       .limit(perPage)
       .returning('*');
+
     return {
       users: rows.map(dbRowToUser),
       totalPages: Math.ceil(parseInt(count + '', 10) / perPage),
@@ -203,6 +202,10 @@ interface GeoIpUserData {
   lng: number;
 }
 
+/**
+ * Returns geoip fields in the form that is safe to directly assign the whole
+ * object to user DB record or business model (User interface).
+ */
 export function getGeoIpUserData(ip: string): GeoIpUserData | null {
   const geo = geoip.lookup(ip);
   if (!geo) return null;

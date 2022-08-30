@@ -1,8 +1,7 @@
+import { AspectType } from '@/lib/types';
 import React, { FC } from 'react';
 import Selectbox, { SelectboxDescribedItemDto, SelectboxItemDto } from '../selectbox';
 import SelectboxDescribedItem from '../selectbox/selectbox-described-item';
-
-export type AspectType = '' | '1.33' | '1.25' | '1.77' | '1.60' | '1.70' | '2.50' | '3.20' | '0.99';
 
 const ITEMS: SelectboxDescribedItemDto<AspectType>[] = [
   { value: '', label: 'All', description: '(default)' },

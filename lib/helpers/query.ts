@@ -10,10 +10,10 @@ export function getParam<T>(
   if (location === 'query') {
     return req.query[name] as any as T | undefined;
   }
-  if (location === 'body') {
+  if (location === 'body' && req.body) {
     return req.body[name] as T | undefined;
   }
-  return (req.query[name] || req.body[name]) as T | undefined;
+  return (req.query[name] || (req.body ? req.body[name] : undefined)) as T | undefined;
 }
 
 export function getStringParam(
@@ -28,8 +28,13 @@ export function getNumericParam(
   req: NextApiRequest,
   name: string,
   location: ParamLocation = 'both',
+  { min, max }: { min?: number, max?: number } = {},
 ): number | undefined {
-  return parseInt(getStringParam(req, name, location) || '', 10) || undefined;
+  const number = parseInt(getStringParam(req, name, location) || '', 10) || undefined;
+  if (number === undefined) return number;
+  if (min !== undefined && number < min) return undefined;
+  if (max !== undefined && number > max) return undefined;
+  return number;
 }
 
 export function getEnumParam<T>(

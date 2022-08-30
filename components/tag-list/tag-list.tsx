@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faTag } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, MouseEvent, useCallback } from 'react';
-import { Purity } from '../../interfaces/constants';
-import Tag from '../../interfaces/tag';
+import { Purity } from '@/lib/constants';
+import Tag from '@/entities/tag';
 import styles from './tag-list.module.scss';
 
 const PURITY_TO_CLASS: Record<number, string> = {

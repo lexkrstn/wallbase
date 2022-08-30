@@ -1,15 +1,20 @@
-import React, { FC, useCallback, useState } from 'react';
-import OrderBySelectbox, { OrderByType, OrderType } from '../selectboxes/order-by-selectbox';
-import ResolutionSelectbox, {
+import React, { FC, useState } from 'react';
+import {
+  AspectType,
+  OrderByType,
+  OrderType,
   ResolutionOperatorType,
   ResolutionType,
-} from '../selectboxes/resolution-selectbox';
-import AspectSelectbox, { AspectType } from '../selectboxes/aspect-selectbox';
-import PageSizeSelectbox, { PageSizeType } from '../selectboxes/page-size-selectbox';
-import BoardFilter from '../triple-filters/board-filter';
-import PurityFilter from '../triple-filters/purity-filter';
+  PageSizeType,
+} from '@/lib/types';
+import OrderBySelectbox from '@/components/selectboxes/order-by-selectbox';
+import ResolutionSelectbox from '@/components/selectboxes/resolution-selectbox';
+import AspectSelectbox from '@/components/selectboxes/aspect-selectbox';
+import PageSizeSelectbox from '@/components/selectboxes/page-size-selectbox';
+import BoardFilter from '@/components/triple-filters/board-filter';
+import PurityFilter from '@/components/triple-filters/purity-filter';
+import { Board, Purity } from '@/lib/constants';
 import styles from './search-controls-triptych.module.scss';
-import { Board, Purity } from '../../interfaces/constants';
 
 export interface SearchControlsTriptychData {
   purity: number;

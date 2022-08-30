@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import nextConnect from 'next-connect';
 import passport from 'passport';
-import User from '../../interfaces/user';
-import { jwtStrategy } from '../../lib/passport';
+import User from '@/entities/user';
+import { jwtStrategy } from '@/lib/server/passport';
 
 interface Data {
   user: User | null;

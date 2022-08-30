@@ -1,6 +1,6 @@
 import { NextApiRequest } from 'next';
 import { IncomingForm, File } from 'formidable';
-import CONFIG from './config';
+import CONFIG from '@/lib/server/config';
 
 export interface UploadedFile {
   path: string;

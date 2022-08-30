@@ -4,7 +4,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
 import React, { ChangeEvent, FC, useCallback, useReducer, useRef, useState } from 'react';
-import { ImageFileData } from '../../lib/helpers/image';
+import { ImageFileData } from '@/lib/helpers/image';
 import Button from '../buttons/button';
 import { TextField } from '../form';
 import BoardFilter from '../triple-filters/board-filter';
@@ -13,11 +13,11 @@ import ThumbnailGrid from '../thumbnail/grid';
 import DropZone from '../dropzone';
 import Thumbnail from '../thumbnail';
 import styles from './upload-pane.module.scss';
-import { useImageFileDialog } from '../../lib/hooks/use-image-file-dialog';
+import { useImageFileDialog } from '@/lib/hooks/use-image-file-dialog';
 import NotAllSetModal from './not-all-set-modal';
 import TagInput from '../form/tag-input';
-import Tag from '../../interfaces/tag';
-import { UploadError, useUploads } from '../../lib/hooks/use-uploads';
+import Tag from '@/entities/tag';
+import { UploadError, useUploads } from '@/lib/hooks/use-uploads';
 import Alert from '../alert';
 import reducer, { initialState } from './reducer';
 

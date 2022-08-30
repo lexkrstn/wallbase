@@ -1,11 +1,11 @@
 import React, { FC, useCallback, useState } from 'react';
 import { faHandSpock, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { countryCodeEmoji } from 'country-code-emoji';
+import User from '@/entities/user';
+import AuthModal from '@/components/modals/auth-modal/auth-modal';
+import { useLogout } from '@/lib/hooks/use-logout';
 import styles from './userbar.module.scss';
-import User from "../../../../interfaces/user";
-import AuthModal from '../../../modals/auth-modal/auth-modal';
-import { useLogout } from '../../../../lib/hooks/use-logout';
 
 interface UserbarProps {
   user: User | null;
