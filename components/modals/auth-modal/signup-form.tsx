@@ -1,19 +1,21 @@
 import { faSignIn, faExclamationCircle, faTimes } from '@fortawesome/free-solid-svg-icons';
 import React, { FC, useCallback } from 'react';
-import { useSignIn } from '@/lib/hooks/use-sign-in';
+import { MIN_LOGIN, MIN_PASSWORD, useSignUp } from '@/lib/hooks/use-sign-up';
 import Alert from '@/components/alert';
 import Button from '@/components/buttons/button';
 import { FormGroup, Label, TextField } from '@/components/form';
 import { ModalFooter } from '@/components/modals/modal';
 import styles from './signin-form.module.scss';
 
-interface SignInFormProps {
-  onLoggedIn?: () => void;
+interface SignUpFormProps {
+  onSignedUp?: () => void;
   onCancel?: () => void;
 }
 
-const SignInForm: FC<SignInFormProps> = ({ onCancel, onLoggedIn }) => {
-  const { error, onSubmit, invalidate, loading } = useSignIn({ onLoggedIn });
+const SignUpForm: FC<SignUpFormProps> = ({ onCancel, onSignedUp }) => {
+  const { error, invalidate, processing, onSubmit } = useSignUp({
+    onComplete: onSignedUp,
+  });
 
   const handleCancelClick = useCallback(() => onCancel && onCancel(), []);
 
@@ -25,20 +27,29 @@ const SignInForm: FC<SignInFormProps> = ({ onCancel, onLoggedIn }) => {
         </Alert>
       )}
       <FormGroup>
-        <Label htmlFor="signin-username">Username / Email:</Label>
+        <Label htmlFor="signup-login">Login:</Label>
         <TextField
-          name="username"
-          placeholder="Your login or email"
-          id="signin-username"
+          name="login"
+          placeholder={`At least ${MIN_LOGIN} letters`}
+          id="signup-login"
           onChange={invalidate}
         />
       </FormGroup>
       <FormGroup>
-        <Label htmlFor="signin-password">Password:</Label>
+        <Label htmlFor="signup-email">Email:</Label>
+        <TextField
+          name="email"
+          placeholder="E.g. your@email.com"
+          id="signup-email"
+          onChange={invalidate}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label htmlFor="signup-password">Password:</Label>
         <TextField
           name="password"
-          placeholder="Your password"
-          id="signin-password"
+          placeholder={`At least ${MIN_PASSWORD} symbols`}
+          id="signup-password"
           onChange={invalidate}
           password
         />
@@ -47,10 +58,10 @@ const SignInForm: FC<SignInFormProps> = ({ onCancel, onLoggedIn }) => {
         <Button
           submit
           iconPrepend={faSignIn}
-          loading={loading}
-          disabled={loading}
+          loading={processing}
+          disabled={processing}
         >
-          Log in
+          Register
         </Button>
         <Button onClick={handleCancelClick} iconPrepend={faTimes} dark>
           Cancel
@@ -60,6 +71,6 @@ const SignInForm: FC<SignInFormProps> = ({ onCancel, onLoggedIn }) => {
   );
 };
 
-SignInForm.displayName = 'SignInForm';
+SignUpForm.displayName = 'SignUpForm';
 
-export default SignInForm;
+export default SignUpForm;

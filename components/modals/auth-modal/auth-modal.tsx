@@ -3,6 +3,7 @@ import Tabs from '../../tabs';
 import Modal, { ModalBody } from '../modal';
 import SignInForm from './signin-form';
 import styles from './auth-modal.module.scss';
+import SignUpForm from './signup-form';
 
 const TITLES = ['Sign in', 'Register new user'];
 const TABS = ['Log in', 'Sign up'];
@@ -26,6 +27,9 @@ const AuthModal: FC<AuthModalProps> = ({ shown, onClose }) => {
         <div className={styles.tabContent}>
           {tabIndex === 0 && (
             <SignInForm onLoggedIn={onClose} onCancel={onClose} />
+          )}
+          {tabIndex === 1 && (
+            <SignUpForm onSignedUp={onClose} onCancel={onClose} />
           )}
         </div>
       </ModalBody>

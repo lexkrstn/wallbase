@@ -41,4 +41,4 @@ export default nextConnect()
     } catch (error: any) {
       res.status(401).json({ error: error.message });
     }
-  })
+  });

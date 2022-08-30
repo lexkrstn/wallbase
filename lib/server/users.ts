@@ -9,6 +9,12 @@ import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-k
 
 export const ROOT_USER_ID = '1';
 
+interface UserRow {
+  id: string;
+  password_hash: string;
+  [key: string]: string;
+}
+
 function dbRowToUserWithPassword(row: Record<any, any>): UserWithPassword {
   return camelCaseObjectKeys(row) as UserWithPassword;
 }
@@ -238,4 +244,62 @@ export async function addUserVisit(id: string, ip: string): Promise<boolean> {
     .where({ id })
     .returning('id');
   return affected.length > 0;
+}
+
+/**
+ * Cache for isFirstUserRegistration().
+ */
+let notFirstUserRegistration = false;
+
+/**
+ * Resolves to true if the is no users registered yet after the deployment
+ * (except the root one).
+ */
+export async function isFirstUserRegistration() {
+  if (notFirstUserRegistration) return false;
+  const [{ count }] = await knex('users').count();
+  if (parseInt(`${count}`, 10) > 1) {
+    notFirstUserRegistration = true;
+    return false;
+  }
+  const users = await knex<UserRow>('users').limit(1);
+  if (users.length === 0 || users[0].password_hash === '') return true;
+  notFirstUserRegistration = true;
+  return false;
+}
+
+/**
+ * Updates the password of the user.
+ */
+export async function updateUserPassword(id: string, password: string) {
+  await knex('users').where({ id }).update<UserRow>({
+    password_hash: await hashPassword(password),
+  });
+}
+
+/**
+ * Updates the root user's credentials.
+ * If no root user created, the function creates a new one.
+ */
+export async function setupRootUser({ login, email, password, activated }: NewUserDto) {
+  const dto = {
+    login,
+    email,
+    activated,
+    password_hash: await hashPassword(password),
+  };
+  const affectedRows = await knex('users')
+    .where('id', 1)
+    .update(dto)
+    .returning('*');
+  if (affectedRows.length > 0) {
+    return dbRowToUser(affectedRows[0]);
+  }
+  const userRows = await knex('users')
+    .insert({
+      ...dto,
+      id: 1,
+    })
+    .returning('*');
+  return dbRowToUser(userRows[0]);
 }
