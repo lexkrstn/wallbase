@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import Router from 'next/router';
+import { createContext, useMemo } from 'react';
 import useSWR from 'swr';
 import User from '@/entities/user';
 import { forgetAuthToken, getAuthToken } from '@/lib/helpers/browser-auth-token';
@@ -31,33 +30,47 @@ const fetcher = async (url: string): Promise<Data> => {
   };
 };
 
-interface UseUserOptions {
-  redirectTo?: string;
-  redirectIfFound?: boolean;
+interface SessionData {
+  user: User | null;
+  finished: boolean;
+  loading: boolean;
+  error: string;
 }
 
-export function useUser({ redirectTo, redirectIfFound }: UseUserOptions = {}) {
+export const SessionContext = createContext<SessionData>({
+  user: null,
+  finished: false,
+  loading: false,
+  error: '',
+});
+
+interface Options {
+  onError?: (err: unknown) => void;
+  onSuccess?: (data: SessionData) => void;
+}
+
+export function useSessionProvider({ onError, onSuccess }: Options = {}) {
   const { data, error, isValidating } = useSWR('/api/user', fetcher, {
     revalidateOnFocus: false,
+    onError,
+    onSuccess: (responseData) => {
+      if (onSuccess) {
+        onSuccess({
+          user: responseData.user,
+          finished: true,
+          loading: false,
+          error: '',
+        });
+      }
+    },
   });
   const user = data?.user ?? null;
   const finished = !!data;
-  const hasUser = !!user;
 
-  useEffect(() => {
-    if (!redirectTo || !finished) return;
-    if (
-      // If redirectTo is set, redirect if the user was not found.
-      (redirectTo && !redirectIfFound && !hasUser) ||
-      // If redirectIfFound is also set, redirect if the user was found
-      (redirectIfFound && hasUser)
-    ) {
-      Router.push(redirectTo);
-    }
-  }, [redirectTo, redirectIfFound, finished, hasUser]);
-
-  return {
-    user: error ? null : user,
+  return useMemo<SessionData>(() => ({
+    user,
+    finished,
     loading: isValidating,
-  };
+    error: error ? (error instanceof Error ? error.message : `${error}`) : '',
+  }), [data, error, isValidating]);
 }

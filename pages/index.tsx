@@ -11,12 +11,11 @@ import SearchTabs, { SearchByType } from '@/components/search-tabs';
 import Triptych from '@/components/triptych';
 import FeaturedWallpaperSlide from '@/entities/featured-wallpaper-slide';
 import Tag from '@/entities/tag';
-import User from '@/entities/user';
-import { getStatistics, Statistics } from '../lib/server/stats';
-import { getPopularTags } from '../lib/server/tags';
-import { getFeaturedWallpaperSlides } from '../lib/server/wallpapers';
-import styles from './index.module.scss';
+import { getStatistics, Statistics } from '@/lib/server/stats';
+import { getPopularTags } from '@/lib/server/tags';
+import { getFeaturedWallpaperSlides } from '@/lib/server/wallpapers';
 import logoImage from '@/components/layouts/elements/header/logo.svg';
+import styles from './index.module.scss';
 
 interface IndexServerSideProps {
   popularTags: Tag[] | null;
@@ -24,20 +23,15 @@ interface IndexServerSideProps {
   stats: Statistics;
 }
 
-interface IndexAppProps {
-  user: User | null;
-  userLoading: boolean;
-}
-
-type IndexProps = IndexServerSideProps & IndexAppProps;
+type IndexProps = IndexServerSideProps;
 
 const Index: NextPage<IndexProps> = ({
-  popularTags, featuredWallpaperSlides, stats, user, userLoading,
+  popularTags, featuredWallpaperSlides, stats,
 }) => {
   const [filtersShown, setFiltersShown] = useState(false);
   const [searchBy, setSearchBy] = useState<SearchByType>('keyword');
   return (
-    <IndexLayout user={user} userLoading={userLoading}>
+    <IndexLayout>
       <div className={styles.home}>
         <div className={styles.logo}>
           <Link href="/">

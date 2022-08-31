@@ -3,22 +3,21 @@ import React, { useEffect } from 'react';
 import Router from 'next/router';
 import RegularLayout from '@/components/layouts/regular-layout';
 import UploadPane from '@/components/upload-pane';
-import User from '@/entities/user';
+import { useSession } from '@/lib/hooks/use-session';
 import styles from './upload.module.scss';
 
-interface UploadProps {
-  user: User | null;
-  userLoading: boolean;
-}
 
-const Upload: NextPage<UploadProps> = ({ user, userLoading }) => {
+const Upload: NextPage = () => {
+  const { user, loading: userLoading } = useSession({ redirectTo: '/' });
+
   useEffect(() => {
     if (!user && !userLoading) {
       Router.push('/');
     }
   }, [user, userLoading]);
+
   return (
-    <RegularLayout user={user} userLoading={userLoading} center>
+    <RegularLayout center>
       <div className={styles.host}>
         <UploadPane />
       </div>
@@ -28,4 +27,4 @@ const Upload: NextPage<UploadProps> = ({ user, userLoading }) => {
 
 Upload.displayName = 'Upload';
 
-export default React.memo(Upload);
+export default Upload;

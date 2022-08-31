@@ -1,8 +1,8 @@
 import React, { FC, FormEvent, ReactNode, useCallback, useState } from 'react';
 import Router from 'next/router';
-import User from '@/entities/user';
 import { makeQueryString } from '@/lib/helpers/query-string';
 import { DEFAULT_SEARCH_OPTIONS, SearchOptions } from '@/lib/search-options';
+import { useSession } from '@/lib/hooks/use-session';
 import SearchOptionsBar from '../search-options-bar';
 import Footer from './elements/footer';
 import Header from './elements/header';
@@ -11,8 +11,6 @@ import styles from './regular-layout.module.scss';
 
 interface RegularLayoutProps {
   children: ReactNode;
-  user: User | null;
-  userLoading: boolean;
   defaultSearchOpen?: boolean;
   center?: boolean;
   initialSearchOptions?: SearchOptions;
@@ -26,12 +24,13 @@ interface RegularLayoutProps {
 }
 
 const RegularLayout: FC<RegularLayoutProps> = ({
-  children, user, userLoading, defaultSearchOpen = false, center = false,
+  children, defaultSearchOpen = false, center = false,
   initialSearchOptions = DEFAULT_SEARCH_OPTIONS, onSearch,
 }) => {
   const mainClasses = [styles.main];
   if (center) mainClasses.push(styles.center);
   const [searchOpen, setSearchOpen] = useState(defaultSearchOpen);
+  const { user, loading: userLoading } = useSession();
 
   const handleSubmitSearchForm = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

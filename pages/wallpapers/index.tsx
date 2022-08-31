@@ -18,20 +18,20 @@ import Thumbnail from '@/components/thumbnail';
 import ThumbnailPageSeparator from '@/components/thumbnail/page-separator';
 import { useWallpapersInfinite } from '@/lib/hooks/use-wallpapers-infinite';
 import IntersectionTrigger from '@/components/intersection-trigger';
-import styles from './wallpapers.module.scss';
 import { useDeleteWallpaperModal } from '@/components/modals/delete-wallpaper-modal';
 import { useReportModal } from '@/components/modals/report-modal';
+import { useSession } from '@/lib/hooks/use-session';
+import styles from './wallpapers.module.scss';
 
 interface WallpapersProps {
-  user: User | null;
-  userLoading: boolean;
   initialSearchOptions: SearchOptions;
 }
 
 /**
  * Wallpapers search page.
  */
-const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearchOptions }) => {
+const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
+  const { user, loading: userLoading } = useSession();
   const [searchOptions, setSearchOptions] = useState(initialSearchOptions);
   const {
     totalPages, totalCount, pages, reload, isReachingEnd, firstPage, isLoading,
@@ -71,8 +71,6 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
 
   return (
     <RegularLayout
-      user={user}
-      userLoading={userLoading}
       defaultSearchOpen
       onSearch={handleSearch}
       initialSearchOptions={initialSearchOptions}
@@ -141,8 +139,6 @@ Wallpapers.displayName = 'Wallpapers';
 
 Wallpapers.getInitialProps = async (ctx) => {
   return {
-    user: null,
-    userLoading: false,
     initialSearchOptions: {
       ...DEFAULT_SEARCH_OPTIONS,
       ...getSearchOptionsFromQuery(ctx.query),

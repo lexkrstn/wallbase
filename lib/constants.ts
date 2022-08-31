@@ -28,13 +28,6 @@ export enum Board {
   ALL = G | A | P,
 };
 
-/**
- * These routes are restricted from unauthorized access. If an unauthorized user
- * gets there it will be immediately redirected to home page.
- */
-export const RESTRICTED_ROUTES = ['/upload'];
-
-
 export const MIMETYPE_TO_EXT: Record<string, string> = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
