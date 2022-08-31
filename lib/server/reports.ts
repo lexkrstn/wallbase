@@ -1,10 +1,11 @@
 import uniq from 'lodash/uniq';
-import { Report, ReportType } from '@/entities/report';
+import { CreateReportDto, Report } from '@/entities/report';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 import knex from './knex';
 import { findWallpapersById } from './wallpapers';
 import { findUsersById } from './users';
 import { wrapError } from 'db-errors';
+import User from '@/entities/user';
 
 /**
  * Incomplete type definition of the Tag record in DB.
@@ -113,12 +114,11 @@ export async function findReports({
   };
 }
 
-interface CreateReportDto {
-  wallpaperId: string;
-  userId: string;
-  type: ReportType;
-  duplicateId?: string;
-  message: string;
+/**
+ * Returns true if the user is allowed to create reports.
+ */
+export function canUserCreateReport(user: User) {
+  return user.role !== 'banned';
 }
 
 /**

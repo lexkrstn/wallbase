@@ -1,5 +1,4 @@
 .alert {
-  padding: 15px;
   background: #121212;
   margin-bottom: 20px;
   border-radius: 2px;
@@ -19,6 +18,9 @@
   line-height: 1;
   @at-root .success & {
     color: #3caa3d;
+  }
+  @at-root .info & {
+    color: #2bb8f3;
   }
   > svg {
     height: 16px;

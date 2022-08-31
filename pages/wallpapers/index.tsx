@@ -20,6 +20,7 @@ import { useWallpapersInfinite } from '@/lib/hooks/use-wallpapers-infinite';
 import IntersectionTrigger from '@/components/intersection-trigger';
 import styles from './wallpapers.module.scss';
 import { useDeleteWallpaperModal } from '@/components/modals/delete-wallpaper-modal';
+import { useReportModal } from '@/components/modals/report-modal';
 
 interface WallpapersProps {
   user: User | null;
@@ -41,6 +42,8 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
     onSuccess: removeWallpaper,
   });
 
+  const reportModal = useReportModal();
+
   const handleSearch = useCallback((so: SearchOptions) => {
     updateLocationSearchOptions(so);
     setSearchOptions(so);
@@ -58,8 +61,10 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
     if (wallpaper) {
       if (canDeleteWallpaper(user, wallpaper)) {
         deleteModal.show(wallpaper);
+      } else if (user) {
+        reportModal.show(wallpaper, user);
       } else {
-        // TODO: show complaint dialog
+        // TODO: AboutWallpaperIssuesModal
       }
     }
   }, [pages, user]);
@@ -127,6 +132,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ user, userLoading, initialSearc
         )}
       </div>
       {deleteModal.jsx}
+      {reportModal.jsx}
     </RegularLayout>
   );
 };

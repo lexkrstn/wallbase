@@ -12,19 +12,21 @@ exports.up = async function(knex) {
     table.uuid('duplicate_id').nullable().index();
     table.string('message').notNullable().defaultTo('');
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
+    table.boolean('reviewed').notNullable().defaultTo(false)
+      .comment('Reviewed, but left in the table to prevent further reports of this type');
 
-    table.unique(['wallpaper_id', 'user_id']);
+    table.unique(['wallpaper_id', 'type']);
 
     table.foreign('wallpaper_id')
-      .references('wallpaper.id')
+      .references('wallpapers.id')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
     table.foreign('duplicate_id')
-      .references('wallpaper.id')
+      .references('wallpapers.id')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
     table.foreign('user_id')
-      .references('user.id')
+      .references('users.id')
       .onUpdate('CASCADE')
       .onDelete('CASCADE');
   });
