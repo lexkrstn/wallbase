@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useSWRConfig } from 'swr';
-import { TOKEN_NAME } from '@/lib/constants';
+import { forgetAuthToken, getAuthTokenHeaders } from '@/lib/helpers/browser-auth-token';
 
 export function useLogout() {
   const { mutate } = useSWRConfig();
@@ -11,11 +11,14 @@ export function useLogout() {
     await fetch('/api/logout', {
       method: 'POST',
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthTokenHeaders(),
+      },
       body: JSON.stringify({}),
     });
     setLoading(false);
-    document.cookie = `${TOKEN_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    forgetAuthToken();
     mutate('/api/user', { user: null });
   }, []);
 
