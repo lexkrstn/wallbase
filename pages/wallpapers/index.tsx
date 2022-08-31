@@ -22,6 +22,7 @@ import { useDeleteWallpaperModal } from '@/components/modals/delete-wallpaper-mo
 import { useReportModal } from '@/components/modals/report-modal';
 import { useSession } from '@/lib/hooks/use-session';
 import styles from './wallpapers.module.scss';
+import { useAboutWallpaperIssuesModal } from '@/components/modals/about-wallpaper-issues-modal';
 
 interface WallpapersProps {
   initialSearchOptions: SearchOptions;
@@ -31,7 +32,7 @@ interface WallpapersProps {
  * Wallpapers search page.
  */
 const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
-  const { user, loading: userLoading } = useSession();
+  const { user } = useSession();
   const [searchOptions, setSearchOptions] = useState(initialSearchOptions);
   const {
     totalPages, totalCount, pages, reload, isReachingEnd, firstPage, isLoading,
@@ -41,8 +42,8 @@ const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
   const deleteModal = useDeleteWallpaperModal({
     onSuccess: removeWallpaper,
   });
-
   const reportModal = useReportModal();
+  const issuesModal = useAboutWallpaperIssuesModal();
 
   const handleSearch = useCallback((so: SearchOptions) => {
     updateLocationSearchOptions(so);
@@ -64,7 +65,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
       } else if (user) {
         reportModal.show(wallpaper, user);
       } else {
-        // TODO: AboutWallpaperIssuesModal
+        issuesModal.show();
       }
     }
   }, [pages, user]);
@@ -106,6 +107,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
                   mimetype={w.mimetype}
                   onDeleteClick={handleDeleteClick}
                   deleteBtnTitle={canDeleteWallpaper(user, w) ? 'Delete' : 'Make a complaint'}
+                  href={`/wallpapers/${w.id}`}
                   interactive
                 />
               ))}
@@ -131,6 +133,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
       </div>
       {deleteModal.jsx}
       {reportModal.jsx}
+      {issuesModal.jsx}
     </RegularLayout>
   );
 };

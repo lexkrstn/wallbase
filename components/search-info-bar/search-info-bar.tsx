@@ -29,7 +29,7 @@ const SearchInfoBar: FC<SearchInfoBarProps> = ({
           {searchType == 'random' && (
             <>
               Warning: this section is too addictive.
-              Leave now or you\'ll lose a couple of hours of your life here.
+              Leave now or you&apos;ll lose a couple of hours of your life here.
             </>
           )}
           {searchType == 'top' && (
@@ -46,9 +46,9 @@ const SearchInfoBar: FC<SearchInfoBarProps> = ({
             <>
               <b>TIP</b>
               {': Do not search wallpapers by too SUBJECTIVE criteria like '}
-              <code>"cute puppies"</code>
+              <code>&quot;cute puppies&quot;</code>
               {' or '}
-              <code>"pretty girls"</code>
+              <code>&quot;pretty girls&quot;</code>
               !
             </>
           )}

@@ -1,4 +1,6 @@
-import React, { CSSProperties, FC, ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  CSSProperties, FC, ReactNode, useCallback, useEffect, useRef, useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 import styles from './tooltip.module.scss';
 
@@ -9,7 +11,7 @@ interface TooltipProps {
   children: ReactNode;
   position?: 'top' | 'right' | 'bottom' | 'left';
   offset?: number;
-};
+}
 
 const Tooltip: FC<TooltipProps> = ({
   className, children, inline, message, position, offset,
@@ -35,6 +37,7 @@ const Tooltip: FC<TooltipProps> = ({
       setPresented(true);
       return;
     }
+    if (!shown) return;
     const rect = hostRef.current!.getBoundingClientRect();
     let left = rect.left + window.scrollX;
     let top = rect.top + window.scrollY;
@@ -60,16 +63,12 @@ const Tooltip: FC<TooltipProps> = ({
   }
   const messageStyle: CSSProperties = {};
   if (position === 'top') {
-    messageStyle.transform = 'translate(-50%, -100%)';
     messageStyle.marginTop = `-${offset}px`;
   } else if (position === 'bottom') {
-    messageStyle.transform = 'translateX(-50%)';
     messageStyle.marginTop = `${offset}px`;
   } else if (position === 'left') {
-    messageStyle.transform = 'translate(-100%, -50%)';
     messageStyle.marginLeft = `-${offset}px`;
   } else if (position === 'right') {
-    messageStyle.transform = 'translateY(-50%)';
     messageStyle.marginLeft = `${offset}px`;
   }
   const messageJsx = (
@@ -84,7 +83,8 @@ const Tooltip: FC<TooltipProps> = ({
 
   return (
     <div
-      className={hostClasses.join(' ')} ref={hostRef}
+      className={hostClasses.join(' ')}
+      ref={hostRef}
       onMouseOut={hide}
       onMouseOver={show}
     >

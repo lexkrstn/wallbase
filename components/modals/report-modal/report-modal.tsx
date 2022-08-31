@@ -95,9 +95,9 @@ const ReportModal: FC<ReportModalProps> = ({
               )}
               {type === 'copyright' && (
                 <Alert icon={faExclamationCircle} info>
-                  If you are the content owner it's also possible to add your
-                  works to banned resources on this website to prevent further
-                  uploading any of your works.
+                  If you are the content owner it&apos;s also possible to add
+                  your works to banned resources on this website to prevent
+                  further uploading any of your works.
                   Alternatively, we can also move the images to your account
                   on this website.
                   Read more about all options in

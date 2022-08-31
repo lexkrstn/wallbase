@@ -11,6 +11,7 @@ const nextConfig = {
     twitterUrl: 'https://twitter.com/wallbase2',
     ircUrl: 'https://qchat.rizon.net/?channels=#wallbase2',
     ircChannel: 'wallbase2',
+    contactEmail: 'admin@wallbase.net',
   },
 };
 

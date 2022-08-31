@@ -22,6 +22,22 @@ $nib: 6px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
   border-radius: 2px;
 
+  @at-root .top & {
+    transform: translate(-50%, -100%);
+  }
+
+  @at-root .bottom & {
+    transform: translateX(-50%);
+  }
+
+  @at-root .left & {
+    transform: translate(-100%, -50%);
+  }
+
+  @at-root .right & {
+    transform: translateY(-50%);
+  }
+
   p {
     margin:0;
     padding:0;
@@ -46,7 +62,7 @@ $nib: 6px;
     @extend %nib;
     left: 50%;
     bottom: (-2 * $nib);
-    margin-left: (-$nib / 2);
+    margin-left: (-$nib);
     border-top-color: $bg;
   }
 }
@@ -55,7 +71,7 @@ $nib: 6px;
     @extend %nib;
     left: 50%;
     top: (-2 * $nib);
-    margin-left: (-$nib / 2);
+    margin-left: (-$nib);
     border-bottom-color: $bg;
   }
 }
@@ -64,7 +80,7 @@ $nib: 6px;
     @extend %nib;
     left: (-2 * $nib);
     top: 50%;
-    margin-top: (-$nib / 2);
+    margin-top: (-$nib);
     border-right-color: $bg;
   }
 }
@@ -73,7 +89,7 @@ $nib: 6px;
     @extend %nib;
     right: (-2 * $nib);
     top: 50%;
-    margin-top: (-$nib / 2);
+    margin-top: (-$nib);
     border-left-color: $bg;
   }
 }
