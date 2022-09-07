@@ -1,8 +1,8 @@
 import React, {
-  ChangeEvent, ChangeEventHandler, FC, FocusEvent, FocusEventHandler,
-  KeyboardEvent, KeyboardEventHandler, MouseEvent, useCallback, useEffect, useRef, useState,
+  ChangeEvent, FC, FocusEvent, FocusEventHandler, KeyboardEvent,
+  KeyboardEventHandler, MouseEvent, useCallback, useEffect, useRef, useState,
 } from 'react';
-import { hasAncestorNode } from '@/lib/helpers/hasAncestorNode';
+import { hasAncestorNode } from '@/lib/helpers/has-ancestor-node';
 import { useAutocomplete } from '@/lib/hooks/use-autocomplete';
 import TextField from '../text-field';
 import styles from './autocomplete.module.scss';
