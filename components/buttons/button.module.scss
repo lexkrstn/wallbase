@@ -64,28 +64,28 @@
 @mixin btn-style($color) {
   $bg: #555353;
   background: $bg;
-	color: $color;
+  color: $color;
   transition: background-color 100ms linear;
   &:hover {
     background: darken($bg, 10%);
   }
-	&:disabled, &.disabled {
+  &:disabled, &.disabled {
     background: $bg;
-		opacity: 0.5;
+    opacity: 0.5;
     cursor: not-allowed;
-	}
+  }
 }
 .regular {
-	@include btn-style(#d6d6d6);
+  @include btn-style(#d6d6d6);
 }
 .danger {
-	@include btn-style(#ffbf9e);
+  @include btn-style(#ffbf9e);
 }
 .success {
-	@include btn-style(#aee6a1);
+  @include btn-style(#aee6a1);
 }
 .primary {
-	@include btn-style(#0e4d82);
+  @include btn-style(#0e4d82);
 }
 
 .iconPrepend, .iconAppend {

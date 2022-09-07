@@ -26,21 +26,21 @@
   });
 
   await knex.schema.raw(`
-		CREATE FUNCTION concat_tsvectors(tsv1 tsvector, tsv2 tsvector)
-			RETURNS tsvector AS $$
-		BEGIN
-			RETURN coalesce(tsv1, to_tsvector(''))
-				|| coalesce(tsv2, to_tsvector(''));
-		END;
-		$$ LANGUAGE plpgsql;
+    CREATE FUNCTION concat_tsvectors(tsv1 tsvector, tsv2 tsvector)
+      RETURNS tsvector AS $$
+    BEGIN
+      RETURN coalesce(tsv1, to_tsvector(''))
+        || coalesce(tsv2, to_tsvector(''));
+    END;
+    $$ LANGUAGE plpgsql;
 
-		CREATE AGGREGATE concat_tsvectors (
-			BASETYPE = tsvector,
-			SFUNC = concat_tsvectors,
-			STYPE = tsvector,
-			INITCOND = ''
-		);
-	`);
+    CREATE AGGREGATE concat_tsvectors (
+      BASETYPE = tsvector,
+      SFUNC = concat_tsvectors,
+      STYPE = tsvector,
+      INITCOND = ''
+    );
+  `);
 
   await knex.schema.raw(`
     CREATE FUNCTION update_wallpaper_tsv(UUID) RETURNS void AS $$
@@ -121,7 +121,7 @@
 
     CREATE TRIGGER on_update_tag_update_wallpaper_tsv AFTER UPDATE ON tags
       FOR EACH ROW EXECUTE PROCEDURE on_update_tag_update_wallpaper_tsv();
-	`);
+  `);
 };
 
 /**

@@ -1,21 +1,21 @@
 .textField {
-	background: #111111;
-	border: 1px solid #2C2C2C;
-	color: #CCC;
-	border-radius: 4px;
-	box-shadow: 0 0 5px #111111;
+  background: #111111;
+  border: 1px solid #2C2C2C;
+  color: #CCC;
+  border-radius: 4px;
+  box-shadow: 0 0 5px #111111;
   width: 100%;
   padding: 7px 10px;
   font-size: 16px;
   line-height: 1;
   outline: none;
-	&:focus {
-		border: 1px solid #666;
-		box-shadow: 0 0 5px #111111;
-	}
-	&:disabled, &:disabled:focus {
-		background: #1F1F1F;
-		border: 1px solid #2C2C2C;
-		color: #CCC;
-	}
+  &:focus {
+    border: 1px solid #666;
+    box-shadow: 0 0 5px #111111;
+  }
+  &:disabled, &:disabled:focus {
+    background: #1F1F1F;
+    border: 1px solid #2C2C2C;
+    color: #CCC;
+  }
 }

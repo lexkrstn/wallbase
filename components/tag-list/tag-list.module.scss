@@ -1,29 +1,29 @@
 .list {
-	list-style: none;
-	display: block;
-	padding: 0;
-	margin: -6px 0 0 -6px;
-	&:after {
-		content: '';
-		display: table;
-		clear: both;
-	}
+  list-style: none;
+  display: block;
+  padding: 0;
+  margin: -6px 0 0 -6px;
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
 }
 .item {
-	font-size: 11px;
-	display: block;
-	float: left;
-	margin: 6px 0 0 6px;
-	padding: 4px 4px 4px 8px;
-	background: #2B2B2B;
-	position: relative;
-	white-space: nowrap;
-	border-radius: 15px;
-	box-shadow: 0 0 1px #000;
+  font-size: 11px;
+  display: block;
+  float: left;
+  margin: 6px 0 0 6px;
+  padding: 4px 4px 4px 8px;
+  background: #2B2B2B;
+  position: relative;
+  white-space: nowrap;
+  border-radius: 15px;
+  box-shadow: 0 0 1px #000;
   cursor: default;
-	&:hover {
-		background: #454545;
-	}
+  &:hover {
+    background: #454545;
+  }
   @at-root .disabled &:hover {
     background: #2B2B2B;
   }
@@ -46,24 +46,24 @@
   }
 }
 .text {
-	display: inline-block;
-	max-width: 170px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	margin: 0 0 0 5px;
-	white-space: nowrap;
-	vertical-align: middle;
-	font-size: 14px;
+  display: inline-block;
+  max-width: 170px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0 0 0 5px;
+  white-space: nowrap;
+  vertical-align: middle;
+  font-size: 14px;
   color: #94C688;
-	@at-root .sketchy & {
+  @at-root .sketchy & {
     color: #CDC200;
   }
-	@at-root .nsfw & {
+  @at-root .nsfw & {
     color: #d37373
   }
 }
 .delete {
-	display: inline-block;
+  display: inline-block;
   cursor: pointer;
   padding: 2px 6px 0 4px;
   text-decoration: none;
@@ -76,8 +76,8 @@
     color: #818181;
   }
   @at-root .item:hover &:hover, &:hover {
-		color: #dedede;
-	}
+    color: #dedede;
+  }
   @at-root .disabled .item:hover & {
     color: #4d4d4d;
     cursor: default;

@@ -27,7 +27,7 @@ function reportToDbRow(row: Partial<Report>): ReportRow {
  * Loads wallpaper fields for the reports and returns a copy of the
  * original array with 'wallpaper' field filled up.
  */
- export async function injectReportWallpapers(reports: Report[]) {
+export async function injectReportWallpapers(reports: Report[]) {
   const ids = reports.map(r => r.wallpaperId);
   if (ids.length === 0) return reports;
   const wallpapers = await findWallpapersById(uniq(ids));

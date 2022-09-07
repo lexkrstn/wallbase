@@ -134,7 +134,7 @@ export async function findUserById(id: string) {
  * @param loginOrEmail User login or email.
  * @returns The user record or null.
  */
- export async function findUserByLoginOrEmail(loginOrEmail: string) {
+export async function findUserByLoginOrEmail(loginOrEmail: string) {
   try {
     const rows = await knex('users')
       .where('login', loginOrEmail)

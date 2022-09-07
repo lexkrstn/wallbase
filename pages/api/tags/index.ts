@@ -4,7 +4,7 @@ import { getEnumParam, getNumericParam, getStringParam } from '@/lib/helpers/que
 import { findTags } from '@/lib/server/tags';
 
 export default async function listTags(req: NextApiRequest, res: NextApiResponse<Tag[]>) {
-	const { tags, totalCount } = await findTags({
+  const { tags, totalCount } = await findTags({
     query: getStringParam(req, 'q'),
     purity: getNumericParam(req, 'purity'),
     page: getNumericParam(req, 'page'),

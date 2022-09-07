@@ -39,7 +39,7 @@ export default function NavButtons(): ReactElement {
             <FontAwesomeIcon icon={faInfoCircle} className={styles.iconAbout} />
             About...
             <div className={styles.arrow}>
-            <FontAwesomeIcon icon={faChevronDown} />
+              <FontAwesomeIcon icon={faChevronDown} />
             </div>
           </a>
         </Link>

@@ -29,13 +29,13 @@
   });
 
   await knex.schema.raw(`
-		CREATE FUNCTION on_tag_insert_update_update_tag_tsv() RETURNS trigger AS $$
-		BEGIN
-			new.tsv :=
-				setweight(to_tsvector(new.name), 'A') ||
-				setweight(to_tsvector(new.alias), 'B');
-			return new;
-		END
+    CREATE FUNCTION on_tag_insert_update_update_tag_tsv() RETURNS trigger AS $$
+    BEGIN
+      new.tsv :=
+        setweight(to_tsvector(new.name), 'A') ||
+        setweight(to_tsvector(new.alias), 'B');
+      return new;
+    END
     $$ LANGUAGE plpgsql;
 
     CREATE TRIGGER on_tag_insert_update_update_tag_tsv BEFORE INSERT OR UPDATE ON tags

@@ -119,7 +119,7 @@ export function updateLocationSearchOptions(so: SearchOptions) {
 /**
  * Updates the page query variable in the navigator's search bar without page reload.
  */
- export function updateLocationPage(page: number) {
+export function updateLocationPage(page: number) {
   Router.push(
     {
       // the document still reloads without this
