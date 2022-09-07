@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { asyncDebounce } from '@/lib/helpers/asyncDebounce';
+import { asyncDebounce } from '@/lib/helpers/async-debounce';
 
 interface UseAutocompleteOptions<T> {
   fetcher: (query: string) => Promise<T[]>;
