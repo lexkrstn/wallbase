@@ -1,0 +1,19 @@
+image: node:latest
+
+# Services to be used on all builds.
+# services:
+#  - redis:latest
+#  - postgres:latest
+
+# This folder is cached between builds
+cache:
+  paths:
+    - node_modules/
+
+lint:
+  variables:
+    NODE_ENV: development
+  script:
+    # installs next, which is ruquired to run linter
+    - npm ci
+    - npm run lint
