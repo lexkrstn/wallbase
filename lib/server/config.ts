@@ -13,20 +13,20 @@ const config = {
   upload: {
     maxFileSize: parseInt(process.env.MAX_WALLPAPER_FILE_SIZE || '', 10) || 15 * MB,
     allowedMimeTypes: ['image/jpeg', 'image/png'],
-		minWidth: 640,
-		minHeight: 640,
-		maxWidth: 10000,
-		maxHeight: 10000,
-		path: path.join(PROJECT_ROOT, 'uploads'),
+    minWidth: 640,
+    minHeight: 640,
+    maxWidth: 10000,
+    maxHeight: 10000,
+    path: path.join(PROJECT_ROOT, 'uploads'),
   },
   wallpaper: {
     path: path.join(PROJECT_ROOT, 'public', 'wallpapers'),
   },
   thumbnail: {
-		width: 250,
-		height: 200,
+    width: 250,
+    height: 200,
     path: path.resolve(PROJECT_ROOT, 'public', 'thumbnails'),
-	},
+  },
 };
 
 export default config;

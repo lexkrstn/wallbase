@@ -218,42 +218,42 @@ export async function findWallpapers(
   const qb = knex('wallpapers');
 
   // filter by boards
-	if (so.boards) {
-		qb.whereRaw('board & ? = board', [so.boards]);
-	}
+  if (so.boards) {
+    qb.whereRaw('board & ? = board', [so.boards]);
+  }
   // filter by purity
   if (so.purity) {
-		qb.whereRaw('purity & ? = purity', [so.purity]);
-	}
+    qb.whereRaw('purity & ? = purity', [so.purity]);
+  }
   // filter by query
   const query = so.query?.trim();
-	if (query) {
+  if (query) {
     qb.select(knex.raw(
       '*, ts_rank(tsv, plainto_tsquery(\'english\', ?)) as rank',
       [query],
     ));
-		qb.whereRaw('tsv @@ plainto_tsquery(\'english\', ?)', [query]);
-	}
+    qb.whereRaw('tsv @@ plainto_tsquery(\'english\', ?)', [query]);
+  }
   // filter by ratio
-	if (so.aspect) {
+  if (so.aspect) {
     const aspect = parseFloat(so.aspect);
-		if (aspect >= 2.4999) {
+    if (aspect >= 2.4999) {
       qb.where('aspect', '>=', 2.5);
-		} else if (aspect >= 0.9999) {
+    } else if (aspect >= 0.9999) {
       qb.whereBetween('aspect', [aspect - 0.0001, aspect + 0.0001]);
-		} else {
+    } else {
       qb.where('aspect', '<', 1);
-		}
-	}
-  // filter by resolution
-	if (so.resolution) {
-    const op = so.resolutionOp === 'eq' ? '=' : '>=';
-		const resolution = so.resolution.split('x').map(x => parseInt(x, 10));
-		if (resolution.length !== 2 || Number.isNaN(resolution[0]) || Number.isNaN(resolution[1])) {
-			throw new Error('Resolution misformatted');
     }
-		qb.whereRaw(`width ${op} ? AND height ${op} ?`, resolution);
-	}
+  }
+  // filter by resolution
+  if (so.resolution) {
+    const op = so.resolutionOp === 'eq' ? '=' : '>=';
+    const resolution = so.resolution.split('x').map(x => parseInt(x, 10));
+    if (resolution.length !== 2 || Number.isNaN(resolution[0]) || Number.isNaN(resolution[1])) {
+      throw new Error('Resolution misformatted');
+    }
+    qb.whereRaw(`width ${op} ? AND height ${op} ?`, resolution);
+  }
 
   const [{ count }] = await qb.clone().count();
 

@@ -2,13 +2,13 @@ $bpPad: 600px;
 $bpWide: 1150px;
 
 .host {
-	padding: 10px 50px 10px 10px;
-	position: relative;
-	background: linear-gradient(to bottom, #171717, #0f0f0f);
-	background-color: #0F0F0F;
-	background-repeat: repeat-x;
-	background-size: 1px 55px;
-	font-size: 14px;
+  padding: 10px 50px 10px 10px;
+  position: relative;
+  background: linear-gradient(to bottom, #171717, #0f0f0f);
+  background-color: #0F0F0F;
+  background-repeat: repeat-x;
+  background-size: 1px 55px;
+  font-size: 14px;
 }
 .groups {
   display: flex;
@@ -66,13 +66,13 @@ $bpWide: 1150px;
 }
 .label {
   flex: 0 1 auto;
-	line-height: 27px;
-	margin-right: 10px;
-	width: 80px;
-	text-align: right;
-	white-space: nowrap;
-	@media (min-width: $bpWide) {
-		width: auto;
+  line-height: 27px;
+  margin-right: 10px;
+  width: 80px;
+  text-align: right;
+  white-space: nowrap;
+  @media (min-width: $bpWide) {
+    width: auto;
     position: absolute;
     top: 100%;
     left: 50%;
@@ -84,33 +84,33 @@ $bpWide: 1150px;
     color: #666;
     line-height: 1;
     text-transform: lowercase;
-	}
+  }
 }
 .item {
   flex: 1 0 auto;
 }
 .submit {
-	position: absolute;
-	top: 50%;
-	margin-top: -11px;
-	right: 25px;
-	background: none;
-	padding: 0;
-	border: 0;
-	outline: none !important;
+  position: absolute;
+  top: 50%;
+  margin-top: -11px;
+  right: 25px;
+  background: none;
+  padding: 0;
+  border: 0;
+  outline: none !important;
   color: #b4b4b4;
   cursor: pointer;
   &:hover {
     color: lighten(#b4b4b4, 20%);
   }
-	> svg {
+  > svg {
     height: 22px;
     transform: rotate(0deg);
     transition: transform .2s linear;
   }
-	&:hover > svg {
-		transform: rotate(360deg);
-	}
+  &:hover > svg {
+    transform: rotate(360deg);
+  }
 }
 .board {
   max-width: none;

@@ -173,10 +173,10 @@ export function formatDate(date: Date): string {
 
 export function thousands(n: number|string, delim = ','): string {
   const regex = /(\d+)(\d{3})/;
-	const parts = (n + '').split('.');
-	let i = parts[0];
-	while (regex.test(i)) {
-		i = i.replace(regex, '$1' + delim + '$2');
-	}
-	return i + (parts.length > 1 ? '.' + parts[1] : '');
+  const parts = (n + '').split('.');
+  let i = parts[0];
+  while (regex.test(i)) {
+    i = i.replace(regex, '$1' + delim + '$2');
+  }
+  return i + (parts.length > 1 ? '.' + parts[1] : '');
 }

@@ -1,43 +1,43 @@
 %panel {
-	margin: 30px auto;
-	background: #1A1A1A;
-	border: 1px solid #282828;
+  margin: 30px auto;
+  background: #1A1A1A;
+  border: 1px solid #282828;
   border-radius: 4px;
-	vertical-align: top;
+  vertical-align: top;
 }
 %panel__icon {
-	display: block;
-	float: left;
-	color: #c2c2c2;
-	font-size: 30px;
-	height: 45px;
-	width: 40px;
-	text-align: center;
-	margin-right: 10px;
+  display: block;
+  float: left;
+  color: #c2c2c2;
+  font-size: 30px;
+  height: 45px;
+  width: 40px;
+  text-align: center;
+  margin-right: 10px;
   > svg {
     height: 1em;
   }
 }
 %panel__header {
-	position: relative;
-	background: #0F0F0F;
-	background-image: linear-gradient(to bottom, #171717, #101010);
-	border-bottom: 1px solid #282828;
-	padding: 10px 12px;
-	text-align: left;
-	&:after {
-		content: '';
-		display: table;
-		clear: both;
-	}
+  position: relative;
+  background: #0F0F0F;
+  background-image: linear-gradient(to bottom, #171717, #101010);
+  border-bottom: 1px solid #282828;
+  padding: 10px 12px;
+  text-align: left;
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
 }
 %panel__caption {
-	border: 0;
-	margin: 0;
-	padding: 0;
-	color: #E29C32;
-	font-size: 17px;
-	font-weight: inherit;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  color: #E29C32;
+  font-size: 17px;
+  font-weight: inherit;
 }
 
 // wallpaper upload section
@@ -45,30 +45,30 @@
 $upload-sidebar-width: 280px;
 
 .host {
-	@extend %panel;
+  @extend %panel;
 }
 .header {
-	@extend %panel__header;
+  @extend %panel__header;
 }
 .icon {
-	@extend %panel__icon;
+  @extend %panel__icon;
 }
 .title {
-	@extend %panel__caption;
+  @extend %panel__caption;
 }
 .attention {
-	font-size: 14px;
+  font-size: 14px;
   margin-top: 5px;
 }
 .body {
-	display: flex;
+  display: flex;
   align-items: stretch;
-	width: 100%;
+  width: 100%;
 }
 .sidebar {
   flex: 0 0 auto;
-	width: $upload-sidebar-width;
-	background-color: #191919;
+  width: $upload-sidebar-width;
+  background-color: #191919;
   padding-bottom: 52px;
 }
 .alert {
@@ -78,47 +78,47 @@ $upload-sidebar-width: 280px;
   flex: 1 0 auto;
 }
 .group {
-	margin: 15px 10px;
+  margin: 15px 10px;
 }
 .label {
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .content {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-	margin-left: 0px;
-	transition: margin-left .1s ease-out;
+  margin-left: 0px;
+  transition: margin-left .1s ease-out;
 }
 .footer {
   flex: 0 0 auto;
-	text-align: center;
-	padding: 10px;
-	border-top: 1px solid #282828;
-	background-color: #191919;
-	&:after {
-		content: '';
-		display: table;
-		clear: both;
-	}
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #282828;
+  background-color: #191919;
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
 }
 .continue {
-	float: right;
+  float: right;
 }
 .btnClear {
-	float: left;
+  float: left;
 }
 .btnUpload {
-	float: right;
+  float: right;
 }
 .btnContinue {
   margin-left: 5px;
 }
 .btnCancel {
-	float: left;
+  float: left;
 }
 .btnFinish {
-	float: right;
+  float: right;
 }
 .thumbnails {
   position: relative;

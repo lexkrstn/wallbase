@@ -59,10 +59,10 @@
   position: static;
   display: inline-block;
   background: linear-gradient(to right, rgba(255,255,255,0), rgba(30,30,30,1));
-	right: 0;
-	>a:before {
-		background-position: -264px -104px;
-	}
+  right: 0;
+  >a:before {
+    background-position: -264px -104px;
+  }
 }
 .white {
   color: white !important;
