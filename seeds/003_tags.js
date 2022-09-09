@@ -11,7 +11,209 @@ const Purity = {
 exports.seed = async function(knex) {
   await knex('tags').insert([
     {
-      id: 62,
+      name: 'abstract',
+      creator_id: 1,
+      category_id: 75,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'nature',
+      creator_id: 1,
+      category_id: 97,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'artwork',
+      creator_id: 1,
+      category_id: 75,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'landscapes',
+      creator_id: 1,
+      category_id: 70,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'animals',
+      creator_id: 1,
+      category_id: 74,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'minimalistic',
+      creator_id: 1,
+      category_id: 96,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'trees',
+      creator_id: 1,
+      category_id: 97,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'anime',
+      creator_id: 1,
+      category_id: 2,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'actress',
+      creator_id: 1,
+      category_id: 1,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'flowers',
+      creator_id: 1,
+      category_id: 97,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'cities',
+      creator_id: 1,
+      category_id: 90,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'Star Wars',
+      creator_id: 1,
+      category_id: 80,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'mountains',
+      creator_id: 1,
+      category_id: 70,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'cats',
+      creator_id: 1,
+      category_id: 74,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'typography',
+      creator_id: 1,
+      category_id: 75,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'outdoors',
+      creator_id: 1,
+      category_id: 89,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'vehicles',
+      creator_id: 1,
+      category_id: 69,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'forest',
+      creator_id: 1,
+      category_id: 97,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'music',
+      creator_id: 1,
+      category_id: 81,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'multicolor',
+      creator_id: 1,
+      category_id: 95,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'beach',
+      creator_id: 1,
+      category_id: 89,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'text',
+      creator_id: 1,
+      category_id: 88,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'blue',
+      creator_id: 1,
+      category_id: 95,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'black',
+      creator_id: 1,
+      category_id: 95,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'fantasy art',
+      creator_id: 1,
+      category_id: 75,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'funny',
+      creator_id: 1,
+      category_id: 79,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'faces',
+      creator_id: 1,
+      category_id: 73,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'water',
+      creator_id: 1,
+      category_id: 5,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
+      name: 'celebrity',
+      creator_id: 1,
+      category_id: 72,
+      purity: Purity.SFW,
+      alias: '',
+    },
+    {
       name: 'portrait',
       creator_id: 1,
       category_id: 103,
@@ -19,7 +221,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 31,
       name: 'short hair',
       creator_id: 1,
       category_id: 73,
@@ -27,7 +228,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 18,
       name: 'lingerie',
       creator_id: 1,
       category_id: 83,
@@ -35,7 +235,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 30,
       name: 'long hair',
       creator_id: 1,
       category_id: 1,
@@ -43,7 +242,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 34,
       name: 'arched back',
       creator_id: 1,
       category_id: 73,
@@ -51,7 +249,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 37,
       name: 'thongs',
       creator_id: 1,
       category_id: 83,
@@ -59,7 +256,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 29,
       name: 'thighs',
       creator_id: 1,
       category_id: 73,
@@ -67,7 +263,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 35,
       name: 'ass',
       creator_id: 1,
       category_id: 73,
@@ -75,7 +270,6 @@ exports.seed = async function(knex) {
       alias: 'asses, bum, butt, butts, buttocks',
     },
     {
-      id: 16,
       name: 'anime girls',
       creator_id: 1,
       category_id: 2,
@@ -83,7 +277,6 @@ exports.seed = async function(knex) {
       alias: 'manga girls',
     },
     {
-      id: 36,
       name: 'back',
       creator_id: 1,
       category_id: 73,
@@ -91,7 +284,6 @@ exports.seed = async function(knex) {
       alias: 'backs',
     },
     {
-      id: 23,
       name: 'bent over',
       creator_id: 1,
       category_id: 1,
@@ -99,7 +291,6 @@ exports.seed = async function(knex) {
       alias: 'ass up, ass up face down, bend over, butt up, doggy, doggy style, doggystyle, face down, face down ass up, on all fours, on hands and knees',
     },
     {
-      id: 24,
       name: 'blonde',
       creator_id: 1,
       category_id: 1,
@@ -107,7 +298,6 @@ exports.seed = async function(knex) {
       alias: 'blonde hair, blondes',
     },
     {
-      id: 26,
       name: 'knee-highs',
       creator_id: 1,
       category_id: 83,
@@ -115,7 +305,6 @@ exports.seed = async function(knex) {
       alias: 'high socks, knee-high socks, knee highs, kneehighs, knee high socks, kneehigh socks, knee socks, kneesocks',
     },
     {
-      id: 39,
       name: 'dyed hair',
       creator_id: 1,
       category_id: 73,
@@ -123,7 +312,6 @@ exports.seed = async function(knex) {
       alias: 'hair dye',
     },
     {
-      id: 32,
       name: 'panties',
       creator_id: 1,
       category_id: 83,
@@ -131,7 +319,6 @@ exports.seed = async function(knex) {
       alias: 'pantsu, panty',
     },
     {
-      id: 20,
       name: 'panties down',
       creator_id: 1,
       category_id: 83,
@@ -139,7 +326,6 @@ exports.seed = async function(knex) {
       alias: 'pulling down panties',
     },
     {
-      id: 22,
       name: 'removing panties',
       creator_id: 1,
       category_id: 83,
@@ -147,7 +333,6 @@ exports.seed = async function(knex) {
       alias: 'undressing',
     },
     {
-      id: 21,
       name: 'shaved vagina',
       creator_id: 1,
       category_id: 73,
@@ -155,7 +340,6 @@ exports.seed = async function(knex) {
       alias: 'shaved pussies, shaved pussy, shaved vaginas',
     },
     {
-      id: 28,
       name: 'sideboob',
       creator_id: 1,
       category_id: 1,
@@ -163,7 +347,6 @@ exports.seed = async function(knex) {
       alias: 'side boob, sideboobs, side boobs',
     },
     {
-      id: 27,
       name: 'smiling',
       creator_id: 1,
       category_id: 1,
@@ -171,7 +354,6 @@ exports.seed = async function(knex) {
       alias: 'smile, smiles',
     },
     {
-      id: 33,
       name: 'striped panties',
       creator_id: 1,
       category_id: 83,
@@ -179,7 +361,6 @@ exports.seed = async function(knex) {
       alias: 'shimapan, striped underwear',
     },
     {
-      id: 25,
       name: 'tatoo',
       creator_id: 1,
       category_id: 1,
@@ -187,7 +368,6 @@ exports.seed = async function(knex) {
       alias: 'tattooed, tattoos',
     },
     {
-      id: 45,
       name: 'shoes',
       creator_id: 1,
       category_id: 83,
@@ -195,7 +375,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 15,
       name: 'women',
       creator_id: 1,
       category_id: 1,
@@ -203,7 +382,6 @@ exports.seed = async function(knex) {
       alias: 'babes, woman, female, girls, lady',
     },
     {
-      id: 38,
       name: 'nude',
       creator_id: 1,
       category_id: 1,
@@ -211,7 +389,6 @@ exports.seed = async function(knex) {
       alias: 'naked, nudes',
     },
     {
-      id: 40,
       name: 'asian',
       creator_id: 1,
       category_id: 1,
@@ -219,7 +396,6 @@ exports.seed = async function(knex) {
       alias: 'asians',
     },
     {
-      id: 41,
       name: 'curve women',
       creator_id: 1,
       category_id: 1,
@@ -227,7 +403,6 @@ exports.seed = async function(knex) {
       alias: 'curvaceous, curves, curvy bodies, curvy body, feminine bodies, juicy, juicy women, sexy bodies, sexy body, voluptuous',
     },
     {
-      id: 42,
       name: 'boobs',
       creator_id: 1,
       category_id: 73,
@@ -235,7 +410,6 @@ exports.seed = async function(knex) {
       alias: 'boob, boobies, breast, breasts, tits, titties, titts',
     },
     {
-      id: 43,
       name: 'nipples',
       creator_id: 1,
       category_id: 73,
@@ -243,7 +417,6 @@ exports.seed = async function(knex) {
       alias: 'nippels, nipple',
     },
     {
-      id: 44,
       name: 'bathtubs',
       creator_id: 1,
       category_id: 96,
@@ -251,7 +424,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 46,
       name: 'strategic covering',
       creator_id: 1,
       category_id: 1,
@@ -259,7 +431,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 47,
       name: 'in bed',
       creator_id: 1,
       category_id: 1,
@@ -267,7 +438,6 @@ exports.seed = async function(knex) {
       alias: 'lying in bed, lying on bed',
     },
     {
-      id: 48,
       name: 'small boobs',
       creator_id: 1,
       category_id: 73,
@@ -275,7 +445,6 @@ exports.seed = async function(knex) {
       alias: 'flat chest, flat chested, pettanko, small breasts',
     },
     {
-      id: 49,
       name: 'rock',
       creator_id: 1,
       category_id: 5,
@@ -283,7 +452,6 @@ exports.seed = async function(knex) {
       alias: 'rocks, rocky',
     },
     {
-      id: 50,
       name: 'looking down',
       creator_id: 1,
       category_id: 1,
@@ -291,7 +459,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 51,
       name: 'river',
       creator_id: 1,
       category_id: 70,
@@ -299,7 +466,6 @@ exports.seed = async function(knex) {
       alias: 'rivers, stream, streams',
     },
     {
-      id: 53,
       name: 'bra',
       creator_id: 1,
       category_id: 83,
@@ -307,7 +473,6 @@ exports.seed = async function(knex) {
       alias: 'bras, brassiere',
     },
     {
-      id: 54,
       name: 'bikini',
       creator_id: 1,
       category_id: 83,
@@ -315,7 +480,6 @@ exports.seed = async function(knex) {
       alias: 'bikini bottom, bikinis',
     },
     {
-      id: 52,
       name: 'wet body',
       creator_id: 1,
       category_id: 73,
@@ -323,7 +487,6 @@ exports.seed = async function(knex) {
       alias: 'wet ass, wet asses, wet belly, wet bodies, wet boob, wet boobs, wet breast, wet breasts, wet chest, wet pussies, wet pussy, wet stomach, wet vaginas',
     },
     {
-      id: 55,
       name: 'flat belly',
       creator_id: 1,
       category_id: 73,
@@ -331,7 +494,6 @@ exports.seed = async function(knex) {
       alias: 'flat bellies, flat stomach, flat stomachs, flat tummies, flat tummy',
     },
     {
-      id: 56,
       name: 'car',
       creator_id: 1,
       category_id: 99,
@@ -339,7 +501,6 @@ exports.seed = async function(knex) {
       alias: 'cars',
     },
     {
-      id: 57,
       name: 'women with glasses',
       creator_id: 1,
       category_id: 1,
@@ -347,7 +508,6 @@ exports.seed = async function(knex) {
       alias: 'girls with glasses, girl with glasses, woman with glasses',
     },
     {
-      id: 58,
       name: 'glasses',
       creator_id: 1,
       category_id: 83,
@@ -355,7 +515,6 @@ exports.seed = async function(knex) {
       alias: '',
     },
     {
-      id: 59,
       name: 'digital art',
       creator_id: 1,
       category_id: 75,
@@ -363,7 +522,6 @@ exports.seed = async function(knex) {
       alias: 'Cgi, digital artwork, digital compositions, graphic, graphics',
     },
     {
-      id: 60,
       name: 'video games',
       creator_id: 1,
       category_id: 78,
@@ -371,7 +529,6 @@ exports.seed = async function(knex) {
       alias: 'game, game art, games, gaming, video game, videogame, videogames, video games art',
     },
     {
-      id: 61,
       name: 'pixel art',
       creator_id: 1,
       category_id: 75,

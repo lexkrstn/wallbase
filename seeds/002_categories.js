@@ -108,7 +108,7 @@ exports.seed = async function(knex) {
     },
     {
       id: 97,
-      name: 'Plants',
+      name: 'Flora / Plants / Trees',
       creator_id: 1,
       parent_id: 5
     },
