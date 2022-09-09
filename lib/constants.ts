@@ -33,3 +33,7 @@ export const MIMETYPE_TO_EXT: Record<string, string> = {
   'image/png': 'png',
   'image/gif': 'gif',
 };
+
+export const FEATURED_WALLPAPER_COUNT = 7;
+export const FEATURED_WALLPAPER_WIDTH = 980;
+export const FEATURED_WALLPAPER_HEIGHT = 220;

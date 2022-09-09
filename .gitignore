@@ -43,3 +43,5 @@ yarn-error.log*
 !/public/wallpapers/.gitkeep
 /public/thumbnails/*
 !/public/thumbnails/.gitkeep
+/public/featured/*
+!/public/featured/.gitkeep

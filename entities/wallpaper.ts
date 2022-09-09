@@ -62,6 +62,13 @@ export function getWallpaperUrl(id: string, mimetype: string): string {
 }
 
 /**
+ * Returns the URL of the wallpaper page by its ID.
+ */
+export function getWallpaperPageUrl(id: string): string {
+  return `/wallpapers/${id}`;
+}
+
+/**
  * Returns the URL of the wallpaper's thubnail file by its ID and mimetype.
  */
 export function getThumbnailUrl(id: string, mimetype: string): string {

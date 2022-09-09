@@ -2,6 +2,9 @@ import type { GetServerSideProps, NextPage } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
+import Tag from '@/entities/tag';
+import { getWallpaperPageUrl } from '@/entities/wallpaper';
+import FeaturedWallpaper, { getFeaturedWallpaperUrl } from '@/entities/featured-wallpaper';
 import Carousel from '@/components/carousel';
 import IndexLayout from '@/components/layouts/index-layout';
 import NavButtons from '@/components/nav-buttons';
@@ -9,24 +12,22 @@ import SearchExpansion from '@/components/search-expansion';
 import SearchLine from '@/components/search-line';
 import SearchTabs, { SearchByType } from '@/components/search-tabs';
 import Triptych from '@/components/triptych';
-import FeaturedWallpaperSlide from '@/entities/featured-wallpaper-slide';
-import Tag from '@/entities/tag';
+import logoImage from '@/components/layouts/elements/header/logo.svg';
 import { getStatistics, Statistics } from '@/lib/server/stats';
 import { getPopularTags } from '@/lib/server/tags';
-import { getFeaturedWallpaperSlides } from '@/lib/server/wallpapers';
-import logoImage from '@/components/layouts/elements/header/logo.svg';
+import { findFeaturedWallpapers } from '@/lib/server/wallpapers';
 import styles from './index.module.scss';
 
 interface IndexServerSideProps {
   popularTags: Tag[] | null;
-  featuredWallpaperSlides: FeaturedWallpaperSlide[] | null;
+  featuredWallpapers: FeaturedWallpaper[] | null;
   stats: Statistics;
 }
 
 type IndexProps = IndexServerSideProps;
 
 const Index: NextPage<IndexProps> = ({
-  popularTags, featuredWallpaperSlides, stats,
+  popularTags, featuredWallpapers, stats,
 }) => {
   const [filtersShown, setFiltersShown] = useState(false);
   const [searchBy, setSearchBy] = useState<SearchByType>('keyword');
@@ -52,7 +53,15 @@ const Index: NextPage<IndexProps> = ({
           <span>{' or '}</span>
         </div>
         <NavButtons />
-        {featuredWallpaperSlides && <Carousel slides={featuredWallpaperSlides} />}
+        {featuredWallpapers && (
+          <Carousel
+            slides={featuredWallpapers.map(w => ({
+              image: getFeaturedWallpaperUrl(w.id, w.mimetype),
+              href: getWallpaperPageUrl(w.id),
+              description: w.description,
+            }))}
+          />
+        )}
         <Triptych popularTags={popularTags} stats={stats} />
       </div>
     </IndexLayout>
@@ -60,10 +69,12 @@ const Index: NextPage<IndexProps> = ({
 };
 
 export const getServerSideProps: GetServerSideProps<IndexServerSideProps> = async () => {
+  const popularTags = await getPopularTags();
+  const featuredWallpapers = await findFeaturedWallpapers({ enabledOnly: true });
   return {
     props: {
-      popularTags: JSON.parse(JSON.stringify(await getPopularTags())),
-      featuredWallpaperSlides: await getFeaturedWallpaperSlides(),
+      popularTags: JSON.parse(JSON.stringify(popularTags)),
+      featuredWallpapers: JSON.parse(JSON.stringify(featuredWallpapers)),
       stats: await getStatistics(),
     },
   };

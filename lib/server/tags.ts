@@ -2,23 +2,12 @@ import uniq from 'lodash/uniq';
 import { Purity } from '@/lib/constants';
 import Tag from '@/entities/tag';
 import knex from '@/lib/server/knex';
-import { camelCaseObjectKeys, snakeCaseObjectKeys } from '../helpers/object-keys';
+import { camelCaseObjectKeys } from '../helpers/object-keys';
 import { findCategoriesById } from './categories';
+import { TagRow } from './interfaces/tag-row';
 
-/**
- * Incomplete type definition of the Tag record in DB.
- */
-interface TagRow {
-  id: string;
-  [k: string]: unknown;
-}
-
-function dbRowToTag(row: TagRow): Tag {
-  return camelCaseObjectKeys(row) as Tag;
-}
-
-function tagToDbRow(row: Tag): TagRow {
-  return snakeCaseObjectKeys(row) as TagRow;
+function rowToTag(row: TagRow): Tag {
+  return camelCaseObjectKeys(row);
 }
 
 /**
@@ -26,7 +15,7 @@ function tagToDbRow(row: Tag): TagRow {
  */
 export async function findTagsById(ids: string[]) {
   const tags = await knex<TagRow>('tags').whereIn('id', ids);
-  return tags.map(dbRowToTag);
+  return tags.map(rowToTag);
 }
 
 /**
@@ -50,7 +39,7 @@ export async function getPopularTags(limit = 14): Promise<Tag[]> {
     // TODO: fav_count_1d
     .orderBy('fav_count', 'desc')
     .limit(limit);
-  const tags = tagRows.map(dbRowToTag);
+  const tags = tagRows.map(rowToTag);
   return injectTagCategories(tags);
 }
 
@@ -109,7 +98,7 @@ export async function findTags({
   }
 
   const [{ count }] = await countBuilder.count();
-  let tags = (await builder).map(dbRowToTag);
+  let tags = (await builder).map(rowToTag);
 
   if (withCategory) {
     tags = await injectTagCategories(tags);
@@ -119,4 +108,32 @@ export async function findTags({
     tags,
     totalCount: parseInt(count + '', 10),
   };
+}
+
+interface WallpapersTagsRow {
+  wallpaper_id: string;
+  tag_id: string;
+}
+
+/**
+ * Returns tags that relate to the wallpapers.
+ */
+export async function findTagsByWallpaperIds(wallpaperIds: string[]) {
+  const map = new Map<string, Tag[]>();
+  if (wallpaperIds.length === 0) {
+    return map;
+  }
+  const pivotRows = await knex<WallpapersTagsRow>('wallpapers_tags')
+    .whereIn('wallpaper_id', wallpaperIds);
+  if (pivotRows.length === 0) {
+    return map;
+  }
+  const tags = await findTagsById(uniq(pivotRows.map(row => row.tag_id)));
+  for (const wallpaperId of wallpaperIds) {
+    const tagIds = pivotRows
+      .filter(r => r.wallpaper_id === wallpaperId)
+      .map(r => r.tag_id);
+    map.set(wallpaperId, tags.filter(t => tagIds.includes(t.id)));
+  }
+  return map;
 }
