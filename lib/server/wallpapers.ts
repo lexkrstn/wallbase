@@ -3,23 +3,30 @@ import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
-import uniq from 'lodash/uniq';
-import FeaturedWallpaperSlide from '@/entities/featured-wallpaper-slide';
 import Wallpaper, { getWallpaperFileName } from '@/entities/wallpaper';
+import FeaturedWallpaper from '@/entities/featured-wallpaper';
 import Tag from '@/entities/tag';
 import { OrderByType } from '@/lib/types';
 import config from '@/lib/server/config';
 import { getFileHash } from '@/lib/server/hash';
 import knex from '@/lib/server/knex';
+import {
+  FEATURED_WALLPAPER_COUNT, FEATURED_WALLPAPER_HEIGHT, FEATURED_WALLPAPER_WIDTH, MIMETYPE_TO_EXT,
+} from '@/lib/constants';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 import {
   createThumbnail, getAvgColorOfRgbPixels, getImage4x4Pixels,
   getImageDistinctiveColors, getImageSize,
 } from '@/lib/server/image';
 import { DEFAULT_SEARCH_OPTIONS, SearchOptions } from '@/lib/search-options';
-import { MIMETYPE_TO_EXT } from '@/lib/constants';
-import { findTagsById } from '@/lib//server/tags';
+import { findTagsByWallpaperIds } from '@/lib//server/tags';
+import { FeaturedWallpaperRow } from './interfaces';
 import { UniqueViolationError, wrapError } from 'db-errors';
+
+interface WallpaperRow {
+  id: string;
+  [key: string]: unknown;
+}
 
 function camelCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
@@ -38,54 +45,14 @@ function snakeCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
 /**
  * Type-unsafe covereter of DB records to Wallpapers.
  */
-function dbRowToWallpaper(row: Record<string, unknown>) {
+function rowToWallpaper(row: WallpaperRow) {
   return {
     ...camelCaseWallpaperKeys(omit(row, ['rank'])),
     tags: [] as Tag[],
   } as Wallpaper;
 }
 
-export async function getFeaturedWallpaperSlides(): Promise<FeaturedWallpaperSlide[]> {
-  return [
-    {
-      image: 'https://w.wallhaven.cc/full/l3/wallhaven-l3xk6q.jpg',
-      href: `/walls/1`,
-      description: 'Blah',
-    },
-    {
-      image: 'https://w.wallhaven.cc/full/x8/wallhaven-x8rwzo.jpg',
-      href: `/walls/2`,
-      description: 'Blah',
-    },
-    {
-      image: 'https://w.wallhaven.cc/full/j3/wallhaven-j3glxy.jpg',
-      href: `/walls/3`,
-      description: 'Blah',
-    },
-    {
-      image: 'https://w.wallhaven.cc/full/wq/wallhaven-wq9v8p.jpg',
-      href: `/walls/4`,
-      description: 'Blah',
-    },
-    {
-      image: 'https://w.wallhaven.cc/full/28/wallhaven-2879mg.png',
-      href: `/walls/5`,
-      description: 'Blah',
-    },
-    {
-      image: 'https://w.wallhaven.cc/full/g7/wallhaven-g7yv8q.jpg',
-      href: `/walls/6`,
-      description: 'Blah',
-    },
-    {
-      image: 'https://w.wallhaven.cc/full/rd/wallhaven-rdm6km.png',
-      href: `/walls/7`,
-      description: 'Blah',
-    },
-  ];
-}
-
-type CreateWallpaperDto = Omit<Wallpaper,
+type WallpaperCreateInput = Omit<Wallpaper,
   'createdAt' | 'updatedAt' | 'tagCount' | 'viewCount' | 'favCount' |
   'favCount1d' | 'favCount1w' | 'favCount1m' | 'featured' | 'tags'
 >;
@@ -93,11 +60,25 @@ type CreateWallpaperDto = Omit<Wallpaper,
 /**
  * Inserts a wallpaper record into the DB.
  */
-export async function insertWallpaper(dto: CreateWallpaperDto): Promise<Wallpaper> {
+export async function insertWallpaper(dto: WallpaperCreateInput): Promise<Wallpaper> {
   const [row] = await knex('wallpapers')
     .insert(snakeCaseWallpaperKeys(dto))
     .returning('*');
-  return dbRowToWallpaper(row);
+  return rowToWallpaper(row);
+}
+
+type WallpaperUpdateInput = Partial<Exclude<WallpaperCreateInput, 'id'>>
+  & Partial<Pick<Wallpaper, 'featured'>>;
+
+/**
+ * Makes an update request to database.
+ */
+export async function updateWallpaper(id: string, dto: WallpaperUpdateInput) {
+  const rows = await knex('wallpapers')
+    .update(snakeCaseWallpaperKeys(dto))
+    .where({ id })
+    .returning('*');
+  return rows.length > 0 ? rowToWallpaper(rows[0]) : null;
 }
 
 /**
@@ -123,7 +104,7 @@ async function findIdenticalWallpaperByFile(
   sha256: string,
 ): Promise<Wallpaper | null> {
   const rows = await knex('wallpapers').where({ sha256 });
-  const wallpapers = rows.map(dbRowToWallpaper);
+  const wallpapers = rows.map(rowToWallpaper);
   const file = await fs.readFile(filePath);
   for (const wallpaper of wallpapers) {
     const file2 = await fs.readFile(getWallpaperPath(wallpaper.id, wallpaper.mimetype));
@@ -183,7 +164,7 @@ export async function uploadWallpaper({
   const rgb4x4 = await getImage4x4Pixels(thumbPath);
   const avgColor = await getAvgColorOfRgbPixels(rgb4x4);
   await fs.rename(path, getWallpaperPath(id, mimetype));
-  return await insertWallpaper({
+  const wallpaper = await insertWallpaper({
     id,
     uploaderId,
     mimetype,
@@ -202,6 +183,10 @@ export async function uploadWallpaper({
     rgb4x4,
     avgColor,
   });
+  if ((await getFeaturedWallpaperCount()).enabled < FEATURED_WALLPAPER_COUNT) {
+    makeWallpaperFeatured(id, uploaderId);
+  }
+  return wallpaper;
 }
 
 interface FindWallpapersOptions {
@@ -273,17 +258,12 @@ export async function findWallpapers(
     qb.offset((so.page - 1) * pageSize);
   }
 
-  const wallpapers = (await qb).map(dbRowToWallpaper);
+  const wallpapers = (await qb).map(rowToWallpaper);
 
   return {
     wallpapers: withTags ? await injectWallpaperTags(wallpapers) : wallpapers,
     totalCount: parseInt(count + '', 10),
   };
-}
-
-interface WallpapersTagsRow {
-  wallpaper_id: string;
-  tag_id: string;
 }
 
 /**
@@ -292,24 +272,11 @@ interface WallpapersTagsRow {
  */
 export async function injectWallpaperTags(wallpapers: Wallpaper[]): Promise<Wallpaper[]> {
   if (wallpapers.length === 0) return [];
-
-  const pivotRows = await knex<WallpapersTagsRow>('wallpapers_tags')
-    .whereIn('wallpaper_id', wallpapers.map(w => w.id));
-
-  let tags: Tag[] = [];
-  if (pivotRows.length > 0) {
-    tags = await findTagsById(uniq(pivotRows.map(row => row.tag_id)));
-  }
-
-  return wallpapers.map(wallpaper => {
-    const tagIds = pivotRows
-      .filter(row => row.wallpaper_id === wallpaper.id)
-      .map(row => row.tag_id);
-    return {
-      ...wallpaper,
-      tags: tags.filter(tag => tagIds.includes(tag.id)),
-    };
-  });
+  const tags = await findTagsByWallpaperIds(wallpapers.map(w => w.id));
+  return wallpapers.map(wallpaper => ({
+    ...wallpaper,
+    tags: tags.get(wallpaper.id)!,
+  }));
 }
 
 /**
@@ -362,7 +329,7 @@ export async function findWallpapersById(ids: string[], {
   }
   const rows = await qb;
   if (rows.length === 0) return [];
-  let wallpapers = rows.map(dbRowToWallpaper);
+  let wallpapers = rows.map(rowToWallpaper);
   if (withTags) {
     wallpapers = await injectWallpaperTags(wallpapers);
   }
@@ -373,9 +340,182 @@ export async function findWallpapersById(ids: string[], {
  * Deletes the wallpaper from DB and removes all the files.
  */
 export async function deleteWallpaper(wallpaper: Wallpaper) {
+  if (wallpaper.featured) {
+    await deleteFeaturedWallpaper(wallpaper.id);
+  }
   await knex('wallpapers')
     .where('id', wallpaper.id)
     .delete();
   await fs.unlink(getWallpaperPath(wallpaper.id, wallpaper.mimetype));
   await fs.unlink(getThumbnailPath(wallpaper.id, wallpaper.mimetype));
+}
+
+interface FindSimilarWallpapersOptions {
+  page?: number;
+  pageSize?: number;
+}
+
+/**
+ * Finds similar wallpapers to the given one with similarity field filled up.
+ */
+export async function findSimilarWallpapers(wallpaper: Wallpaper, {
+  page = 1,
+  pageSize = 24,
+}: FindSimilarWallpapersOptions = {}) {
+  const simdata = wallpaper.rgb4x4.join();
+  const rows = await knex({ w: 'wallpapers' })
+    .select([
+      'w.*',
+      knex
+        .select(knex.raw('100 - 100 * avg(abs(rgb4x4[i] - c)) / 255'))
+        .from(knex.raw(`unnest('{${simdata}}'::integer[]) with ordinality tmp(c, i)`))
+        .as('similarity'),
+    ])
+    .where('id', '!=', wallpaper.id)
+    .orderBy('similarity', 'desc')
+    .offset((page - 1) * pageSize)
+    .limit(pageSize);
+  return rows.map(rowToWallpaper);
+}
+
+/**
+ * The function increments view counters of the wallpaper.
+ */
+export async function viewWallpaper(wallpaperId: string, userId?: string) {
+  await knex('wallpapers')
+    .update({
+      view_count: knex.raw('view_count + 1'),
+    })
+    .where('id', wallpaperId);
+  if (userId) {
+    await knex('users')
+      .update({
+        wall_view_count: knex.raw('wall_view_count + 1'),
+      })
+      .where('id', userId);
+  }
+}
+
+/**
+ * Converts FeaturedWallpaperRow to it's respective FeaturedWallpaper representation.
+ */
+function rowToFeaturedWallpaper(row: FeaturedWallpaperRow): FeaturedWallpaper {
+  return {
+    ...camelCaseObjectKeys(row),
+    description: '',
+  };
+}
+
+/**
+ * Returns the absolute path of the featured wallpaper file by its ID and mimetype.
+ */
+export function getFeaturedWallpaperPath(id: string, mimetype: string): string {
+  return path.join(config.featured.path, getWallpaperFileName(id, mimetype));
+}
+
+interface FeaturedWallpaperSearchOptions {
+  enabledOnly?: boolean;
+  disabledOnly?: boolean;
+}
+
+/**
+ * Returns featured wallpapers from DB.
+ * "Featured" are the wallpapers that are shown in the home page's slider.
+ */
+export async function findFeaturedWallpapers({
+  enabledOnly = false,
+  disabledOnly = false,
+}: FeaturedWallpaperSearchOptions = {}) {
+  const qb = knex<FeaturedWallpaperRow>('featured_wallpapers');
+  if (enabledOnly && !disabledOnly) {
+    qb.where('enabled', true);
+  }
+  if (disabledOnly && !enabledOnly) {
+    qb.where('enabled', false);
+  }
+  const wallpapers = (await qb).map(rowToFeaturedWallpaper);
+  const tags = await findTagsByWallpaperIds(wallpapers.map(w => w.id));
+  return wallpapers.map(wallpaper => ({
+    ...wallpaper,
+    description: tags.get(wallpaper.id)!.map(t => t.name).join(', '),
+  }));
+}
+
+/**
+ * Makes some regular wallpaper featured.
+ * "Featured" are the wallpapers that are shown in the home page's slider.
+ */
+export async function makeWallpaperFeatured(id: string, userId: string) {
+  const wallpaper = await updateWallpaper(id, { featured: true });
+  if (!wallpaper) {
+    throw new Error(`The wallpaper ${id} doesn't exist`);
+  }
+  const wallpaperPath = getWallpaperPath(id, wallpaper.mimetype);
+  const thumbnailPath = getFeaturedWallpaperPath(id, wallpaper.mimetype);
+  await createThumbnail(
+    wallpaperPath,
+    wallpaper.width,
+    wallpaper.height,
+    thumbnailPath,
+    FEATURED_WALLPAPER_WIDTH,
+    FEATURED_WALLPAPER_HEIGHT,
+  );
+  const rows = await knex('featured_wallpapers')
+    .insert<FeaturedWallpaperRow>({
+      id,
+      user_id: userId,
+      mimetype: wallpaper.mimetype,
+    })
+    .returning<FeaturedWallpaperRow[]>('*');
+  return rowToFeaturedWallpaper(rows[0]);
+}
+
+/**
+ * Unfeatures a featured wallpaper.
+ */
+export async function deleteFeaturedWallpaper(id: string) {
+  const wallpaper = await updateWallpaper(id, { featured: false });
+  if (!wallpaper) {
+    throw new Error(`The wallpaper ${id} doesn't exist`);
+  }
+  const rows = await knex('featured_wallpapers')
+    .where({ id })
+    .delete()
+    .returning('id');
+  if (rows.length === 0) {
+    throw new Error(`The wallpaper ${id} is not featured`);
+  }
+  await fs.unlink(getFeaturedWallpaperPath(id, wallpaper.mimetype));
+}
+
+/**
+ * Enables or disables a featured wallpaper.
+ * Disabled featured wallpapers are not shown in the slider.
+ */
+export async function setFeaturedWallpaperEnabled(id: string, enable: boolean) {
+  await knex('featured_wallpapers')
+    .update('enabled', enable)
+    .where({ id });
+}
+
+/**
+ * Returns counters for featured wallpapers: enabled, disabled ones and total.
+ */
+export async function getFeaturedWallpaperCount() {
+  const rows = await knex.select('enabled', knex.raw('count(*)'))
+    .from('featured_wallpapers')
+    .groupBy('enabled');
+  let [enabled, disabled] = [0, 0];
+  for (const row of rows) {
+    if (row.enabled) {
+      enabled += row.count;
+    } else {
+      disabled += row.count;
+    }
+  }
+  return {
+    enabled,
+    disabled,
+    total: enabled + disabled,
+  };
 }

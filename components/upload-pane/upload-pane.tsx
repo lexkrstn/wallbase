@@ -3,7 +3,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import React, { ChangeEvent, FC, useCallback, useReducer, useRef, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useReducer, useState } from 'react';
 import { ImageFileData } from '@/lib/helpers/image';
 import Button from '../buttons/button';
 import { TextField } from '../form';

@@ -4,7 +4,6 @@ import React, { FC, ReactElement, useCallback, useEffect, useRef, useState } fro
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Link from 'next/link';
 import styles from './carousel.module.scss';
-import Image from 'next/image';
 
 interface SlideData {
   image: string;
@@ -26,9 +25,9 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
   const contentRef = useRef<HTMLUListElement>(null);
   const [{ activeIndex, direction }, setSlideState] = useState({
     activeIndex: 0,
-    direction: 'right' as 'right'|'left',
+    direction: 'right' as 'right' | 'left',
   });
-  const { image, href, description } = slides[activeIndex];
+  const activeSlide = slides[activeIndex];
   const effect = `slide-${direction}`;
 
   const slideLeft = useCallback(() => {
@@ -125,17 +124,19 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
   return (
     <div className={styles.host}>
       <ul className={styles.content} ref={contentRef}>
-        <TransitionGroup component={null} childFactory={createChildFactory(effect)}>
-          <CSSTransition key={href} classNames={effect} timeout={300}>
-            <li data-index={activeIndex} className={styles.slide}>
-              <Link href={href}>
-                <a title="Go to the wallpaper page">
-                  <img src={image} alt={description} />
-                </a>
-              </Link>
-            </li>
-          </CSSTransition>
-        </TransitionGroup>
+        {slides.length > 0 && (
+          <TransitionGroup component={null} childFactory={createChildFactory(effect)}>
+            <CSSTransition key={activeSlide.href} classNames={effect} timeout={300}>
+              <li data-index={activeIndex} className={styles.slide}>
+                <Link href={activeSlide.href}>
+                  <a title="Go to the wallpaper page">
+                    <img src={activeSlide.image} alt={activeSlide.description} />
+                  </a>
+                </Link>
+              </li>
+            </CSSTransition>
+          </TransitionGroup>
+        )}
       </ul>
       <div className={styles.left} title="Previous">
         <button

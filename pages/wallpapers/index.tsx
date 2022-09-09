@@ -5,7 +5,6 @@ import React, { useCallback, useState } from 'react';
 import RegularLayout from '@/components/layouts/regular-layout';
 import SearchInfoBar from '@/components/search-info-bar';
 import ThumbnailGrid from '@/components/thumbnail/grid';
-import User from '@/entities/user';
 import { canDeleteWallpaper, getThumbnailUrl } from '@/entities/wallpaper';
 import {
   DEFAULT_SEARCH_OPTIONS,

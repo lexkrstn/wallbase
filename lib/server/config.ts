@@ -27,6 +27,9 @@ const config = {
     height: 200,
     path: path.resolve(PROJECT_ROOT, 'public', 'thumbnails'),
   },
+  featured: {
+    path: path.join(PROJECT_ROOT, 'public', 'featured'),
+  },
 };
 
 export default config;
