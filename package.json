@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "knex": "knex"
+    "knex": "knex",
+    "recreate-image-info": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register scripts/recreate-image-info.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
@@ -58,6 +59,8 @@
     "eslint": "8.17.0",
     "eslint-config-next": "12.1.6",
     "sass": "^1.52.2",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "4.7.3"
   }
 }

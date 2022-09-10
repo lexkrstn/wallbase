@@ -64,3 +64,5 @@ npm run lint
 - `country-data` - large JSON files with country info (names, codes, langs, etc)
 - `@fortawesome/*` - svg icons
 - `country-code-emoji` - converts country codes to emoji country flags
+- `ts-node` - typescript executor for standalone scripts in scripts/*
+- `tsconfig-paths` - plugin for ts-node that loads path aliases from tsconfig

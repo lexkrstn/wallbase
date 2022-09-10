@@ -1,7 +1,7 @@
 import path from 'path';
 import { MB } from '@/lib/constants';
 
-const PROJECT_ROOT = process.env.PROJECT_ROOT!;
+const PROJECT_ROOT = process.env.PROJECT_ROOT || '.';
 
 const config = {
   secret: process.env.SALT!,
