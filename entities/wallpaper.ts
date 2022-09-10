@@ -1,3 +1,4 @@
+import padStart from 'lodash/padStart';
 import { MIMETYPE_TO_EXT } from '@/lib/constants';
 import Tag from '@/entities/tag';
 import User from '@/entities/user';
@@ -11,7 +12,6 @@ export default interface Wallpaper {
   updatedAt: Date;
   uploaderId: string;
   mimetype: string;
-  ext: string;
   fileSize: number;
   width: number;
   height: number;
@@ -27,7 +27,7 @@ export default interface Wallpaper {
   purity: number;
   board: number;
   ratio: number;
-  rgb4x4: number[];
+  simdata: number[];
   colors: number[];
   avgColor: number[];
   sha256: string;
@@ -45,6 +45,17 @@ export default interface Wallpaper {
    * service function with an option that includes this field.
    */
   faved?: boolean;
+  /**
+   * Note, that in most cases it is undefined unless you explicitly call a
+   * service function with an option that includes this field.
+   */
+  uploader?: User;
+  /**
+   * A measure of similarity with some wallpaper from 0 to 100.
+   * Note, that this field is available only in response to the request of
+   * similar wallpapers.
+   */
+  similarity?: number;
 }
 
 /**
@@ -81,4 +92,19 @@ export function getThumbnailUrl(id: string, mimetype: string): string {
 export function canDeleteWallpaper(user: User | null, wallpaper: Wallpaper) {
   if (!user) return false;
   return wallpaper.uploaderId === user.id || user.role === 'moderator' || user.role === 'admin';
+}
+
+/**
+ * Returns distinctive wallpaper colors as hex strings starting with #.
+ */
+export function getWallpaperColorsHex(wallpaper: Wallpaper) {
+  const hexes: string[] = [];
+  const { colors } = wallpaper;
+  for (let i = 0; i < colors.length / 3; i++) {
+    const r = padStart(colors[i * 3 + 0].toString(16), 2, '0');
+    const g = padStart(colors[i * 3 + 1].toString(16), 2, '0');
+    const b = padStart(colors[i * 3 + 2].toString(16), 2, '0');
+    hexes.push(`#${r}${g}${b}`);
+  }
+  return hexes;
 }

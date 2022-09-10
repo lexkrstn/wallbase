@@ -1,8 +1,10 @@
+import { UniqueViolationError, wrapError } from 'db-errors';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
+import uniq from 'lodash/uniq';
 import Wallpaper, { getWallpaperFileName } from '@/entities/wallpaper';
 import FeaturedWallpaper from '@/entities/featured-wallpaper';
 import Tag from '@/entities/tag';
@@ -15,13 +17,13 @@ import {
 } from '@/lib/constants';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 import {
-  createThumbnail, getAvgColorOfRgbPixels, getImage4x4Pixels,
+  createThumbnail, getAvgColorOfRgbPixels, getImageSimdata,
   getImageDistinctiveColors, getImageSize,
 } from '@/lib/server/image';
 import { DEFAULT_SEARCH_OPTIONS, SearchOptions } from '@/lib/search-options';
 import { findTagsByWallpaperIds } from '@/lib//server/tags';
 import { FeaturedWallpaperRow } from './interfaces';
-import { UniqueViolationError, wrapError } from 'db-errors';
+import { findUsersById } from './users';
 
 interface WallpaperRow {
   id: string;
@@ -30,15 +32,15 @@ interface WallpaperRow {
 
 function camelCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
-    ...camelCaseObjectKeys(omit(obj, ['rgb4x4', 'sha256'])),
-    ...pick(obj, ['rgb4x4', 'sha256']),
+    ...camelCaseObjectKeys(omit(obj, ['simdata', 'sha256'])),
+    ...pick(obj, ['simdata', 'sha256']),
   };
 }
 
 function snakeCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
-    ...snakeCaseObjectKeys(omit(obj, ['rgb4x4', 'sha256'])),
-    ...pick(obj, ['rgb4x4', 'sha256']),
+    ...snakeCaseObjectKeys(omit(obj, ['simdata', 'sha256'])),
+    ...pick(obj, ['simdata', 'sha256']),
   };
 }
 
@@ -47,7 +49,7 @@ function snakeCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
  */
 function rowToWallpaper(row: WallpaperRow) {
   return {
-    ...camelCaseWallpaperKeys(omit(row, ['rank'])),
+    ...camelCaseWallpaperKeys(omit(row, ['rank', 'tsv'])),
     tags: [] as Tag[],
   } as Wallpaper;
 }
@@ -84,14 +86,14 @@ export async function updateWallpaper(id: string, dto: WallpaperUpdateInput) {
 /**
  * Returns the absolute path of the wallpaper file by its ID and mimetype.
  */
-function getWallpaperPath(id: string, mimetype: string): string {
+export function getWallpaperPath(id: string, mimetype: string): string {
   return path.join(config.wallpaper.path, getWallpaperFileName(id, mimetype));
 }
 
 /**
  * Returns the absolute path of the wallpaper's thumbnail file by its ID and mimetype.
  */
-function getThumbnailPath(id: string, mimetype: string): string {
+export function getThumbnailPath(id: string, mimetype: string): string {
   return path.join(config.thumbnail.path, getWallpaperFileName(id, mimetype));
 }
 
@@ -161,8 +163,8 @@ export async function uploadWallpaper({
   const { width, height } = await getImageSize(path);
   await createThumbnail(path, width, height, thumbPath, thumbWidth, thumbHeight);
   const colors = await getImageDistinctiveColors(thumbPath, thumbWidth, thumbHeight);
-  const rgb4x4 = await getImage4x4Pixels(thumbPath);
-  const avgColor = await getAvgColorOfRgbPixels(rgb4x4);
+  const simdata = await getImageSimdata(thumbPath);
+  const avgColor = await getAvgColorOfRgbPixels(simdata);
   await fs.rename(path, getWallpaperPath(id, mimetype));
   const wallpaper = await insertWallpaper({
     id,
@@ -170,7 +172,6 @@ export async function uploadWallpaper({
     mimetype,
     fileSize,
     sha256,
-    ext: MIMETYPE_TO_EXT[mimetype],
     purity,
     board,
     sourceUrl,
@@ -180,7 +181,7 @@ export async function uploadWallpaper({
     height,
     ratio: width / height,
     colors,
-    rgb4x4,
+    simdata,
     avgColor,
   });
   if ((await getFeaturedWallpaperCount()).enabled < FEATURED_WALLPAPER_COUNT) {
@@ -280,6 +281,19 @@ export async function injectWallpaperTags(wallpapers: Wallpaper[]): Promise<Wall
 }
 
 /**
+ * Loads uploaders for the wallpapers and returns a copy of the array of
+ * wallpapers which have the uploader field filled up.
+ */
+export async function injectWallpaperUploaders(wallpapers: Wallpaper[]): Promise<Wallpaper[]> {
+  if (wallpapers.length === 0) return [];
+  const users = await findUsersById(uniq(wallpapers.map(w => w.uploaderId)));
+  return wallpapers.map(wallpaper => ({
+    ...wallpaper,
+    uploader: users.find(user => user.id === wallpaper.uploaderId),
+  }));
+}
+
+/**
  * Adds tags to the wallpaper in DB.
  */
 export async function addWallpaperTags(
@@ -304,6 +318,7 @@ export async function addWallpaperTags(
 
 interface FindWallpaperByIdOptions {
   withTags?: boolean;
+  withUploader?: boolean;
 }
 
 /**
@@ -319,6 +334,7 @@ export async function findWallpaperById(id: string, options: FindWallpaperByIdOp
  */
 export async function findWallpapersById(ids: string[], {
   withTags,
+  withUploader,
 }: FindWallpaperByIdOptions = {}) {
   if (ids.length === 0) return [];
   const qb = knex('wallpapers');
@@ -332,6 +348,9 @@ export async function findWallpapersById(ids: string[], {
   let wallpapers = rows.map(rowToWallpaper);
   if (withTags) {
     wallpapers = await injectWallpaperTags(wallpapers);
+  }
+  if (withUploader) {
+    wallpapers = await injectWallpaperUploaders(wallpapers);
   }
   return wallpapers;
 }
@@ -362,12 +381,12 @@ export async function findSimilarWallpapers(wallpaper: Wallpaper, {
   page = 1,
   pageSize = 24,
 }: FindSimilarWallpapersOptions = {}) {
-  const simdata = wallpaper.rgb4x4.join();
+  const simdata = wallpaper.simdata.join();
   const rows = await knex({ w: 'wallpapers' })
     .select([
       'w.*',
       knex
-        .select(knex.raw('100 - 100 * avg(abs(rgb4x4[i] - c)) / 255'))
+        .select(knex.raw('100 - 100 * avg(abs(simdata[i] - c)) / 255'))
         .from(knex.raw(`unnest('{${simdata}}'::integer[]) with ordinality tmp(c, i)`))
         .as('similarity'),
     ])
