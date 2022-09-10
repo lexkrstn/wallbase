@@ -1,3 +1,4 @@
+import { createWriteStream } from 'fs';
 import gm from 'gm';
 
 const SIMDATA_SIDE = 16;
@@ -89,11 +90,11 @@ export function getImageAvgColor(filePath: string) {
   })
 }
 
-export function createThumbnail(
+export function createThumbnailStream(
   filePath: string,
   width: number,
   height: number,
-  thumbPath: string,
+  stream: NodeJS.WritableStream,
   dstWidth: number,
   dstHeight: number,
 ) {
@@ -109,11 +110,30 @@ export function createThumbnail(
       .crop(srcWidth, srcHeight, x, y)
       .resize(dstWidth, dstHeight)
       .quality(85)
-      .write(thumbPath, err => {
+      .stream((err, stdout) => {
         if (err) return reject(err);
-        resolve();
+        stdout
+          .on('error', reject) // listen to stdout errors
+          .pipe(stream)
+          .on('error', reject) // listen to stream errors
+          .on('finish', resolve);
       });
   });
+}
+
+export function createThumbnail(
+  filePath: string,
+  width: number,
+  height: number,
+  thumbPath: string,
+  dstWidth: number,
+  dstHeight: number,
+) {
+  const stream = createWriteStream(thumbPath, {
+    encoding: 'binary',
+    mode: 0o644,
+  });
+  return createThumbnailStream(filePath, width, height, stream, dstWidth, dstHeight);
 }
 
 export type ImageSize = { width: number, height: number };

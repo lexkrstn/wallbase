@@ -13,7 +13,7 @@ import config from '@/lib/server/config';
 import { getFileHash } from '@/lib/server/hash';
 import knex from '@/lib/server/knex';
 import {
-  FEATURED_WALLPAPER_COUNT, FEATURED_WALLPAPER_HEIGHT, FEATURED_WALLPAPER_WIDTH, MIMETYPE_TO_EXT,
+  FEATURED_WALLPAPER_COUNT, FEATURED_WALLPAPER_HEIGHT, FEATURED_WALLPAPER_WIDTH,
 } from '@/lib/constants';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 import {
@@ -21,33 +21,28 @@ import {
   getImageDistinctiveColors, getImageSize,
 } from '@/lib/server/image';
 import { DEFAULT_SEARCH_OPTIONS, SearchOptions } from '@/lib/search-options';
+import { FeaturedWallpaperRow, WallpaperRow } from '@/lib/server/interfaces';
 import { findTagsByWallpaperIds } from '@/lib//server/tags';
-import { FeaturedWallpaperRow } from './interfaces';
 import { findUsersById } from './users';
-
-interface WallpaperRow {
-  id: string;
-  [key: string]: unknown;
-}
 
 function camelCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
-    ...camelCaseObjectKeys(omit(obj, ['simdata', 'sha256'])),
-    ...pick(obj, ['simdata', 'sha256']),
+    ...camelCaseObjectKeys(omit(obj, ['sha256'])),
+    ...pick(obj, ['sha256']),
   };
 }
 
 function snakeCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
-    ...snakeCaseObjectKeys(omit(obj, ['simdata', 'sha256'])),
-    ...pick(obj, ['simdata', 'sha256']),
+    ...snakeCaseObjectKeys(omit(obj, ['sha256'])),
+    ...pick(obj, ['sha256']),
   };
 }
 
 /**
  * Type-unsafe covereter of DB records to Wallpapers.
  */
-function rowToWallpaper(row: WallpaperRow) {
+function rowToWallpaper(row: WallpaperRow): Wallpaper {
   return {
     ...camelCaseWallpaperKeys(omit(row, ['rank', 'tsv'])),
     tags: [] as Tag[],
