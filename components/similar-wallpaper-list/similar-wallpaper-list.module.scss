@@ -1,0 +1,91 @@
+.host {
+  height: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.loading {
+  flex: 1 0 auto;
+  text-align: center;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.spinner {
+  vertical-align: middle;
+  height: 24px;
+  animation: spin 1s linear 0s infinite normal forwards;
+}
+@keyframes blinking {
+  from { color: #666; }
+  to { color: #888; }
+}
+.loadingText {
+  margin-top: 10px;
+  color: #666;
+  text-transform: uppercase;
+  font-size: 13px;
+  animation: blinking 1s linear 0s infinite alternate-reverse forwards;
+}
+.leftScrollOverlay, .rightScrollOverlay {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width: 50px;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 100ms linear;
+  &.shown {
+    opacity: 1;
+  }
+}
+.leftScrollOverlay {
+  left: 10px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+.rightScrollOverlay {
+  right: 10px;
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+.frame {
+  height: 220px;
+  margin: 0 10px;
+  overflow: hidden;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 3px;
+    border: 0;
+    &:hover {
+      background-color: #777;
+    }
+  }
+}
+.thumbnailList {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: -10px 0 0 -10px;
+  user-select: none;
+  text-align: left;
+  line-height: 1;
+  font-size: 0;
+  white-space: nowrap;
+}
+.thumbnailItem {
+  display: inline-block;
+  padding: 10px 0 0 10px;
+  line-height: normal;
+  font-size: 1rem;
+  &:first-child {
+    margin-left: 0;
+  }
+}
