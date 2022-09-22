@@ -1,0 +1,81 @@
+%separator {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: linear-gradient(to bottom, #333, #1e1e1e);
+  background-color: #333;
+  background-position: bottom;
+  background-repeat: repeat-x;
+  background-size: 1px 100px;
+}
+.purityFlags {
+  position: relative;
+  display: block;
+  width: 180px;
+  height: 90px;
+  &::after {
+    @extend %separator;
+    left: auto;
+    right: 0px;
+  }
+}
+%button {
+  position: relative;
+  display: block;
+  float: left;
+  width: 60px;
+  height: 90px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  &:hover {
+    background-image: linear-gradient(to bottom, #282828 1%,rgba(30,30,30,0) 100%);
+  }
+  &::after {
+    @extend %separator;
+  }
+}
+.sfw {
+  @extend %button;
+  color: #6fbd6c;
+  &.active {
+    background-image: linear-gradient(
+      to bottom,
+      #7cca59 0%,
+      mix(#7cca59, #1e1e1e, 15%) 80%,
+      #1e1e1e 100%);
+    color: #1e1e1e;
+  }
+}
+.sketchy {
+  @extend %button;
+  color: #cdb762;
+  &.active {
+    background-image: linear-gradient(
+      to bottom,
+      #c8ac59 0%,
+      mix(#c8ac59, #1e1e1e, 15%) 80%,
+      #1e1e1e 100%);
+    color: #1e1e1e;
+  }
+}
+.nsfw {
+  @extend %button;
+  color: #cc5a5b;
+  &.active {
+    background-image: linear-gradient(
+      to bottom,
+      #c9595a 0%,
+      mix(#c9595a, #1e1e1e, 15%) 80%,
+      #1e1e1e 100%);
+    color: #1e1e1e;
+  }
+}
+.icon {
+  height: 30px;
+  width: 30px;
+}
