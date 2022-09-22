@@ -9,6 +9,7 @@ import { canDeleteWallpaper, getThumbnailUrl } from '@/entities/wallpaper';
 import {
   DEFAULT_SEARCH_OPTIONS,
   getSearchOptionsFromQuery,
+  omitDefaultSearchOptions,
   SearchOptions,
   updateLocationPage,
   updateLocationSearchOptions,
@@ -20,8 +21,9 @@ import IntersectionTrigger from '@/components/intersection-trigger';
 import { useDeleteWallpaperModal } from '@/components/modals/delete-wallpaper-modal';
 import { useReportModal } from '@/components/modals/report-modal';
 import { useSession } from '@/lib/hooks/use-session';
-import styles from './wallpapers.module.scss';
 import { useAboutWallpaperIssuesModal } from '@/components/modals/about-wallpaper-issues-modal';
+import { makeQueryString } from '@/lib/helpers/query-string';
+import styles from './wallpapers.module.scss';
 
 interface WallpapersProps {
   initialSearchOptions: SearchOptions;
@@ -43,6 +45,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
   });
   const reportModal = useReportModal();
   const issuesModal = useAboutWallpaperIssuesModal();
+  const queryString = makeQueryString({ ...omitDefaultSearchOptions(searchOptions) });
 
   const handleSearch = useCallback((so: SearchOptions) => {
     updateLocationSearchOptions(so);
@@ -106,7 +109,7 @@ const Wallpapers: NextPage<WallpapersProps> = ({ initialSearchOptions }) => {
                   mimetype={w.mimetype}
                   onDeleteClick={handleDeleteClick}
                   deleteBtnTitle={canDeleteWallpaper(user, w) ? 'Delete' : 'Make a complaint'}
-                  href={`/wallpapers/${w.id}`}
+                  href={`/wallpapers/${w.id}${queryString ? '?' : ''}${queryString}`}
                   interactive
                 />
               ))}

@@ -1,4 +1,5 @@
 import padStart from 'lodash/padStart';
+import isString from 'lodash/isString';
 import { DAY, GB, HOUR, KB, MB, MINUTE, MONTH, TB, WEEK, YEAR } from '../constants';
 
 /**
@@ -96,8 +97,17 @@ const UNIT_AGO_LONG_FORM: Record<string, string> = {
   'm': 'minute',
 };
 
-export function unitAgo(date: Date | number, format: 'abbr' | 'long' = 'abbr'): string {
-  const ms: number = date instanceof Date ? date.getTime() : date;
+export function formatTimeAgo(
+  date: Date | number | string,
+  format: 'abbr' | 'long' = 'abbr',
+): string {
+  let ms: number;
+  if (date instanceof Date)
+    ms = date.getTime();
+  else if (isString(date))
+    ms = new Date(date).getTime();
+  else
+    ms = date;
   const elapsed = Date.now() - ms;
   let time: number;
   let unit: string;
@@ -125,7 +135,7 @@ export function unitAgo(date: Date | number, format: 'abbr' | 'long' = 'abbr'): 
   const numUnits =  Math.round(elapsed / time);
   return format === 'abbr'
     ? numUnits + unit
-    : numUnits + ' ' + plural(UNIT_AGO_LONG_FORM[unit], numUnits);
+    : numUnits + ' ' + plural(UNIT_AGO_LONG_FORM[unit], numUnits) + ' ago';
 }
 
 export function formatK(n: number, fraction: number = 1): string {
