@@ -1,0 +1,91 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid #2a2a2a;
+  font-size: 13px;
+  color: #7E7E7E;
+}
+.item {
+  border-bottom: 1px solid #2a2a2a;
+  padding: 15px;
+  position: relative;
+}
+.title {
+  color: #fff;
+  font-size: 14px;
+  margin-bottom: 5px;
+  margin-left: 35px;
+  line-height: 1.3;
+}
+.subtitle {
+  clear: both;
+  margin-left: 35px;
+  line-height: 22px;
+  line-height: 2.2rem;
+  font-size: 13px;
+}
+.copyIcon {
+  display: block;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  font-size: 25px;
+  color: #B85838;
+  float: left;
+  line-height: 1;
+  width: 25px;
+  height: 20px;
+  padding-top: 2px;
+}
+.favsIcon {
+  display: block;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  font-size: 25px;
+  float: left;
+  line-height: 1;
+  width: 25px;
+  height: 20px;
+  padding-top: 2px;
+  color: #A48F4C;
+}
+.btnAdd {
+  float: right;
+  display: block;
+  padding: 4px 9px;
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(0,0,0,.3);
+  background: #4f4f4f;
+  color: #ccc;
+  border-radius: 14px;
+  border: 1px solid #171717;
+  text-shadow: #000 0 0 3px;
+  outline: 0!important;
+  font-size: 12px;
+  transition: background-color 150ms ease, color 150ms ease;
+  &:hover {
+    color: #fff;
+    box-shadow: none;
+    background: #656565;
+  }
+}
+.highlight {
+  font-weight: bold;
+  color: #DE8D19;
+}
+.link {
+  color: #94C688;
+  text-decoration: none;
+  &:hover {
+    color: #fff;
+  }
+}
+.authorName {
+  display: block;
+  margin-right: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
