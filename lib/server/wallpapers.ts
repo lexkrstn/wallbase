@@ -1,12 +1,14 @@
 import { UniqueViolationError, wrapError } from 'db-errors';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { Knex } from 'knex';
 import fs from 'fs/promises';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import uniq from 'lodash/uniq';
 import Wallpaper, { getWallpaperFileName } from '@/entities/wallpaper';
 import FeaturedWallpaper from '@/entities/featured-wallpaper';
+import SiblingWallpaper from '@/entities/sibling-wallpaper';
 import Tag from '@/entities/tag';
 import { OrderByType } from '@/lib/types';
 import config from '@/lib/server/config';
@@ -190,14 +192,9 @@ interface FindWallpapersOptions {
 }
 
 /**
- * Searches for the wallpapers in DB by search options.
+ * Applies wallpaper search query to a Knex query builder instance.
  */
-export async function findWallpapers(
-  so: Partial<SearchOptions>,
-  { withTags = false }: FindWallpapersOptions = {},
-) {
-  const qb = knex('wallpapers');
-
+function applySearchOptions(qb: Knex.QueryBuilder, so: Partial<SearchOptions>) {
   // filter by boards
   if (so.boards) {
     qb.whereRaw('board & ? = board', [so.boards]);
@@ -235,18 +232,44 @@ export async function findWallpapers(
     }
     qb.whereRaw(`width ${op} ? AND height ${op} ?`, resolution);
   }
+}
 
-  const [{ count }] = await qb.clone().count();
-
-  // sort order
+/**
+ * Applies the "order by" of the wallpaper search query to a Knex query builder
+ * instance.
+ */
+function applySearchOrder(qb: Knex.QueryBuilder, so: Partial<SearchOptions>) {
   const orderBy = so.orderBy ?? DEFAULT_SEARCH_OPTIONS.orderBy;
+  const query = so.query?.trim();
   const orderByToColumn: Record<OrderByType, string> = {
     relevancy: query && orderBy === 'relevancy' ? 'rank' : 'fav_count_1w',
     date: 'created_at',
     views: 'view_count',
     favs: 'fav_count',
   };
-  qb.orderBy(orderByToColumn[orderBy], so.order ?? DEFAULT_SEARCH_OPTIONS.order);
+  qb.orderBy([
+    {
+      column: orderByToColumn[orderBy],
+      order: so.order ?? DEFAULT_SEARCH_OPTIONS.order
+    },
+    { column: 'id' }, // if walls have identical ranks fixes their positions
+  ]);
+}
+
+/**
+ * Searches for the wallpapers in DB by search options.
+ */
+export async function findWallpapers(
+  so: Partial<SearchOptions>,
+  { withTags = false }: FindWallpapersOptions = {},
+) {
+  const qb = knex('wallpapers');
+  applySearchOptions(qb, so);
+
+  const [{ count }] = await qb.clone().count();
+
+  applySearchOrder(qb, so);
+
   // pagination
   const pageSize = so.pageSize ?? DEFAULT_SEARCH_OPTIONS.pageSize;
   qb.limit(pageSize);
@@ -260,6 +283,61 @@ export async function findWallpapers(
     wallpapers: withTags ? await injectWallpaperTags(wallpapers) : wallpapers,
     totalCount: parseInt(count + '', 10),
   };
+}
+
+/**
+ * Find the previous and next wallpaper relative to a given one that appears
+ * in some search result.
+ */
+export async function findSiblingWallpapers(
+  wallpaperId: string,
+  so: Partial<SearchOptions>,
+) {
+  const siblings: [SiblingWallpaper | null, SiblingWallpaper | null] = [null, null];
+  const { wallpapers, totalCount } = await findWallpapers(so);
+  const idx = wallpapers.findIndex(w => w.id === wallpaperId);
+  const page = so.page ?? 1;
+  // Previous
+  if (idx === 0 && page > 1) {
+    const prevPageSO = {
+      ...so,
+      page: page - 1,
+    };
+    const prevPage = await findWallpapers(prevPageSO);
+    if (prevPage.wallpapers.length > 0) {
+      siblings[0] = {
+        id: prevPage.wallpapers.pop()!.id,
+        page: prevPageSO.page,
+      };
+    }
+  } else if (idx > 0) {
+    siblings[0] = {
+      id: wallpapers[idx - 1].id,
+      page,
+    };
+  }
+  // Next
+  const pageSize = so.pageSize ?? DEFAULT_SEARCH_OPTIONS.pageSize;
+  const pageCount = Math.ceil(totalCount / pageSize);
+  if (idx === wallpapers.length - 1 && page < pageCount) {
+    const nextPageSO = {
+      ...so,
+      page: page + 1,
+    };
+    const nextPage = await findWallpapers(nextPageSO);
+    if (nextPage.wallpapers.length > 0) {
+      siblings[1] = {
+        id: nextPage.wallpapers.shift()!.id,
+        page: nextPageSO.page,
+      };
+    }
+  } else if (idx >= 0 && idx < wallpapers.length - 1) {
+    siblings[1] = {
+      id: wallpapers[idx + 1].id,
+      page,
+    };
+  }
+  return siblings;
 }
 
 /**

@@ -3,8 +3,8 @@
  */
 export interface WallpaperRow {
   id: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: string;
+  updated_at: string;
   uploader_id: string;
   mimetype: string;
   file_size: number;
