@@ -1,5 +1,7 @@
 # Wallbase
 
+![build](https://github.com/lexkrstn/wallbase/actions/workflows/build.yml/badge.svg)
+
 Wallbase is a user-driven wallpaper gallery website. All content is provided by
 the uploaders. Users can upload wallpapers directly via the upload form found
 on the top-left of the homepage. Though, you have to be logged in to be able
