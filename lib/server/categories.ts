@@ -1,14 +1,7 @@
 import Category from '@/entities/category';
 import knex from '@/lib/server/knex';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '../helpers/object-keys';
-
-/**
- * Incomplete type definition of the Tag record in DB.
- */
-interface CategoryRow {
-  id: string;
-  [k: string]: unknown;
-}
+import { CategoryRow } from './interfaces';
 
 function dbRowToCategory(row: CategoryRow): Category {
   return camelCaseObjectKeys(row) as Category;

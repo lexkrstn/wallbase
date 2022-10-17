@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { formatFileSize, thousands } from '@/lib/helpers/formatters';
-import { Statistics } from '@/lib/stats';
+import { Statistics } from '@/lib/server/stats';
 import Button from '../buttons/button';
 import styles from './statistics-pane.module.scss';
 

@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import Link from 'next/link';
 import { thousands } from '@/lib/helpers/formatters';
 import { Purity } from '@/lib/constants';
-import { TagWithCategory } from '@/entities/tag';
+import Tag from '@/entities/tag';
 import styles from './popular-tag-item.module.scss';
 
 const PURITY_TO_CLASS = {
@@ -14,7 +14,7 @@ const PURITY_TO_CLASS = {
 };
 
 interface PopularTagItemProps {
-  tag: TagWithCategory;
+  tag: Tag;
 }
 
 const PopularTagItem: FC<PopularTagItemProps> = ({ tag }) => (
@@ -28,7 +28,7 @@ const PopularTagItem: FC<PopularTagItemProps> = ({ tag }) => (
       </Link>
       <Link href={`/tags?cat=${tag.categoryId}`}>
         <a className={styles.category}>
-          {tag.category.name}
+          {tag.category!.name}
         </a>
       </Link>
     </span>

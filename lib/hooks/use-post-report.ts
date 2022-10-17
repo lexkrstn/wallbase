@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { CreateReportDto } from '@/entities/report';
+import { ReportCreateDto } from '@/entities/report';
 import { getAuthTokenHeaders } from '@/lib/helpers/browser-auth-token';
 
-async function requestPostReport(dto: CreateReportDto) {
+async function requestPostReport(dto: ReportCreateDto) {
   const res = await fetch(`/api/wallpapers/${dto.wallpaperId}/reports`, {
     method: 'POST',
     headers: {
@@ -47,7 +47,7 @@ export function usePostReport({ onComplete, onError, onSuccess }: Options) {
     });
   };
 
-  const post = async (dto: CreateReportDto) => {
+  const post = async (dto: ReportCreateDto) => {
     setState({
       processing: true,
       error: '',
