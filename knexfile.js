@@ -15,13 +15,7 @@ if (result.error) {
 
 const commonConfig = {
   client: 'pg',
-  connection: {
-    host:     process.env.DB_HOST,
-    port:     parseInt(process.env.DB_PORT ?? '', 10),
-    database: process.env.DB_NAME,
-    user:     process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-  },
+  connection: process.env.DATABASE_URL,
   migrations: {
     directory: path.join(ROOT_DIR, 'migrations'),
   },
@@ -34,10 +28,7 @@ module.exports = {
   development: commonConfig,
   testing: {
     ...commonConfig,
-    connection: {
-      ...commonConfig.connection,
-      database: process.env.DB_NAME + '_test',
-    },
+    connection: process.env.DATABASE_URL + '_test',
   },
   production: commonConfig,
 };
