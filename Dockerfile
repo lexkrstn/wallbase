@@ -3,7 +3,8 @@ WORKDIR /opt/wallbase
 
 COPY . .
 
-RUN npm i && \
+RUN apk add graphicsmagick && \
+    npm i && \
     npm run generate-dotenv && \
     npm run build && \
     npm prune --production
