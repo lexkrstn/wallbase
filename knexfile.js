@@ -10,8 +10,7 @@ const result = dotenv.config({
 
 if (result.error) {
   // eslint-disable-next-line no-console
-  console.error('Failed to load dotenv config');
-  process.exit(-1);
+  console.warn('Failed to load dotenv config');
 }
 
 const commonConfig = {

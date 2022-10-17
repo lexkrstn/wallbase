@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "knex": "knex",
-    "recreate-image-info": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register scripts/recreate-image-info.ts"
+    "recreate-image-info": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register scripts/recreate-image-info.ts",
+    "generate-dotenv": "ts-node -O '{\"module\": \"commonjs\"}' -r tsconfig-paths/register scripts/generate-dotenv.ts"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
