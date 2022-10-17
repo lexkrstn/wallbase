@@ -25,7 +25,7 @@ Current status: under development.
 
 ```bash
 cd <PROJECT_DIR>
-cp ./example.env ./.env
+npm run generate-dotenv
 nano ./.env
 npm run knex migrate:latest
 npm run knex seed:run
