@@ -1,10 +1,10 @@
 import React, { FC } from 'react';
-import { TagWithCategory } from '@/entities/tag';
+import Tag from '@/entities/tag';
 import PopularTagItem from './popular-tag-item';
 import styles from './popular-tag-list.module.scss';
 
 interface PopularTagListProps {
-  tags: TagWithCategory[] | null;
+  tags: Tag[] | null;
 }
 
 const PopularTagList: FC<PopularTagListProps> = ({ tags }) => (

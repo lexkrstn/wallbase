@@ -134,3 +134,16 @@ export function updateLocationPage(page: number) {
     { shallow: true },
   );
 }
+
+/**
+ * Returns a copy of a search options map without the options having default values.
+ */
+export function omitDefaultSearchOptions(so: Partial<SearchOptions>)
+{
+  return (Object.keys(so) as (keyof SearchOptions)[])
+    .filter(key => so[key] !== DEFAULT_SEARCH_OPTIONS[key])
+    .reduce((obj, key) => ({
+      ...obj,
+      [key]: so[key],
+    }), {} as Partial<SearchOptions>);
+}

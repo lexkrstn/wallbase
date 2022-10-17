@@ -35,13 +35,16 @@ const RegularLayout: FC<RegularLayoutProps> = ({
   const handleSubmitSearchForm = useCallback((event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const searchOptions = Object.keys(initialSearchOptions)
+    const searchOptions = (Object.keys(initialSearchOptions) as (keyof SearchOptions)[])
       .reduce((accum, key) => {
         const item = form.elements.namedItem(key);
         if (!item) return accum;
+        const { value } = item as HTMLInputElement;
         return {
           ...accum,
-          [key]: (item as HTMLInputElement).value,
+          [key]: typeof DEFAULT_SEARCH_OPTIONS[key] === 'number'
+            ? parseInt(value, 10)
+            : value,
         };
       }, {} as Partial<SearchOptions>);
     if (onSearch) {

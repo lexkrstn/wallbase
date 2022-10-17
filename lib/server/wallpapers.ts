@@ -1,53 +1,52 @@
+import { UniqueViolationError, wrapError } from 'db-errors';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { Knex } from 'knex';
 import fs from 'fs/promises';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
+import uniq from 'lodash/uniq';
 import Wallpaper, { getWallpaperFileName } from '@/entities/wallpaper';
 import FeaturedWallpaper from '@/entities/featured-wallpaper';
+import SiblingWallpaper from '@/entities/sibling-wallpaper';
 import Tag from '@/entities/tag';
 import { OrderByType } from '@/lib/types';
 import config from '@/lib/server/config';
 import { getFileHash } from '@/lib/server/hash';
 import knex from '@/lib/server/knex';
 import {
-  FEATURED_WALLPAPER_COUNT, FEATURED_WALLPAPER_HEIGHT, FEATURED_WALLPAPER_WIDTH, MIMETYPE_TO_EXT,
+  FEATURED_WALLPAPER_COUNT, FEATURED_WALLPAPER_HEIGHT, FEATURED_WALLPAPER_WIDTH,
 } from '@/lib/constants';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 import {
-  createThumbnail, getAvgColorOfRgbPixels, getImage4x4Pixels,
+  createThumbnail, getAvgColorOfRgbPixels, getImageSimdata,
   getImageDistinctiveColors, getImageSize,
 } from '@/lib/server/image';
 import { DEFAULT_SEARCH_OPTIONS, SearchOptions } from '@/lib/search-options';
+import { FeaturedWallpaperRow, WallpaperRow } from '@/lib/server/interfaces';
 import { findTagsByWallpaperIds } from '@/lib//server/tags';
-import { FeaturedWallpaperRow } from './interfaces';
-import { UniqueViolationError, wrapError } from 'db-errors';
-
-interface WallpaperRow {
-  id: string;
-  [key: string]: unknown;
-}
+import { findUsersById } from './users';
 
 function camelCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
-    ...camelCaseObjectKeys(omit(obj, ['rgb4x4', 'sha256'])),
-    ...pick(obj, ['rgb4x4', 'sha256']),
+    ...camelCaseObjectKeys(omit(obj, ['sha256'])),
+    ...pick(obj, ['sha256']),
   };
 }
 
 function snakeCaseWallpaperKeys(obj: Record<any, any>): Record<any, any> {
   return {
-    ...snakeCaseObjectKeys(omit(obj, ['rgb4x4', 'sha256'])),
-    ...pick(obj, ['rgb4x4', 'sha256']),
+    ...snakeCaseObjectKeys(omit(obj, ['sha256'])),
+    ...pick(obj, ['sha256']),
   };
 }
 
 /**
  * Type-unsafe covereter of DB records to Wallpapers.
  */
-function rowToWallpaper(row: WallpaperRow) {
+function rowToWallpaper(row: WallpaperRow): Wallpaper {
   return {
-    ...camelCaseWallpaperKeys(omit(row, ['rank'])),
+    ...camelCaseWallpaperKeys(omit(row, ['rank', 'tsv'])),
     tags: [] as Tag[],
   } as Wallpaper;
 }
@@ -84,14 +83,14 @@ export async function updateWallpaper(id: string, dto: WallpaperUpdateInput) {
 /**
  * Returns the absolute path of the wallpaper file by its ID and mimetype.
  */
-function getWallpaperPath(id: string, mimetype: string): string {
+export function getWallpaperPath(id: string, mimetype: string): string {
   return path.join(config.wallpaper.path, getWallpaperFileName(id, mimetype));
 }
 
 /**
  * Returns the absolute path of the wallpaper's thumbnail file by its ID and mimetype.
  */
-function getThumbnailPath(id: string, mimetype: string): string {
+export function getThumbnailPath(id: string, mimetype: string): string {
   return path.join(config.thumbnail.path, getWallpaperFileName(id, mimetype));
 }
 
@@ -161,8 +160,8 @@ export async function uploadWallpaper({
   const { width, height } = await getImageSize(path);
   await createThumbnail(path, width, height, thumbPath, thumbWidth, thumbHeight);
   const colors = await getImageDistinctiveColors(thumbPath, thumbWidth, thumbHeight);
-  const rgb4x4 = await getImage4x4Pixels(thumbPath);
-  const avgColor = await getAvgColorOfRgbPixels(rgb4x4);
+  const simdata = await getImageSimdata(thumbPath);
+  const avgColor = await getAvgColorOfRgbPixels(simdata);
   await fs.rename(path, getWallpaperPath(id, mimetype));
   const wallpaper = await insertWallpaper({
     id,
@@ -170,7 +169,6 @@ export async function uploadWallpaper({
     mimetype,
     fileSize,
     sha256,
-    ext: MIMETYPE_TO_EXT[mimetype],
     purity,
     board,
     sourceUrl,
@@ -180,7 +178,7 @@ export async function uploadWallpaper({
     height,
     ratio: width / height,
     colors,
-    rgb4x4,
+    simdata,
     avgColor,
   });
   if ((await getFeaturedWallpaperCount()).enabled < FEATURED_WALLPAPER_COUNT) {
@@ -194,14 +192,9 @@ interface FindWallpapersOptions {
 }
 
 /**
- * Searches for the wallpapers in DB by search options.
+ * Applies wallpaper search query to a Knex query builder instance.
  */
-export async function findWallpapers(
-  so: Partial<SearchOptions>,
-  { withTags = false }: FindWallpapersOptions = {},
-) {
-  const qb = knex('wallpapers');
-
+function applySearchOptions(qb: Knex.QueryBuilder, so: Partial<SearchOptions>) {
   // filter by boards
   if (so.boards) {
     qb.whereRaw('board & ? = board', [so.boards]);
@@ -239,18 +232,44 @@ export async function findWallpapers(
     }
     qb.whereRaw(`width ${op} ? AND height ${op} ?`, resolution);
   }
+}
 
-  const [{ count }] = await qb.clone().count();
-
-  // sort order
+/**
+ * Applies the "order by" of the wallpaper search query to a Knex query builder
+ * instance.
+ */
+function applySearchOrder(qb: Knex.QueryBuilder, so: Partial<SearchOptions>) {
   const orderBy = so.orderBy ?? DEFAULT_SEARCH_OPTIONS.orderBy;
+  const query = so.query?.trim();
   const orderByToColumn: Record<OrderByType, string> = {
     relevancy: query && orderBy === 'relevancy' ? 'rank' : 'fav_count_1w',
     date: 'created_at',
     views: 'view_count',
     favs: 'fav_count',
   };
-  qb.orderBy(orderByToColumn[orderBy], so.order ?? DEFAULT_SEARCH_OPTIONS.order);
+  qb.orderBy([
+    {
+      column: orderByToColumn[orderBy],
+      order: so.order ?? DEFAULT_SEARCH_OPTIONS.order
+    },
+    { column: 'id' }, // if walls have identical ranks fixes their positions
+  ]);
+}
+
+/**
+ * Searches for the wallpapers in DB by search options.
+ */
+export async function findWallpapers(
+  so: Partial<SearchOptions>,
+  { withTags = false }: FindWallpapersOptions = {},
+) {
+  const qb = knex('wallpapers');
+  applySearchOptions(qb, so);
+
+  const [{ count }] = await qb.clone().count();
+
+  applySearchOrder(qb, so);
+
   // pagination
   const pageSize = so.pageSize ?? DEFAULT_SEARCH_OPTIONS.pageSize;
   qb.limit(pageSize);
@@ -267,6 +286,61 @@ export async function findWallpapers(
 }
 
 /**
+ * Find the previous and next wallpaper relative to a given one that appears
+ * in some search result.
+ */
+export async function findSiblingWallpapers(
+  wallpaperId: string,
+  so: Partial<SearchOptions>,
+) {
+  const siblings: [SiblingWallpaper | null, SiblingWallpaper | null] = [null, null];
+  const { wallpapers, totalCount } = await findWallpapers(so);
+  const idx = wallpapers.findIndex(w => w.id === wallpaperId);
+  const page = so.page ?? 1;
+  // Previous
+  if (idx === 0 && page > 1) {
+    const prevPageSO = {
+      ...so,
+      page: page - 1,
+    };
+    const prevPage = await findWallpapers(prevPageSO);
+    if (prevPage.wallpapers.length > 0) {
+      siblings[0] = {
+        id: prevPage.wallpapers.pop()!.id,
+        page: prevPageSO.page,
+      };
+    }
+  } else if (idx > 0) {
+    siblings[0] = {
+      id: wallpapers[idx - 1].id,
+      page,
+    };
+  }
+  // Next
+  const pageSize = so.pageSize ?? DEFAULT_SEARCH_OPTIONS.pageSize;
+  const pageCount = Math.ceil(totalCount / pageSize);
+  if (idx === wallpapers.length - 1 && page < pageCount) {
+    const nextPageSO = {
+      ...so,
+      page: page + 1,
+    };
+    const nextPage = await findWallpapers(nextPageSO);
+    if (nextPage.wallpapers.length > 0) {
+      siblings[1] = {
+        id: nextPage.wallpapers.shift()!.id,
+        page: nextPageSO.page,
+      };
+    }
+  } else if (idx >= 0 && idx < wallpapers.length - 1) {
+    siblings[1] = {
+      id: wallpapers[idx + 1].id,
+      page,
+    };
+  }
+  return siblings;
+}
+
+/**
  * Loads tags for the wallpapers and returns a copy of the array of wallpapers
  * which have tags array filled up.
  */
@@ -276,6 +350,19 @@ export async function injectWallpaperTags(wallpapers: Wallpaper[]): Promise<Wall
   return wallpapers.map(wallpaper => ({
     ...wallpaper,
     tags: tags.get(wallpaper.id)!,
+  }));
+}
+
+/**
+ * Loads uploaders for the wallpapers and returns a copy of the array of
+ * wallpapers which have the uploader field filled up.
+ */
+export async function injectWallpaperUploaders(wallpapers: Wallpaper[]): Promise<Wallpaper[]> {
+  if (wallpapers.length === 0) return [];
+  const users = await findUsersById(uniq(wallpapers.map(w => w.uploaderId)));
+  return wallpapers.map(wallpaper => ({
+    ...wallpaper,
+    uploader: users.find(user => user.id === wallpaper.uploaderId),
   }));
 }
 
@@ -304,6 +391,7 @@ export async function addWallpaperTags(
 
 interface FindWallpaperByIdOptions {
   withTags?: boolean;
+  withUploader?: boolean;
 }
 
 /**
@@ -319,6 +407,7 @@ export async function findWallpaperById(id: string, options: FindWallpaperByIdOp
  */
 export async function findWallpapersById(ids: string[], {
   withTags,
+  withUploader,
 }: FindWallpaperByIdOptions = {}) {
   if (ids.length === 0) return [];
   const qb = knex('wallpapers');
@@ -332,6 +421,9 @@ export async function findWallpapersById(ids: string[], {
   let wallpapers = rows.map(rowToWallpaper);
   if (withTags) {
     wallpapers = await injectWallpaperTags(wallpapers);
+  }
+  if (withUploader) {
+    wallpapers = await injectWallpaperUploaders(wallpapers);
   }
   return wallpapers;
 }
@@ -362,12 +454,12 @@ export async function findSimilarWallpapers(wallpaper: Wallpaper, {
   page = 1,
   pageSize = 24,
 }: FindSimilarWallpapersOptions = {}) {
-  const simdata = wallpaper.rgb4x4.join();
+  const simdata = wallpaper.simdata.join();
   const rows = await knex({ w: 'wallpapers' })
     .select([
       'w.*',
       knex
-        .select(knex.raw('100 - 100 * avg(abs(rgb4x4[i] - c)) / 255'))
+        .select(knex.raw('100 - 100 * avg(abs(simdata[i] - c)) / 255'))
         .from(knex.raw(`unnest('{${simdata}}'::integer[]) with ordinality tmp(c, i)`))
         .as('similarity'),
     ])

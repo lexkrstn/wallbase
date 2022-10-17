@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { FC } from 'react';
-import { TagWithCategory } from '@/entities/tag';
-import { Statistics } from '@/lib/stats';
+import Tag from '@/entities/tag';
+import { Statistics } from '@/lib/server/stats';
 import { thousands } from '@/lib/helpers/formatters';
 import Button from '../buttons/button';
 import PopularTagList from '../popular-tag-list';
@@ -11,7 +11,7 @@ import styles from './triptych.module.scss';
 import patreonImage from './patreon-button.png';
 
 interface TriptychProps {
-  popularTags: TagWithCategory[] | null,
+  popularTags: Tag[] | null,
   stats: Statistics;
 }
 

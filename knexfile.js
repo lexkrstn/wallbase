@@ -1,3 +1,4 @@
+// @ts-check
 const dotenv = require('dotenv');
 const path = require('path');
 
@@ -9,18 +10,14 @@ const result = dotenv.config({
 
 if (result.error) {
   // eslint-disable-next-line no-console
-  console.error('Failed to load dotenv config');
-  process.exit(-1);
+  console.warn('Failed to load dotenv config');
 }
 
 const commonConfig = {
   client: 'pg',
   connection: {
-    host:     process.env.DB_HOST,
-    port:     parseInt(process.env.DB_PORT, 10),
-    database: process.env.DB_NAME,
-    user:     process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
   },
   migrations: {
     directory: path.join(ROOT_DIR, 'migrations'),
@@ -34,10 +31,7 @@ module.exports = {
   development: commonConfig,
   testing: {
     ...commonConfig,
-    connection: {
-      ...commonConfig.connection,
-      database: process.env.DB_NAME + '_test',
-    },
+    connection: process.env.DATABASE_URL + '_test',
   },
   production: commonConfig,
 };

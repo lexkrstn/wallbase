@@ -9,7 +9,6 @@
     table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.bigInteger('uploader_id').unsigned().notNullable();
     table.string('mimetype', 64).notNullable();
-    table.string('ext', 8).notNullable();
     table.integer('file_size').unsigned().notNullable();
     table.integer('width').unsigned().notNullable();
     table.integer('height').unsigned().notNullable();
@@ -27,11 +26,11 @@
     table.float('ratio').notNullable().comment('width / height');
     table.specificType('tsv', 'tsvector').nullable()
       .comment('Concatenated FT-search data of all tags');
-    table.specificType('rgb4x4', 'float[48]').notNullable()
+    table.specificType('simdata', 'smallint[256]').notNullable()
       .comment('4x4 rgb data to search for similars');
-    table.specificType('colors', 'float[15]').notNullable()
+    table.specificType('colors', 'smallint[15]').notNullable()
       .comment('5 distinctive colors');
-    table.specificType('avg_color', 'float[3]').notNullable();
+    table.specificType('avg_color', 'smallint[3]').notNullable();
     table.string('sha256', 64).notNullable();
     table.boolean('featured').notNullable().defaultTo(false);
 

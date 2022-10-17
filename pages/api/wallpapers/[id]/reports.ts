@@ -23,7 +23,7 @@ const schemaPost = z.object({
   message: z.string(),
 });
 
-type GetData = { error?: string } | Report | null;
+type GetData = { error?: string } | Report[];
 type PostData = { error?: string } | Report;
 
 export default nextConnect()
@@ -34,8 +34,14 @@ export default nextConnect()
         ...omit(dto, ['id']),
         wallpaperId: dto.id,
       });
-      res.json(reports.length > 0 ? reports[0] : null);
+      res.json(reports);
     } catch (err) {
+      if (err instanceof ZodError) {
+        res.status(400).json({
+          error: err.issues[0].message,
+        });
+        return;
+      }
       res.status(500).json({
         error: err instanceof Error ? err.message : `${err}`,
       });

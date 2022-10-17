@@ -1,27 +1,24 @@
+import { KeysToCamelCase } from '@/lib/helpers/type-case';
+import { ReportRow, ReportType } from '@/lib/server/interfaces';
 import User from './user';
 import Wallpaper from './wallpaper';
 
-export const REPORT_TYPES = [
-  'low_quality', 'duplicate', 'rule', 'copyright', 'illegal', 'other',
-] as const;
+export { REPORT_TYPES } from '@/lib/server/interfaces';
+export type { ReportType } from '@/lib/server/interfaces';
 
-export type ReportType = typeof REPORT_TYPES[number];
-
-export interface Report {
-  id: string;
-  wallpaperId: string;
-  userId: string;
-  type: ReportType;
-  duplicateId: string | null;
-  message: string;
-  createdAt: Date;
-
+/**
+ * Wallpaper rule violation report.
+ */
+export interface Report extends KeysToCamelCase<ReportRow> {
   user?: User;
   wallpaper?: Wallpaper;
   duplicate?: Wallpaper | null;
 }
 
-export interface CreateReportDto {
+/**
+ * Wallpaper rule violation report creation DTO.
+ */
+export interface ReportCreateDto {
   wallpaperId: string;
   userId: string;
   type: ReportType;

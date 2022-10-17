@@ -1,0 +1,100 @@
+.sidebar {
+  float: left;
+  border-right: 1px solid #2a2a2a;
+  background: #1e1e1e;
+  background-image: linear-gradient(to right, #171717, #1e1e1e);
+  position: absolute;
+  top: 35px;
+  bottom: 0;
+  width: 50%;
+  @media (min-width:650px) {
+    width: 279px;
+  }
+  @media (min-width:900px) {
+    top: 0;
+  }
+}
+.btnToggle {
+  position: fixed;
+  z-index: 15;
+  bottom: 10px;
+  left: 0;
+  display: block;
+  width: 80px;
+  padding: 6px 0 6px 12px;
+  border: 0;
+  border-radius: 0 25px 25px 0;
+  text-align: left;
+  background: #111;
+  color: #ccc;
+  font-size: 14px;
+  user-select: none;
+  cursor: pointer;
+  &:hover {
+    background: #2E2E2E;
+  }
+}
+%toggleIcon {
+  vertical-align: middle;
+  margin-top: -2px;
+  height: 14px;
+  color: #888;
+}
+.toggleIconLeft {
+  @extend %toggleIcon;
+  margin-right: 8px;
+}
+.toggleIconRight {
+  @extend %toggleIcon;
+  margin-left: 8px;
+}
+.top {
+  background-image: linear-gradient(to bottom, #111, #1e1e1e);
+  background-repeat: repeat-x;
+  background-color: #1e1e1e;
+  background-size: 1px 85px;
+  position: relative;
+  @media (min-width:900px) {
+    &:before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 35px;
+      top: 0;
+      right: -1px;
+      position: absolute;
+      background-image: linear-gradient(to bottom, #111, #1e1e1e);
+      background-position: repeat-x;
+      background-color: #1e1e1e;
+      background-size: 1px 85px;
+    }
+  }
+  &:after {
+    display: table;
+    content: '';
+    clear: both;
+  }
+}
+.logo {
+  display: block;
+  float: left;
+  width: 87px;
+  height: 100px;
+  background-image: url("../../public/logo-short.svg");
+  background-size: 47px 30px;
+  background-repeat: no-repeat;
+  background-position: center 25px;
+  position: relative;
+  z-index: 1;
+}
+.toolbar {
+  position: absolute;
+  top: 90px;
+  @media (min-height:650px) {
+    top: 115px;
+  }
+  bottom: 0;
+  width: 100%;
+  padding-bottom: 30px;
+  overflow: auto;
+}

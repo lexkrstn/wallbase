@@ -12,11 +12,13 @@ export type CamelCase<S extends string> = S extends `${infer P1}_${infer P2}${in
 /**
  * A helper for KeysToCamelCase<T>.
  */
-type ObjectToCamelCase<T> = {
-  [K in keyof T as CamelCase<string &K>]: T[K] extends Record<string, any>
-    ? KeysToCamelCase<T[K]>
-    : T[K];
-};
+type ObjectToCamelCase<T> = T extends Date
+  ? T
+  : {
+    [K in keyof T as CamelCase<string &K>]: T[K] extends Record<string, any>
+      ? KeysToCamelCase<T[K]>
+      : T[K];
+  };
 
 /**
  * Converts each key of an object type T to camel case, e.g.:
@@ -60,11 +62,13 @@ export type SnakeCase<S extends string> = S extends `${infer P1}${infer P2}`
 /**
  * A helper for KeysToSnakeCase<T>.
  */
-type ObjectToSnakeCase<T> = {
-  [K in keyof T as SnakeCase<string &K>]: T[K] extends Record<string, any>
-    ? KeysToSnakeCase<T[K]>
-    : T[K];
-};
+type ObjectToSnakeCase<T> = T extends Date
+  ? T
+  : {
+    [K in keyof T as SnakeCase<string &K>]: T[K] extends Record<string, any>
+      ? KeysToSnakeCase<T[K]>
+      : T[K];
+  };
 
 /**
  * Converts each key of an object type T to camel case, e.g.:

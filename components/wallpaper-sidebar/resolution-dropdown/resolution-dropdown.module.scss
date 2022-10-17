@@ -1,0 +1,209 @@
+.host {
+  position: relative;
+  float: left;
+}
+.button {
+  float: left;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  padding: 22px 50px 40px 0;
+  text-align: right;
+  width: 190px;
+  font-family: "Titillium Web", Calibri, Tahoma,Verdana;
+  font-size: 24px;
+  font-weight: 300;
+  color: #DCDCDC;
+  text-shadow: #111 1px 1px 0;
+  cursor: pointer;
+  line-height: 1;
+  user-select: none;
+  z-index: 10;
+  &:hover {
+    background-image: linear-gradient(to bottom, #282828, rgba(48,48,48,0));
+  }
+  &:before {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(to bottom, #333, #1e1e1e);
+    background-color: #333;
+    background-position: bottom;
+    background-repeat: repeat-x;
+    background-size: 1px 104px;
+  }
+  @at-root .open & {
+    background-image: linear-gradient(to bottom, #545454, #323232);
+    background-color: #333;
+    background-position: 0 -20px;
+    background-repeat: repeat-x;
+    background-size: 1px 65px;
+  }
+}
+.board {
+  display: block;
+  color: #999999;
+  font-family: "Titillium Web", Calibri, Tahoma,Verdana;
+  font-weight: 300;
+  font-size: 14px;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 80px;
+  width: 300px;
+  background: #303030;
+  z-index: 12;
+  box-shadow: 2px 6px 15px #101010;
+  border-radius: 2px;
+  left: 0;
+  @at-root .open & {
+    display: block;
+  }
+}
+.chevron {
+  width: 16px;
+  height: 10px;
+  display: block;
+  position: absolute;
+  top: 35%;
+  right: 20px;
+  margin-top: -8px;
+  color: #676767;
+  line-height: 1;
+  font-size: 0;
+}
+.chevronIcon {
+  width: 14px;
+  transform: rotate(0deg);
+  transition: transform 150ms ease;
+  @at-root .open & {
+    transform: rotate(180deg);
+  }
+}
+.header {
+  border: none;
+  margin: 10px 0;
+  // 1x1 pixels texture #4b4b4b
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wUXBRwRoJ5bSAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAADElEQVQI12Pw9vYGAAHGAOJNm+7QAAAAAElFTkSuQmCC');
+  background-repeat: repeat-x;
+  background-position: 0% 55%;
+  text-align: left;
+  padding-left: 20px;
+  font-size: 14px;
+}
+.headerText {
+  display: inline-block;
+  padding: 0 5px;
+  color: #999;
+  text-shadow: #111 1px 1px 0;
+  background: #303030;
+  -webkit-font-smoothing: antialiased;
+}
+.content {
+  max-height: 350px;
+  margin: 20px 10px 20px;
+}
+.resolutionList {
+  display: block;
+  list-style: none;
+  margin: -8px 0 0 -8px;
+  padding: 0;
+  line-height: 1;
+  font-size: 0;
+}
+.resolutionItem {
+  display: inline-block;
+  vertical-align: top;
+  margin: 0;
+  padding: 8px 0 0 8px;
+  font-size: 16px;
+  line-height: normal;
+}
+.resolutionLink {
+  display: block;
+  padding: 5px 8px;
+  background: #111111;
+  border-radius: 3px;
+  color: #999;
+  text-decoration: none;
+  box-shadow: 1px 1px 2px rgba(0,0,0,.3);
+  &:hover {
+    color: #fff;
+  }
+}
+.sharing {
+  padding: 10px;
+  margin: 0 10px 10px 10px;
+  background: #232323;
+  border-radius: 2px;
+}
+.sharingTitle {
+  font-weight: bold;
+  color: #ccc;
+  font-size: 1.3rem;
+  padding: 0 0 3px 2px;
+}
+.textInput {
+  font-family: Calibri,Tahoma,Verdana;
+  font-size: 1.4;
+  color: #666;
+  padding: 6px 10px;
+  border: 1px solid #303030;
+  background: #111;
+  width: 100%;
+  border-radius: 2px;
+  &:focus {
+    border-color: #4B4B4B;
+    color: #CCB762;
+    outline: 0;
+  }
+}
+.socialList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  &:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+.socialItem {
+  float: left;
+}
+.socialLink {
+  color: #ccc;
+  display: inline-block;
+  padding: 10px 10px 0 10px;
+}
+%socialIcon {
+  height: 22px;
+  &:hover {
+    color: white !important;
+  }
+}
+.fb {
+  @extend %socialIcon;
+  color: #3B5998;
+}
+.twitter {
+  @extend %socialIcon;
+  color: #00ACEE;
+}
+.googleplus {
+  @extend %socialIcon;
+  color: #CC3B29;
+}
+.pinterest {
+  @extend %socialIcon;
+  color: #BA0F24;
+}
+.reddit {
+  @extend %socialIcon;
+  color: #CEE3F8;
+}

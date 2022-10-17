@@ -1,3 +1,28 @@
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 100;
+  src: local("Titillium Web"),
+       local("TitilliumWeb-Regular"),
+       url("/fonts/TitilliumWeb/TitilliumWeb-ExtraLight.ttf") format("truetype");
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 300;
+  src: local("Titillium Web"),
+       local("TitilliumWeb-Regular"),
+       url("/fonts/TitilliumWeb/TitilliumWeb-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Titillium Web"),
+       local("TitilliumWeb-Regular"),
+       url("/fonts/TitilliumWeb/TitilliumWeb-Regular.ttf") format("truetype");
+}
+
 * { box-sizing: border-box; }
 strong, b {
   font-weight: bold;
@@ -49,10 +74,6 @@ code {
                           ANIMATION
 \**************************************************************/
 
-@-webkit-keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

@@ -1,19 +1,12 @@
 import uniq from 'lodash/uniq';
-import { CreateReportDto, Report } from '@/entities/report';
+import { wrapError } from 'db-errors';
+import { ReportCreateDto, Report } from '@/entities/report';
+import User from '@/entities/user';
 import { camelCaseObjectKeys, snakeCaseObjectKeys } from '@/lib/helpers/object-keys';
 import knex from './knex';
 import { findWallpapersById } from './wallpapers';
 import { findUsersById } from './users';
-import { wrapError } from 'db-errors';
-import User from '@/entities/user';
-
-/**
- * Incomplete type definition of the Tag record in DB.
- */
-interface ReportRow {
-  id: string;
-  [k: string]: unknown;
-}
+import { ReportRow } from './interfaces';
 
 function dbRowToReport(row: ReportRow): Report {
   return camelCaseObjectKeys(row) as Report;
@@ -124,7 +117,7 @@ export function canUserCreateReport(user: User) {
 /**
  * Inserts a new wallpaper report (complaint) into DB.
  */
-export async function createReport(dto: CreateReportDto) {
+export async function createReport(dto: ReportCreateDto) {
   try {
     const rows = await knex('reports')
       .insert(reportToDbRow(dto))

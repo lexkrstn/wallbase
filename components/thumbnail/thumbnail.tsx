@@ -1,7 +1,7 @@
 import { faCheckCircle, faTimes, faFlag, faTags } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Link from 'next/link';
-import React, { FC, MouseEvent, useCallback } from 'react';
+import React, { FC, MouseEvent, ReactNode, useCallback } from 'react';
 import { Board, MIMETYPE_TO_EXT, Purity } from '@/lib/constants';
 import Tag from '@/entities/tag';
 import styles from './thumbnail.module.scss';
@@ -41,17 +41,37 @@ interface ThumbnailProps {
   faved?: boolean;
   deleteBtnTitle?: string;
   mimetype?: string;
+  noControls?: boolean;
+  hoverable?: boolean;
+  title?: string;
+  target?: '_blank';
   onPurityClick?: (id: string) => void;
   onTagBtnClick?: (id: string) => void;
   onClick?: (id: string) => void;
   onDeleteClick?: (id: string) => void;
 }
 
+type WrapProps = Pick<ThumbnailProps, 'className' | 'title' | 'href' | 'target'> & {
+  children: ReactNode;
+  onClick: (event: MouseEvent<HTMLElement>) => void;
+};
+
+const ThumbnailWrap: FC<WrapProps> = ({ href, ...props }) => {
+  if (href) {
+    return (
+      <Link href={href}>
+        <a {...props} />
+      </Link>
+    );
+  }
+  return <div {...props} />;
+};
+
 const Thumbnail: FC<ThumbnailProps> = ({
   id, width, height, error, success, url, active, purity, favs, faved,
   board, progress, similarity, interactive, href, tags, loading, disabled,
   onClick, onDeleteClick, onPurityClick, onTagBtnClick, deleteBtnTitle = 'Remove',
-  mimetype, className,
+  mimetype, className, noControls, hoverable, title, target,
 }) => {
   const classes = [styles.host];
   if (active) classes.push(styles.active);
@@ -64,9 +84,10 @@ const Thumbnail: FC<ThumbnailProps> = ({
   if (onTagBtnClick) classes.push(styles.tagbtnClickable);
   if (onClick || href) classes.push(styles.clickable);
   if (mimetype) classes.push(styles[MIMETYPE_TO_EXT[mimetype]]);
+  if (hoverable) classes.push(styles.hoverable);
   if (className) classes.push(className);
 
-  const handleClick = useCallback((event: MouseEvent<HTMLDivElement>) => {
+  const handleClick = useCallback((event: MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     if (disabled) return;
     const target = event.target as Element;
@@ -88,7 +109,13 @@ const Thumbnail: FC<ThumbnailProps> = ({
   }, [id, disabled, onDeleteClick, onClick, onPurityClick, onTagBtnClick]);
 
   return (
-    <div className={classes.join(' ')} onClick={handleClick} title="">
+    <ThumbnailWrap
+      className={classes.join(' ')}
+      onClick={handleClick}
+      title={title}
+      href={href}
+      target={target}
+    >
       <div className={styles.frame}>
         {(progress !== undefined || loading) && (
           <div className={styles.progressbar}>
@@ -119,45 +146,40 @@ const Thumbnail: FC<ThumbnailProps> = ({
             </div>
           </div>
         )}
-        {!!similarity && (
-          <div className={styles.similarity}>{similarity}</div>
+        {similarity !== undefined && (
+          <div className={styles.similarity}>{similarity}%</div>
         )}
-        {!!href && (
-          <Link href={href}>
-            <a className={styles.thlink}>
-              <img src={url} alt="" />
-            </a>
-          </Link>
-        )}
-        {!href && (
-          <div className={styles.thlink}>
-            <img src={url} alt="" />
-          </div>
-        )}
+        <div className={styles.imageWrap}>
+          <img className={styles.image} src={url} alt={title} />
+        </div>
         {!!onDeleteClick && (
           <div className={styles.delete} title={deleteBtnTitle}>
             <FontAwesomeIcon icon={faTimes} />
           </div>
         )}
         <div className={styles.resolution}>
-          <div className={styles.purity}>
-            <FontAwesomeIcon icon={faFlag} />
-          </div>
-          <div className={styles.tagbtn}>
-            <FontAwesomeIcon icon={faTags} />
-            {!!tags && (
-              <>
-                &times;
-                {tags.length}
-              </>
-            )}
-          </div>
+          {!noControls && (
+            <>
+              <div className={styles.purity}>
+                <FontAwesomeIcon icon={faFlag} />
+              </div>
+              <div className={styles.tagbtn}>
+                <FontAwesomeIcon icon={faTags} />
+                {!!tags && (
+                  <>
+                    &times;
+                    {tags.length}
+                  </>
+                )}
+              </div>
+            </>
+          )}
           {width}
           &times;
           {height}
         </div>
       </div>
-    </div>
+    </ThumbnailWrap>
   );
 };
 

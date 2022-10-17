@@ -1,0 +1,15 @@
+.host {
+  width: 100%;
+  background: #1E1E1E;
+  display: flex;
+}
+.color {
+  flex: 1 1 auto;
+  display: block;
+  height: 15px;
+  background: #131313;
+  transition: flex-grow .1s ease-in;
+  &:hover {
+    flex-grow: 2;
+  }
+}
