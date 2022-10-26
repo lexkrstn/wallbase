@@ -16,8 +16,8 @@ if (result.error) {
 const commonConfig = {
   client: 'pg',
   connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    connectionString: process.env.DATABASE_URL || 'postgresql://postgres@localhost:5432/wallbase',
+    ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
   },
   migrations: {
     directory: path.join(ROOT_DIR, 'migrations'),
