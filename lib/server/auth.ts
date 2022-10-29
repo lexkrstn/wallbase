@@ -29,9 +29,9 @@ function parseCookies(req: NextApiRequest) {
   return parse(cookie || '');
 }
 
-export function getTokenFromCookie(req: NextApiRequest): string {
+export function getTokenFromCookie(req: NextApiRequest) {
   const cookies = parseCookies(req);
-  return cookies[TOKEN_NAME];
+  return cookies[TOKEN_NAME] ?? '';
 }
 
 export function getUserIdFromToken(token: string): Promise<string> {

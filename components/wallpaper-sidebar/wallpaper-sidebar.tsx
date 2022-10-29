@@ -31,9 +31,7 @@ const WallpaperSidebar: FC<Props> = ({
         )}
       </button>
       <div className={styles.top}>
-        <Link href="/">
-          <a className={styles.logo} />
-        </Link>
+        <Link href="/" className={styles.logo} />
         <ResolutionDropdown wallpaper={wallpaper} />
       </div>
       <Palette wallpaper={wallpaper} />

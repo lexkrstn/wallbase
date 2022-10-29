@@ -9,6 +9,10 @@ const Purity = {
  * @returns { Promise<void> }
  */
 exports.seed = async function(knex) {
+  const [{ count }] = await knex('tags').count();
+  if (count > 0) {
+    return;
+  }
   await knex('tags').insert([
     {
       name: 'abstract',

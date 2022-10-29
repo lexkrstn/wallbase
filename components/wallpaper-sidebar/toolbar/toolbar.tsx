@@ -23,11 +23,9 @@ const Toolbar: FC<Props> = ({ wallpaper, uploader, nextLink, prevLink }) => {
         <div className={styles.title}>Uploaded by</div>
         <div className={styles.username}>
           <Link href={`/users/${wallpaper.uploaderId}`}>
-            <a>
-              {!uploader.cc2 && '🇺🇳'}
-              {!!uploader.cc2 && countryCodeEmoji(uploader.cc2)}
-              {` ${uploader.login}`}
-            </a>
+            {!uploader.cc2 && '🇺🇳'}
+            {!!uploader.cc2 && countryCodeEmoji(uploader.cc2)}
+            {` ${uploader.login}`}
           </Link>
         </div>
         <div className={styles.date}>

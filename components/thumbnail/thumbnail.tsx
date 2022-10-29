@@ -58,11 +58,7 @@ type WrapProps = Pick<ThumbnailProps, 'className' | 'title' | 'href' | 'target'>
 
 const ThumbnailWrap: FC<WrapProps> = ({ href, ...props }) => {
   if (href) {
-    return (
-      <Link href={href}>
-        <a {...props} />
-      </Link>
-    );
+    return <Link href={href} {...props} />;
   }
   return <div {...props} />;
 };

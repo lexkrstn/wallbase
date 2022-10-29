@@ -33,7 +33,7 @@ const jwtOpts = {
 
 export const jwtStrategy = new Jwt.Strategy(jwtOpts, (jwtPayload, done) => {
   findUserById(jwtPayload.sub)
-    .then(user => done(null, user))
+    .then(user => done(null, user ?? false))
     .catch(error => done(error));
 });
 

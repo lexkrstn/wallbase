@@ -130,9 +130,7 @@ const UploadPane: FC<UploadPaneProps> = ({ onUploaded }) => {
         <h1 className={styles.title}>Upload wallpapers</h1>
         <div className={styles.attention}>
           {'Please read the '}
-          <Link href="/help/rules">
-            <a>rules</a>
-          </Link>
+          <Link href="/help/rules">rules</Link>
           {' before '}
           {(!uploading && errors.length === 0) && (
             <Button xsmall dark iconPrepend={faFolderOpen} onClick={openFileDialog}>

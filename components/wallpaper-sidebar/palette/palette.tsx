@@ -10,9 +10,12 @@ interface Props {
 const Palette: FC<Props> = ({ wallpaper }) => (
   <div className={styles.host}>
     {getWallpaperColorsHex(wallpaper).map((color, i) => (
-      <Link key={`${i}-${color}`} href={`/wallpapers?color=${color.slice(1)}`}>
-        <a className={styles.color} style={{ background: color }} />
-      </Link>
+      <Link
+        key={`${i}-${color}`}
+        href={`/wallpapers?color=${color.slice(1)}`}
+        className={styles.color}
+        style={{ background: color }}
+      />
     ))}
   </div>
 );

@@ -17,6 +17,8 @@
   width: 193px;
   height: 41px;
   margin: (17px + 35px) auto 10px;
+  background: url(./logo.svg);
+  background-size: 193px 41px;
   @media (min-width: 500px) {
     margin-top: 17px;
   }

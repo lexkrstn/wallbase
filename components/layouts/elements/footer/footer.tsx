@@ -18,51 +18,31 @@ const Footer: FC = () => {
         </div>
         <div className={styles.l2}>
           <span className={styles.copy}>&copy; {siteName}, {copyYear}</span>
-          <Link href="/help/faq">
-            <a>FAQ</a>
-          </Link>
-          <Link href="/help/terms">
-            <a>Terms of Service</a>
-          </Link>
-          <Link href="/help/privacy">
-            <a>Privacy Policy</a>
-          </Link>
-          <Link href="/help/about">
-            <a>About...</a>
-          </Link>
+          <Link href="/help/faq">FAQ</Link>
+          <Link href="/help/terms">Terms of Service</Link>
+          <Link href="/help/privacy">Privacy Policy</Link>
+          <Link href="/help/about">About...</Link>
         </div>
       </div>
       <div className={styles.bottom}>
         <ul className={styles.menu}>
           <li>
-            <Link href="/upload">
-              <a>Upload</a>
-            </Link>
+            <Link href="/upload">Upload</Link>
           </li>
           <li>
-            <Link href="/tags">
-              <a>Popular tags</a>
-            </Link>
+            <Link href="/tags">Popular tags</Link>
           </li>
           <li>
-            <Link href="/random">
-              <a>Random</a>
-            </Link>
+            <Link href="/random">Random</Link>
           </li>
           <li>
-            <Link href="/top">
-              <a>Toplist</a>
-            </Link>
+            <Link href="/top">Toplist</Link>
           </li>
           <li>
-            <Link href="/users">
-              <a>Users</a>
-            </Link>
+            <Link href="/users">Users</Link>
           </li>
           <li>
-            <Link href="/comments">
-              <a>Comments</a>
-            </Link>
+            <Link href="/comments">Comments</Link>
           </li>
         </ul>
         <div className={styles.social}>

@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  wallbase:
+    build:
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - wallpapers:/opt/wallbase/public/wallpapers
+      - thumbnails:/opt/wallbase/public/thumbnails
+      - featured:/opt/wallbase/public/featured
+    deploy:
+      resources:
+        limits: # In case the code enters infinite loop, do not heat up my notebook
+          cpus: '2'
+          memory: 500M
+        reservations:
+          cpus: '0.5'
+          memory: 50M
+
+volumes:
+  wallpapers:
+  thumbnails:
+  featured:

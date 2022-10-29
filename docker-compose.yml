@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   postgres:
-    image: postgres:latest
+    image: postgres:alpine
     restart: always
     environment:
       POSTGRES_DB: wallbase
@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - .:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d wallbase"]
       interval: 10s
@@ -25,26 +25,33 @@ services:
           cpus: '1'
           memory: 1G
     networks:
-      - postgres
+      - common
 
   wallbase:
     image: lexkrstn/wallbase
     restart: always
+    command: >
+      sh -c "npm run knex migrate:latest &&
+             npm run knex seed:run &&
+             npm start"
     depends_on:
       - postgres
-    ports:
-      - "443:443"
-      - "3000:3000"
-    volumes:
-      - /opt/wallbase/tls:/opt/wallbase/tls
     environment:
-      NODE_ENV: production
-      DATABASE_URL: postgresql://postgres:qwerty@localhost:5432/wallbase
-      SSL: 1
-      PORT: 443
+      DATABASE_URL: postgresql://postgres:qwerty@postgres:5432/wallbase
+      DATABASE_SSL: 0
+      SSL: 0
+      PORT: 3000
     networks:
-      - postgres
+      - common
+    logging:
+      driver: json-file
+      options:
+        max-size: 50K
+        max-file: "10"
 
 networks:
-  postgres:
+  common:
     driver: bridge
+
+volumes:
+  pgdata:

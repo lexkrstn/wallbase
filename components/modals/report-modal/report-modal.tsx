@@ -78,9 +78,7 @@ const ReportModal: FC<ReportModalProps> = ({
                   Low-quality edits (rotated, mirrored images, collages, etc),
                   screenshots. For more information read the
                   {' '}
-                  <Link href="/help/faq#upload">
-                    <a target="_blank">FAQ</a>
-                  </Link>
+                  <Link href="/help/faq#upload" target="_blank">FAQ</Link>
                 </Alert>
               )}
               {type === 'rule' && (
@@ -88,9 +86,7 @@ const ReportModal: FC<ReportModalProps> = ({
                   Please indicate which rule is violated.
                   For more information about the rules read the
                   {' '}
-                  <Link href="/help/faq#upload">
-                    <a target="_blank">FAQ</a>
-                  </Link>
+                  <Link href="/help/faq#upload" target="_blank">FAQ</Link>
                 </Alert>
               )}
               {type === 'copyright' && (
@@ -102,9 +98,7 @@ const ReportModal: FC<ReportModalProps> = ({
                   on this website.
                   Read more about all options in
                   {' '}
-                  <Link href="/help/faq#copyright">
-                    <a target="_blank">FAQ</a>
-                  </Link>
+                  <Link href="/help/faq#copyright" target="_blank">FAQ</Link>
                   .
                 </Alert>
               )}
@@ -112,9 +106,7 @@ const ReportModal: FC<ReportModalProps> = ({
                 <Alert icon={faExclamationCircle} info>
                   For more information read the
                   {' '}
-                  <Link href="/help/faq#upload">
-                    <a target="_blank">FAQ</a>
-                  </Link>
+                  <Link href="/help/faq#upload" target="_blank">FAQ</Link>
                   .
                 </Alert>
               )}

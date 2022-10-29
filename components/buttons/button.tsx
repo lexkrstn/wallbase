@@ -60,10 +60,8 @@ const Button: FC<ButtonProps> = ({
         </button>
       )}
       {!!href && (
-        <Link href={href}>
-          <a className={classes.join(' ')} title={title}>
-            {inner}
-          </a>
+        <Link href={href} className={classes.join(' ')} title={title}>
+          {inner}
         </Link>
       )}
     </>

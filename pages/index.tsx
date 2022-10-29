@@ -35,10 +35,8 @@ const Index: NextPage<IndexProps> = ({
     <IndexLayout>
       <div className={styles.home}>
         <div className={styles.logo}>
-          <Link href="/">
-            <a title="Desktop wallpapers" tabIndex={-1}>
-              <Image src={logoImage} alt="Wallbase" width={193} height={41} />
-            </a>
+          <Link href="/" title="Desktop wallpapers" tabIndex={-1}>
+            <Image src={logoImage} alt="Wallbase" width={193} height={41} />
           </Link>
         </div>
         <div className={styles.subtitle}>We have wallpapers</div>

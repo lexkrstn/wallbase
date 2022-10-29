@@ -128,10 +128,8 @@ const Carousel: FC<CarouselProps> = ({ slides }) => {
           <TransitionGroup component={null} childFactory={createChildFactory(effect)}>
             <CSSTransition key={activeSlide.href} classNames={effect} timeout={300}>
               <li data-index={activeIndex} className={styles.slide}>
-                <Link href={activeSlide.href}>
-                  <a title="Go to the wallpaper page">
-                    <img src={activeSlide.image} alt={activeSlide.description} />
-                  </a>
+                <Link href={activeSlide.href} title="Go to the wallpaper page">
+                  <img src={activeSlide.image} alt={activeSlide.description} />
                 </Link>
               </li>
             </CSSTransition>

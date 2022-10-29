@@ -5,10 +5,8 @@ COPY . .
 
 RUN apk add graphicsmagick && \
     npm i && \
-    npm run generate-dotenv && \
-    npm run build && \
-    npm prune --production
+    npm run generate-dotenv
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

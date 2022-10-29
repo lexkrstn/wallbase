@@ -43,10 +43,8 @@ const Triptych: FC<TriptychProps> = ({ popularTags, stats }) => (
           </li>
           <li>
             <Link href="/users">
-              <a>
-                {'Online: '}
-                <span className={styles.number}>{thousands(stats.usersOnline)}</span>
-              </a>
+              {'Online: '}
+              <span className={styles.number}>{thousands(stats.usersOnline)}</span>
             </Link>
           </li>
         </ul>

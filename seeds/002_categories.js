@@ -3,6 +3,10 @@
  * @returns { Promise<void> }
  */
 exports.seed = async function(knex) {
+  const [{ count }] = await knex('categories').count();
+  if (count > 0) {
+    return;
+  }
   await knex('categories').insert([
     {
       id: 72,

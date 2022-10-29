@@ -28,9 +28,7 @@ const AboutWallpaperIssuesModal: FC<Props> = ({ shown, onClose }) => {
         <p className={styles.para}>
           If you want us to know that the wallpaper violates
           {' '}
-          <Link href="/help/faq#upload">
-            <a target="_blank">our rules</a>
-          </Link>
+          <Link href="/help/faq#upload" target="_blank">our rules</Link>
           {' '}
           , simply log in under your account on this website, click the
           &quot;delete&quot; button on the thumbnail again, and you&apos;ll

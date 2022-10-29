@@ -63,10 +63,13 @@ const SearchLine: FC<SearchLineProps> = ({ filtersShown, searchBy, onShowFilters
               transform={{ rotate: 90 }}
             />
           </button>
-          <Link href="/new">
-            <a className={styles.new} title="Show new wallpapers" tabIndex={2}>
-              <FontAwesomeIcon icon={faPizzaSlice} />
-            </a>
+          <Link
+            href="/new"
+            className={styles.new}
+            title="Show new wallpapers"
+            tabIndex={2}
+          >
+            <FontAwesomeIcon icon={faPizzaSlice} />
           </Link>
           <div className={styles.input}>
             {searchBy === 'keyword' && (

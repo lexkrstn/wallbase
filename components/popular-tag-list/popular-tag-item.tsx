@@ -20,16 +20,18 @@ interface PopularTagItemProps {
 const PopularTagItem: FC<PopularTagItemProps> = ({ tag }) => (
   <li className={styles.item}>
     <span className={styles.links}>
-      <Link href={`/wallpapers?tag=${encodeURIComponent('"' + tag.name + '"')}`}>
-        <a className={`${styles.search} ${PURITY_TO_CLASS[tag.purity]}`}>
-          <FontAwesomeIcon icon={faSearch} />
-          {tag.name}
-        </a>
+      <Link
+        href={`/wallpapers?tag=${encodeURIComponent('"' + tag.name + '"')}`}
+        className={`${styles.search} ${PURITY_TO_CLASS[tag.purity]}`}
+      >
+        <FontAwesomeIcon icon={faSearch} />
+        {tag.name}
       </Link>
-      <Link href={`/tags?cat=${tag.categoryId}`}>
-        <a className={styles.category}>
-          {tag.category!.name}
-        </a>
+      <Link
+        href={`/tags?cat=${tag.categoryId}`}
+        className={styles.category}
+      >
+        {tag.category!.name}
       </Link>
     </span>
     <span className={styles.stats}>{thousands(tag.wallpaperCount)}</span>

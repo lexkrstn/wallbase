@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+  wallbase:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: >
+      sh -c "npm run knex migrate:latest &&
+             npm run knex seed:run &&
+             npm run dev"
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/opt/wallbase
+      - /opt/wallbase/node_modules # excluding from mounting due to some binaries
+    environment:
+      NODE_ENV: development
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 10
+        window: 30s
+      resources:
+        limits: # In case the code enters infinite loop, do not heat up my notebook
+          cpus: '2'
+          memory: 1024M
+        reservations:
+          cpus: '0.5'
+          memory: 200M
